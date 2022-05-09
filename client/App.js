@@ -1,70 +1,48 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, Button, TextInput } from 'react-native';
+
+import connectionHandler from './Controller/connectionHandler.js';
+
+import LoginPage from './Views/LoginPage.js'
+import MainPage from './Views/MainPage.js'
+
+
+var conn =  null;
+var refreshIntervalId = null;
 
 
 export default function App() {
+  const [logged, setLogged] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [authError, setAuthError] = useState(false);
 
-  const [conn, setConn] = useState(false);
-
-  const [logged_in, setLogged_in] = useState(false);
-
-
-  const [username, setUser] = useState('');
-  const [psw, setPsw] = useState('');
-  const [login_error, setLogin_error] = useState(false);
-
-  const [socket, setSocket] = useState();
-
-
-  useEffect(() => { //conn all avvio
-
-    var soc = new WebSocket('ws://192.168.1.10:8080/');
-    
-    soc.onopen = () => {console.log("ws aperta")}
-    soc.onmessage = ({data}) => {
-      console.log(data);
-
-      const msg = JSON.parse(data);
-      if(msg?.type == 'login' && msg?.ok == true){
-        setLogged_in(true);
-      }
-      if(msg?.type == 'login' && msg?.ok == false){
-        setLogin_error(true);
-      }
+  useEffect(()=>{
+    if(!connected){
+      console.log("connessione...")
+      conn = new connectionHandler(setLogged, setConnected, setAuthError);
+    } else {
+      clearInterval(refreshIntervalId);
     }
-
-    setSocket(soc);
-
-    setConn(true);
-  }, [])
+  }, [connected])
 
 
-  const logIn_button = () => {
-    const msg = JSON.stringify({type: 'login', usr: username, psw: psw});
-    socket.send(msg);
-
-  }
-
-  if(!conn){
+  if(!connected){
+    refreshIntervalId = setInterval(()=>
+      {conn = new connectionHandler(setLogged, setConnected, setAuthError);}
+    ,1000)
     return(
       <Text> Connessione in corso...</Text>
     )
   }
 
-  if(logged_in){
-    return(<Text>Sei Loggato con {username}, {psw}</Text>)
+  if(logged){
+    return(
+      <MainPage conn = {conn} setLogged = {setLogged}></MainPage>
+    )
   } else {
     return(
-    <View>
-      <Text>Effettua il login o registrati!</Text>
-      <TextInput onChangeText = {(value) => {setUser(value)}} />
-      <TextInput onChangeText = {(value) => {setPsw(value)}} />
-      <Button onPress = {logIn_button} title="Log In"/>
-      <Button onPress = {logIn_button} title="Sign Up"/>
-      <Text>{login_error ? 'Dati errati' : ''}</Text>
-    </View>
+      <LoginPage conn = {conn} authError = {authError}></LoginPage>
     )
   }
 }
-

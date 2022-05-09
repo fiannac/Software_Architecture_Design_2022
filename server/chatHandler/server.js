@@ -12,10 +12,8 @@ wss.on('connection', function connection(ws) {
   last = ws.id;
   ws.on('message', function message(data) {
     console.log('received: %s, from: %s', data, ws.id);
-    
     const msg = JSON.parse(data);
     if(msg?.type == 'login'){
-
       if(msg.usr == 'matt.conti' && msg.psw == '123'){
         const reply = JSON.stringify({type: 'login', ok:true})
         ws.send(reply)
@@ -25,9 +23,6 @@ wss.on('connection', function connection(ws) {
         ws.send(reply)
         console.log("Dati sbagliati!");
       }
-
-      
     }
-
   });
 });
