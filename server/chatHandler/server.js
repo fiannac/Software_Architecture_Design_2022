@@ -1,28 +1,77 @@
 const WebSocket = require('ws');
-var uuid = require('uuid');
+const uuid = require('uuid');
+const axios = require('axios');
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+const port = 8888
+
 const users = new Map();
 
-var last = '';
+app.use(cors({
+  origin: '*'
+}));
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 wss.on('connection', function connection(ws) {
   ws.id = uuid.v1();
+  ws.auth = false;
+  ws.userId = '';
   users.set(ws.id, ws);
   last = ws.id;
-  ws.on('message', function message(data) {
+  ws.on('message', async function message(data) {
     console.log('received: %s, from: %s', data, ws.id);
     const msg = JSON.parse(data);
-    if(msg?.type == 'login'){
-      if(msg.usr == 'matt.conti' && msg.psw == '123'){
-        const reply = JSON.stringify({type: 'login', ok:true})
-        ws.send(reply)
-        console.log("Loggato!");
+    /*
+    if(msg?.type == 'auth'){
+       verifica user e psw
+      const checkData = true;
+      if(checkData){
+        ws.auth = true;
+        ws.userId = msg?.usr;
       } else {
-        const reply = JSON.stringify({type: 'login', ok:false})
-        ws.send(reply)
-        console.log("Dati sbagliati!");
+        ws.close();
       }
-    }
+    } else if(ws.auth == false){
+      ws.close();
+    } else{ */
+      if(msg?.type == 'login'){
+        /*gestione login*/
+        if(msg.usr == 'matt.conti' && msg.psw == '123'){
+          const reply = JSON.stringify({type: 'login', ok:true})
+          ws.send(reply)
+          console.log("Loggato!");
+        } else {
+          const reply = JSON.stringify({type: 'login', ok:false})
+          ws.send(reply)
+          console.log("Dati sbagliati!");
+        }
+
+      } else if (msg?.type == 'logout'){
+        console.log("Socket chiusa con %s", ws.id);
+
+        /*gestione logOut*/
+
+        users.delete(ws.id);
+      } else if(msg?.type == 'signup'){
+
+        console.log("Richiesta di registrazione");
+
+        /* handle registrazione*/
+      }
+    //}
   });
+});
+
+
+server.listen(process.env.PORT || port, () => {
+  console.log(`Server started on port ${server.address().port} :)`);
 });
