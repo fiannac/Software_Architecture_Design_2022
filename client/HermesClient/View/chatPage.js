@@ -8,7 +8,7 @@ import {setConnState} from '../App.js'
 export default class ChatPage extends React.Component {
   constructor(prop){
     super()
-
+    console.log("creazione chat")
   }
 
   render(){

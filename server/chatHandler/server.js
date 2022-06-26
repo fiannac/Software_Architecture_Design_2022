@@ -5,8 +5,15 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 
+const bodyParser = require('body-parser');
+
 const app = express();
 const server = http.createServer(app);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
+
 const wss = new WebSocket.Server({ server });
 
 const port = 8888
@@ -17,11 +24,23 @@ app.use(cors({
   origin: '*'
 }));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.post('/register', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({key:"value"}));
+})
+
+app.post('/login', (req, res) => {
+  console.log("Richiesta di login")
+  console.log(req.body.usr)
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ok:true, token:"pippo", id:"69"}));
 })
 
 wss.on('connection', function connection(ws) {
+  console.log("Nuova connessione")
+
+  ws.send(JSON.stringify({type: "auth", ok: true}))
+
   ws.id = uuid.v1();
   ws.auth = false;
   ws.userId = '';
@@ -73,5 +92,5 @@ wss.on('connection', function connection(ws) {
 
 
 server.listen(process.env.PORT || port, () => {
-  console.log(`Server started on port ${server.address().port} :)`);
+  console.log(`HTTP Server started on port ${server.address().port} :)`);
 });
