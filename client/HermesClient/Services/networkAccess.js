@@ -2,12 +2,14 @@ import { setConnState, setLoggedState } from "../App.js";
 
 export default class NetworkAccess {
     constructor(controller, ws = 'ws://localhost:8888/') {
-        this.ws = this.createWS(ws)
+        this.ws = this.createWS(ws,controller)
         this.controller = controller
+
     }
     
-    createWS(ws){
+    createWS(ws,controller){
         ws = new WebSocket(ws);
+        ws.controller = controller
         ws.onopen = this.WSopen; 
         ws.onclose = this.WSclose;
         ws.onmessage = this.WSmsg;
@@ -27,8 +29,7 @@ export default class NetworkAccess {
         if(msg?.type == 'auth' && msg?.ok == true){
             setLoggedState(true)
         } else if(msg?.type == 'msg'){
-            //chiamata al contorller ricezione dei messaggi
-            controller.rcvMsg(msg.text, msg.usernameDest, msg.timestamp)
+            this.controller.rcvMsg(msg.text, msg.dest, msg.timestamp)
         }
     }
 
@@ -39,8 +40,8 @@ export default class NetworkAccess {
         this.ws.send(jmsg);
     }
 
-    msgRequest(id, destId, token, msgText){
-        const response = fetch('http://localhost:8888/msg', 
+    async msgRequest(id, destId, token, msgText){
+        const response = await fetch('http://localhost:8888/msg', 
             {
             method: 'POST',
             headers: {
@@ -57,8 +58,8 @@ export default class NetworkAccess {
         return response;
     }
 
-    rcvOldMsgReq(id, token){
-        const response = fetch('http://localhost:8888/storedmsg', 
+    async rcvOldMsgReq(id, token){
+        const response = await fetch('http://localhost:8888/storedmsg', 
             {
             method: 'POST',
             headers: {
@@ -73,8 +74,8 @@ export default class NetworkAccess {
         return response;
     }
 
-    registerRequest(user, email, psw, pubk, prvk){
-        const response = fetch('http://localhost:8888/register', 
+    async registerRequest(user, email, psw, pubk, prvk){
+        return await fetch('http://localhost:8888/register', 
             {
             method: 'POST',
             headers: {
@@ -83,13 +84,12 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 usr: user,
-                email: email,
+                mail: email,
                 psw: psw,
                 pubk:pubk,
                 prvk:prvk
             })
         }).then((respone) => respone.json()).then(json => json.ok)
-        return response;
     }
 
     async loginRequest(usr, psw){
@@ -121,8 +121,8 @@ export default class NetworkAccess {
 
     }
 
-    userDataRequest(destUsr, id, token){
-        const response = fetch('http://localhost:8888/userdata', 
+    async userDataRequest(destUsr, id, token){
+        return await fetch('http://localhost:8888/userdata', 
             {
             method: 'POST',
             headers: {
@@ -135,7 +135,6 @@ export default class NetworkAccess {
                 token: token
             })
         }).then((respone) => respone.json())
-        return response;
     }
 
 }

@@ -1,21 +1,23 @@
 export default class RegistrationController {
-    constructor(network, loggedUser) {
+    constructor(network, crypto) {
         this.network = network
+        this.crypto = crypto
     }
 
-    registerUser(user, email, psw){  
-        const pubk = 0;
-        const prvk = 0;
-        //cripta la prvk con la password
-        //hasha la psw
-        
-        if(this.network.registerRequest(user, email, psw, pubk, prvk)){
-            return true;
-            //torna a login page
-        } else {
-            //mostra errore a video?!
-        }
+    async registerUser(user, email, psw){  
+        const keys = this.crypto.generateKeys();
+        const prk = keys.prk;
+        const puk = keys.puk;
 
+        const Cprk = this.crypto.encryptPrk(psw,prk)
+        const Hpsw = this.crypto.hashPsw(psw)
+        
+        const res = await this.network.registerRequest(user, email, Hpsw, puk, Cprk)
+        if(res == true){
+            return true;
+        } else {
+            return false;
+        }
     }
     
 }

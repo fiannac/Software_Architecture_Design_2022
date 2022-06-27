@@ -4,13 +4,13 @@ export default class CreateChatController {
         this.loggedUser = loggedUser
     }
 
-    createChat(username){  
+    async createChat(username){  
         //se la chat esiste già non la devo creare.
 
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
 
-        const data = this.network.userDataRequest(username, id, token) //forse jsonparse
+        const data = await this.network.userDataRequest(username, id, token) 
 
         const idDest = data.id
         const pubk = data.pubk

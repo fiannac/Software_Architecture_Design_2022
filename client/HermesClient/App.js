@@ -20,7 +20,7 @@ export let setConnState
 
 const LoginStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
-//const networkService = new networkAccess();
+
 
 
 
@@ -35,9 +35,6 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
-
-   // networkService.loginRequest('zio', 'pera') //da togliere
-    
 
   }
 
@@ -62,7 +59,7 @@ export default class App extends React.Component {
       <NavigationContainer>
         <LoginStack.Navigator initialRouteName="LoginPage">
           <LoginStack.Screen name="LoginPage" component={LoginPage} initialParams={{controller : this.controller}}/>
-          <LoginStack.Screen name="RegisterPage" component = {RegistrationPage} />
+          <LoginStack.Screen name="RegisterPage" component = {RegistrationPage} initialParams={{controller : this.controller}}/>
         </LoginStack.Navigator>
       </NavigationContainer>
       );

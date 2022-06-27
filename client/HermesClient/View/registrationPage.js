@@ -1,15 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 
 export default class RegistrationPage extends React.Component {
-  constructor(prop){
-    super()
+  constructor(props){
+    super(props)
+    this.state = {
+      errore: false
+    }
     this.usrname = ''
     this.psw = ''
     this.mail = ''
+    this.controller = props.route.params.controller
+
+    this.registratiButton = this.registratiButton.bind(this);
+  }
+
+  async registratiButton(){
+    //faccio il controllo di validità della psw
+    
+    const res = await this.controller.registerUser(this.usrname, this.mail, this.psw)
+
+    console.log(res)
+    if(res == true){
+      this.props.navigation.goBack()
+    } else {
+      this.setState({errore:true})
+    }
   }
 
   render(){
@@ -20,7 +38,9 @@ export default class RegistrationPage extends React.Component {
         <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
         <TextInput onChangeText = {(value) => {this.psw = value}} secureTextEntry = {true} style={styles.inserimentoTestoPsw} placeholder='Inserisci password'/>
         
-        <Button title="Registrati!" onPress={() => console.log("zio pera")} style={styles.bottone}/>
+        <Button title="Registrati!" onPress={this.registratiButton} style={styles.bottone}/>
+
+        <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
       </View>
     );
   }

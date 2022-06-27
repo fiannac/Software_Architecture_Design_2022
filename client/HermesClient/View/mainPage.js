@@ -22,11 +22,11 @@ export default class MainPage extends React.Component {
     notifyMessage = this.notifyMessage
   }
 
-  notifyChat(user){
+  notifyChat = (user)=>{
     this.setState({chats:[...this.state.chats, {user:user, chat:[]}]})
   }
 
-  notifyMessage(user,msg){
+  notifyMessage = (user,msg)=>{
     for(let i=0; i<this.state.chats.length; i++){
       if(this.state.chats[i].user == user){
         this.state.chats[i].chat = [...this.state.chats[i].chat,msg]
