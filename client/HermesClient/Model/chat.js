@@ -1,4 +1,4 @@
-import {messaggio} from './messaggio.js'
+import messaggio from './messaggio.js'
 
 export default class Chat{
     constructor(id, timestamp, user){

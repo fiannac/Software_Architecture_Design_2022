@@ -1,8 +1,9 @@
 import { setConnState, setLoggedState } from "../App.js";
 
-export default class ConnectionHandler {
-    constructor(ws = 'ws://localhost:8888/') {
+export default class NetworkAccess {
+    constructor(controller, ws = 'ws://localhost:8888/') {
         this.ws = this.createWS(ws)
+        this.controller = controller
     }
     
     createWS(ws){
@@ -27,8 +28,11 @@ export default class ConnectionHandler {
             setLoggedState(true)
         } else if(msg?.type == 'msg'){
             //chiamata al contorller ricezione dei messaggi
+            controller.rcvMsg(msg.text, msg.usernameDest, msg.timestamp)
         }
     }
+
+    
 
     authWSRequest(id, token){
         const jmsg = JSON.stringify({type: 'authWS', id: id, token: token});
@@ -69,7 +73,7 @@ export default class ConnectionHandler {
         return response;
     }
 
-    registerRequest(user, email, psw){
+    registerRequest(user, email, psw, pubk, prvk){
         const response = fetch('http://localhost:8888/register', 
             {
             method: 'POST',
@@ -80,14 +84,16 @@ export default class ConnectionHandler {
             body: JSON.stringify({
                 usr: user,
                 email: email,
-                psw: psw
+                psw: psw,
+                pubk:pubk,
+                prvk:prvk
             })
         }).then((respone) => respone.json()).then(json => json.ok)
         return response;
     }
 
-    loginRequest(usr, psw){
-        const response = fetch('http://localhost:8888/login', 
+    async loginRequest(usr, psw){
+        const response = await fetch('http://localhost:8888/login', 
             {
             method: 'POST',
             headers: {
@@ -98,7 +104,7 @@ export default class ConnectionHandler {
                 usr: usr,
                 psw: psw
             })
-        }).then((respone) => respone.json())
+        }).then((res) => res.json()).then((res) => {return res})
 
         if(response.ok == true){
             const ok = true;
@@ -106,14 +112,16 @@ export default class ConnectionHandler {
             const id = response.id;
             return {ok, token, id};
         } else {
+            console.log(response.ok)
             const ok = false;
             const token = "";
             const id = "";
             return {ok, token, id};
         }
+
     }
 
-    UserDataRequest(destUsr, id, token){
+    userDataRequest(destUsr, id, token){
         const response = fetch('http://localhost:8888/userdata', 
             {
             method: 'POST',

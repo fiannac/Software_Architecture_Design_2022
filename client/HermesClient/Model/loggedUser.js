@@ -1,9 +1,10 @@
-import {Chat} from './chat.js'
-import {User} from './user.js'
+import Chat from './chat.js'
+import User from './user.js'
 
 import { setConnState, setLoggedState } from "../App.js";
 import { useReducer } from 'react';
-import user from './user.js';
+
+import {notifyChat,notifyMessage} from '../View/mainPage.js';
 
 export default class loggedUser{
 
@@ -33,23 +34,28 @@ export default class loggedUser{
     setPsw(psw){
         this.password = psw
     }
-    setPrK(prk){
+    setPrk(prk){
         this.prk = prk
+    }
+    setToken(token){
+        this.token = token
     }
 
     createChat(id, username, pk){
         const user = new User(id, username, pk)
         const chat = new Chat('0', '0', user)
         this.chats.set(username,chat)
+
+        notifyChat(username)
     }
     createMessage(text, usernameDest, timestamp){
         const chat = this.chats.get(usernameDest);
         chat.addMessage(text,'0','0');
-    }
 
+        notifyMessage(usernameDest,text)
+    }
     getChat(usernameDest){
         return this.chats.get(usernameDest).msgs();
     }
-
     
 }

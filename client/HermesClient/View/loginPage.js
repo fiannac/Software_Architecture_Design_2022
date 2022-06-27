@@ -7,13 +7,14 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {setConnState} from '../App.js'
 
 export default class LoginPage extends React.Component {
-  constructor(prop){
-    super()
+  constructor(props){
+    super(props)
     this.state = {
       hidePass: true,
     }
-    console.log(prop.route.params.val)
-    this.navigation = prop.navigation;
+    this.navigation = props.navigation;
+
+    this.controller = props.route.params.controller
     this.usrname = '';
     this.psw = '';
   }
@@ -23,7 +24,7 @@ export default class LoginPage extends React.Component {
     return (
       <View>
         <Text>Effettua il login o registrati!</Text>
-        <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
+        <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci nome utente"/>
         <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
         <Icon
           name={this.state.hidePass ? 'eye-slash' : 'eye'}
@@ -32,7 +33,7 @@ export default class LoginPage extends React.Component {
           onPress={() => this.setState({hidePass: !this.state.hidePass})}
         />
         <TextInput/>
-        <Button title="Log in" onPress = {()=>setConnState()} style={styles.bottone} />
+        <Button title="Log in" onPress = {()=>this.controller.login(this.usrname, this.psw)} style={styles.bottone} />
         <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} style={styles.bottone}/>
       </View>
     );

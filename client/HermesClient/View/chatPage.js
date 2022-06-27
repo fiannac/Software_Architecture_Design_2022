@@ -6,16 +6,18 @@ import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 import {setConnState} from '../App.js'
 
 export default class ChatPage extends React.Component {
-  constructor(prop){
-    super()
-    console.log("creazione chat")
+  constructor(props){
+    super(props)
   }
 
   render(){
-
+    
     return (
       <View>
-        <Text>Chatpage!</Text>
+    
+        {this.props.chat.map(( (msg,i) => (
+            <Text key = {i}>{msg}</Text>
+        )))}
       </View>
     );
   }

@@ -4,32 +4,60 @@ import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 import {setConnState} from '../App.js'
+import ChatPage from './chatPage.js'
+
+export let notifyChat
+export let notifyMessage
 
 export default class MainPage extends React.Component {
-  constructor(prop){
-    super()
-    this.navigation = prop.navigation
+  constructor(props){
+    super(props)
     this.state = {
-      chats : [1,2,3,4,5]
+      chats : [],
+      chatOpen : false,
+      chatOpenId : 0
     }
 
-    const f = () => {
-      console.log("wewe")
-      this.setState({chats: [0,0,0,0,0,0,0,0]})
+    notifyChat = this.notifyChat
+    notifyMessage = this.notifyMessage
+  }
+
+  notifyChat(user){
+    this.setState({chats:[...this.state.chats, {user:user, chat:[]}]})
+  }
+
+  notifyMessage(user,msg){
+    for(let i=0; i<this.state.chats.length; i++){
+      if(this.state.chats[i].user == user){
+        this.state.chats[i].chat = [...this.state.chats[i].chat,msg]
+      }
     }
 
-    let myTimeout = setTimeout(f, 1000);
+    this.setState({chats:[...this.state.chats]})
   }
 
   render(){
-    console.log("Creazione mainpage")
-    return (
+    if(this.state.chatOpen == false){
+      return (
+        <View>
+          <Text>Mainpage!</Text>
+          
+          {this.state.chats.map(( (id,i) => (
+            <Button key = {i} title = {id.user} onPress={()=>this.setState({chatOpen:true, chatOpenId:i})}/>
+          )))}
+        </View>
+      );
+    } else {
+      return(
       <View>
-        <Text>Mainpage!</Text>
-        {this.state.chats.map((id => (
-          <Button title = {id} onPress={() => this.navigation.navigate('ChatPage',{state:this.chats})}/>
-        )))}
+        <Button onPress = {()=>this.setState({chatOpen:false})}/>
+        <ChatPage chat = {this.state.chats[this.state.chatOpenId].chat}/>
       </View>
-    );
+      )      
+    }
   }
 }
+
+
+//<Button title = "Aggiungi chat" onPress={()=>this.createChat('Mimmo' + this.state.chats.length)}></Button>
+//<Button title = "Aggiungi msg" onPress={()=>this.createMessage('Mimmo0','we puppy')}></Button>
