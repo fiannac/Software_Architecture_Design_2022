@@ -1,8 +1,8 @@
 import { NativeModules, Platform } from 'react-native'
 
 
-import RSAKey from 'react-native-rsa';
-const bcrypt = require('bcrypt');
+var RSAKey = require('react-native-rsa');
+import bcrypt from 'bcryptjs'
 var CryptoJS = require("crypto-js");
 
 
@@ -10,12 +10,12 @@ export default class Crypto {
 
     constructor(){
         this.rsa = new RSAKey();
+        this.salt=bcrypt.genSaltSync(10)
     }
     
     encryptPrk(prk, password){ // prk è ciò che viene cifrato con la password
     
         var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(password), prk).toString();
-        console.log(ciphertext);
         return ciphertext;
     }
     decryptPrk(ciphertext, password){ //cifr
@@ -25,14 +25,14 @@ export default class Crypto {
         return decryptedData;
     }
 
+    
 
-ù
-    async hashPsw(psw){
-    const salt = await bcrypt.genSalt(6);
-    const hashed = await bcrypt.hash(psw, salt);
-    return hashed;
+    hashPsw(psw){
+
+        const hashedPassword = bcrypt.hashSync(psw, this.salt)
+        return hashedPassword;
+        return psw
     }
-
     
     generateKeys(){
     const bits = 1024;

@@ -68,14 +68,12 @@ wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({ok:true, type:'auth'}))
   });
 
-  var intervalId = setInterval(function() {
+  /*var intervalId = setInterval(function() {
     console.log("invio...")
   ws.send(JSON.stringify({type:'msg',dest:'zio', text:'cazz000000000000o'}))
 }, 5000);
-
-
+*/
 });
-
 
 server.listen(process.env.PORT || port, () => {
   console.log(`HTTP Server started on port ${server.address().port} :)`);

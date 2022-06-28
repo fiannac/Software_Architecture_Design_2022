@@ -24,51 +24,47 @@ export default class LoginPage extends React.Component {
     return (
       <View>
         <Text>Effettua il login o registrati!</Text>
-        <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci nome utente"/>
-        <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
-        <Icon
-          name={this.state.hidePass ? 'eye-slash' : 'eye'}
-          size={15}
-          color="grey"
-          onPress={() => this.setState({hidePass: !this.state.hidePass})}
-        />
+        <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
+        <View style={styles.stilePassword}>
+          <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
+          <Icon
+            name={this.state.hidePass ? 'eye-slash' : 'eye'}
+            size={15}
+            style={{align: 'center'}}
+            color="grey"
+            onPress={() => this.setState({hidePass: !this.state.hidePass})}
+          />
+        </View>
         <TextInput/>
-        <Button title="Log in" onPress = {()=>this.controller.login(this.usrname, this.psw)} style={styles.bottone} />
-        <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} style={styles.bottone}/>
+        <View style={styles.bottone}>
+          <View style={styles.bottoneLogin}>
+            <Button title="Log in" onPress = {()=>this.controller.login(this.usrname, this.psw)}  />
+            <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} />
+          </View>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  stilePassword: {
+    flexDirection: 'row',
+  },
   inserimentoTestoUser: {
     borderWidth: 1,
-    marginVertical: 5,
-    width: 200,
-    marginHorizontal: 50,
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: 'black',
     backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
-    marginBottom: 10,
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10
+    marginVertical: 5,
+    width: 200
   },
   inserimentoTestoPsw: {
     borderWidth: 1,
+    backgroundColor: 'white',
     marginVertical: 5,
     width: 200
+  },
+  bottoneLogin: {
+    marginRight: 5,
   },
   bottone: {
     flexDirection: "row",//allineo sull'asse x

@@ -9,7 +9,7 @@ export default class RegistrationController {
         const prk = keys.prk;
         const puk = keys.puk;
 
-        const Cprk = this.crypto.encryptPrk(psw,prk)
+        const Cprk = this.crypto.encryptPrk(prk, psw)
         const Hpsw = this.crypto.hashPsw(psw)
         
         const res = await this.network.registerRequest(user, email, Hpsw, puk, Cprk)

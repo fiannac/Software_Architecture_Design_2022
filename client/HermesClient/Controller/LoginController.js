@@ -16,7 +16,7 @@ export default class LoginController {
             this.loggedUser.setToken(reply.token)
             this.loggedUser.setPsw(Opsw)
             this.loggedUser.setUser(user)
-            this.loggedUser.setPrk(this.crypto.decryptPrk(Opsw,reply.prk))
+            this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk, Opsw))
 
             const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token);
             for(let msg of msgs.list){
