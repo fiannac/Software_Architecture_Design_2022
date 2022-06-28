@@ -32,15 +32,15 @@ export default class RegistrationPage extends React.Component {
   render(){
     return (
         <View>
-        <Text>Registrati con username e password</Text>
-        <TextInput onChangeText = {(value) => {this.mail = value}} style={styles.inserimentoTestoMail} placeholder="Inserisci mail"/>
-        <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
-        <TextInput onChangeText = {(value) => {this.psw = value}} secureTextEntry = {true} style={styles.inserimentoTestoPsw} placeholder='Inserisci password'/>
-        
-        <Button title="Registrati!" onPress={this.registratiButton} style={styles.bottone}/>
-
-        <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
-      </View>
+          <Text>Registrati con username e password</Text>
+          <TextInput onChangeText = {(value) => {this.mail = value}} style={styles.inserimentoTestoMail} placeholder="Inserisci mail"/>
+          <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
+          <TextInput onChangeText = {(value) => {this.psw = value}} secureTextEntry = {true} style={styles.inserimentoTestoPsw} placeholder='Inserisci password'/>
+          <View style={styles.bottone}>
+            <Button title="Registrati!" onPress={this.registratiButton}/>
+          </View>
+          <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
+        </View>
     );
   }
 }
@@ -49,20 +49,24 @@ const styles = StyleSheet.create({
   inserimentoTestoUser: {
     borderWidth: 1,
     marginVertical: 5,
-    width: 200
+    width: 200,
+    marginLeft: 5,
   },
   inserimentoTestoPsw: {
     borderWidth: 1,
     marginVertical: 5,
-    width: 200
+    width: 200, 
+    marginLeft: 5,
   },
   inserimentoTestoMail: {
     borderWidth: 1,
     marginVertical: 5,
-    width: 200
+    width: 200,
+    marginLeft: 5,
   },
   bottone: {
-    flexDirection: "row",//allineo sull'asse x
     marginVertical: 5,
+    marginLeft: 5,
+    width: 100,
   }
 });

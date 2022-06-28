@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, View, Button, TextInput, TouchableOpacity } from 'react-native';
+import { Avatar, Text } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 import {setConnState} from '../App.js'
@@ -8,7 +11,7 @@ import ChatPage from './chatPage.js'
 
 export let notifyChat
 export let notifyMessage
-
+const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
 export default class MainPage extends React.Component {
   constructor(props){
     super(props)
@@ -51,11 +54,37 @@ export default class MainPage extends React.Component {
   render(){
     if(this.state.chatOpen == false){
       return (
-        <View>
+        <View style={{ paddingVertical: 15, paddingHorizontal: 30 }}>
+          <View style={styles.container}>
+            <TouchableOpacity activeOpacity={0.5}>
+              <Avatar
+                rounded
+                source={{
+                  uri: PLACEHOLDER_AVATAR,
+                }}
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+            <TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5}>
+            <Icon name="search" size={18} color="black" />
+            </TouchableOpacity>
+            </View>
+          </View>
+
+          <Text h4 style={{ color: 'white', marginTop: 15 }}>
+            Messages
+          </Text>
+
           <Text>Mainpage!</Text>
           
-          <TextInput onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
-          <Button onPress={this.handleCreateChat}></Button>
+          <TextInput placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
+          <Button onPress={this.handleCreateChat} title="Seleziona nuovo contatto"></Button>
 
           {this.state.chats.map(( (id,i) => (
             <Button key = {i} title = {id.user} onPress={()=>this.setState({chatOpen:true, chatOpenNumber:i})}/>
@@ -73,6 +102,12 @@ export default class MainPage extends React.Component {
   }
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+})
 //<Button title = "Aggiungi chat" onPress={()=>this.createChat('Mimmo' + this.state.chats.length)}></Button>
 //<Button title = "Aggiungi msg" onPress={()=>this.createMessage('Mimmo0','we puppy')}></Button>

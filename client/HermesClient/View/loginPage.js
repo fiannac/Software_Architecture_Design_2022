@@ -30,7 +30,7 @@ export default class LoginPage extends React.Component {
           <Icon
             name={this.state.hidePass ? 'eye-slash' : 'eye'}
             size={15}
-            style={{align: 'center'}}
+            style={{marginLeft: 5}}
             color="grey"
             onPress={() => this.setState({hidePass: !this.state.hidePass})}
           />
@@ -38,8 +38,8 @@ export default class LoginPage extends React.Component {
         <View style={styles.bottone}>
           <View style={styles.bottoneLogin}>
             <Button title="Log in" onPress = {()=>this.controller.login(this.usrname, this.psw)}  />
-            <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} />
           </View>
+          <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} />
         </View>
       </View>
     );
@@ -49,21 +49,25 @@ export default class LoginPage extends React.Component {
 const styles = StyleSheet.create({
   stilePassword: {
     flexDirection: 'row',
+    alignItems: 'center', 
   },
   inserimentoTestoUser: {
     borderWidth: 1,
     backgroundColor: 'white',
     marginVertical: 5,
+    marginLeft: 5,
     width: 200
   },
   inserimentoTestoPsw: {
     borderWidth: 1,
     backgroundColor: 'white',
     marginVertical: 5,
+    marginLeft: 5,
     width: 200
   },
   bottoneLogin: {
     marginRight: 5,
+    marginLeft: 5,
   },
   bottone: {
     flexDirection: "row",//allineo sull'asse x
