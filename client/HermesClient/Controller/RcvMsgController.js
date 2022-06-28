@@ -6,13 +6,12 @@ export default class RcvMsgController {
         this.crypto = crypto
     }
 
-    rcvMsg(text, idMittente, timestamp){  
+    async rcvMsg(text, idMittente, timestamp){  
         if(!this.loggedUser.chats.has(idMittente)){
-            this.createChat.createChatFromId(idMittente)
-            
+            const res = await this.createChat.createChatFromId(idMittente)
         }
-
         this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), idMittente, 0)
+        
         //stora in locale
     }
     

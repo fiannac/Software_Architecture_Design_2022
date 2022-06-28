@@ -44,13 +44,11 @@ export default class loggedUser{
     createChat(id, username, puk){
         const user = new User(id, username, puk)
         const chat = new Chat('0', '0', user)
-        console.log("Aggiunta chat ", id, chat)
         this.chats.set(id,chat)
-
+        
         notifyChat(id, username)
     }
     createMessage(text, id, timestamp){
-        console.log(text, id, this.chats, this.chats.get(id))
         const chat = this.chats.get(id);
         chat.addMessage(text,'0','0');
         notifyMessage(id,text)
@@ -60,7 +58,6 @@ export default class loggedUser{
     }
 
     getUserPbk(idMittente){
-        console.log(this.chats, idMittente)
         return this.chats.get(idMittente).getPubk()
     }
     getUserUserName(idMittente){

@@ -24,9 +24,9 @@ export default class LoginController {
             const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
             for(let msg of msgs.list){
                 if(!this.loggedUser.chats.has(msg.idMittente)){
-                    this.createChat.createChatFromId(msg.idMittente)
-                }
-                this.loggedUser.createMessage(this.crypto.decryptMsg(msg.text, this.loggedUser.prk), msg.dest, 0)
+                    const res = await this.createChat.createChatFromId(msg.idMittente)
+                } 
+                this.loggedUser.createMessage(this.crypto.decryptMsg(msg.text, this.loggedUser.prk), msg.idMittente, 0)
             }
             
             //storo queste info in locale per i prossimi login

@@ -41,7 +41,6 @@ export default class CreateChatController {
         const puk = JSON.stringify(data.puk)
         //controlla se effettivamente l'utente esiste!
         this.loggedUser.createChat(idMittente, userNameMittente, puk)
-        console.log("Chat creata")
         return true;
         //memorizza chat in locale
     }
