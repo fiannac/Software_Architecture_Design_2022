@@ -29,18 +29,17 @@ export default class NetworkAccess {
         if(msg?.type == 'auth' && msg?.ok == true){
             setLoggedState(true)
         } else if(msg?.type == 'msg'){
-            this.controller.rcvMsg(msg.text, msg.dest, msg.timestamp)
+            console.log(msg)
+            this.controller.rcvMsg(msg.text, msg.idMittente, msg.timestamp)
         }
     }
-
-    
 
     authWSRequest(id, token){
         const jmsg = JSON.stringify({type: 'authWS', id: id, token: token});
         this.ws.send(jmsg);
     }
 
-    async msgRequest(id, destId, token, msgText){
+    async msgRequest(idMittente, idDestinatario, token, text){
         const response = await fetch('http://localhost:8888/msg', 
             {
             method: 'POST',
@@ -49,16 +48,16 @@ export default class NetworkAccess {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: id,
-                idDest: destId,
+                idMittente: idMittente,
+                idDestinatario: idDestinatario,
                 token: token,
-                msgText: msgText
+                text: text
             })
         }).then((respone) => respone.json()).then(json => json.ok)
         return response;
     }
 
-    async rcvOldMsgReq(id, token){
+    async rcvOldMsgReq(idDestinatario, token){
         const response = await fetch('http://localhost:8888/storedmsg', 
             {
             method: 'POST',
@@ -67,14 +66,14 @@ export default class NetworkAccess {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: id,
+                idDestinatario: idDestinatario,
                 token: token
             })
         }).then((respone) => respone.json())
         return response;
     }
 
-    async registerRequest(user, email, psw, pubk, prvk){
+    async registerRequest(user, email, psw, puk, prk){
         return await fetch('http://localhost:8888/register', 
             {
             method: 'POST',
@@ -83,11 +82,11 @@ export default class NetworkAccess {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                usr: user,
-                mail: email,
-                psw: psw,
-                pubk:pubk,
-                prvk:prvk
+                userName: user,
+                email: email,
+                password: psw,
+                puk:puk,
+                prk:prk
             })
         }).then((respone) => respone.json()).then(json => json.ok)
     }
@@ -101,8 +100,8 @@ export default class NetworkAccess {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                usr: usr,
-                psw: psw
+                userName: usr,
+                password: psw
             })
         }).then((res) => res.json()).then((res) => {return res})
 
@@ -110,7 +109,8 @@ export default class NetworkAccess {
             const ok = true;
             const token = response.token;
             const id = response.id;
-            return {ok, token, id};
+            const prk = response.prk;
+            return {ok, token, id, prk};
         } else {
             console.log(response.ok)
             const ok = false;
@@ -130,8 +130,24 @@ export default class NetworkAccess {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                usr: destUsr,
-                id: id,
+                userNameDest: destUsr,
+                idMittente: id,
+                token: token
+            })
+        }).then((respone) => respone.json())
+    }
+
+    async userDataFromIdRequest(idMittente, id, token){
+        return await fetch('http://localhost:8888/userdataId', 
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idRichiesto: idMittente,
+                idMittente: id,
                 token: token
             })
         }).then((respone) => respone.json())

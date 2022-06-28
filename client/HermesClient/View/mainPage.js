@@ -15,25 +15,37 @@ export default class MainPage extends React.Component {
     this.state = {
       chats : [],
       chatOpen : false,
-      chatOpenId : 0
+      chatOpenNumber : 0
     }
+
+    this.newUser = ''
+    this.controller = props.controller
 
     notifyChat = this.notifyChat
     notifyMessage = this.notifyMessage
+
+    this.handleCreateChat = this.handleCreateChat.bind(this)
   }
 
-  notifyChat = (user)=>{
-    this.setState({chats:[...this.state.chats, {user:user, chat:[]}]})
+  notifyChat = (id, userName)=>{
+    this.setState({chats:[...this.state.chats, {user:userName, id:id, chat:[]}]})
   }
 
-  notifyMessage = (user,msg)=>{
+  notifyMessage = (id,msg)=>{
     for(let i=0; i<this.state.chats.length; i++){
-      if(this.state.chats[i].user == user){
+      if(this.state.chats[i].id == id){
         this.state.chats[i].chat = [...this.state.chats[i].chat,msg]
       }
     }
 
     this.setState({chats:[...this.state.chats]})
+  }
+
+  handleCreateChat = () =>{
+    if(this.newUser != ''){
+      this.controller.createChatFromUsername(this.newUser)
+      this.textInput.clear()
+    }
   }
 
   render(){
@@ -42,8 +54,11 @@ export default class MainPage extends React.Component {
         <View>
           <Text>Mainpage!</Text>
           
+          <TextInput onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
+          <Button onPress={this.handleCreateChat}></Button>
+
           {this.state.chats.map(( (id,i) => (
-            <Button key = {i} title = {id.user} onPress={()=>this.setState({chatOpen:true, chatOpenId:i})}/>
+            <Button key = {i} title = {id.user} onPress={()=>this.setState({chatOpen:true, chatOpenNumber:i})}/>
           )))}
         </View>
       );
@@ -51,7 +66,7 @@ export default class MainPage extends React.Component {
       return(
       <View>
         <Button onPress = {()=>this.setState({chatOpen:false})}/>
-        <ChatPage chat = {this.state.chats[this.state.chatOpenId].chat}/>
+        <ChatPage controller = {this.controller} chat = {this.state.chats[this.state.chatOpenNumber].chat} userName = {this.state.chats[this.state.chatOpenNumber].user} id = {this.state.chats[this.state.chatOpenNumber].id}/>
       </View>
       )      
     }

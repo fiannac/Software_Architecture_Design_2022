@@ -12,4 +12,11 @@ export default class Chat{
         const msg = new messaggio(testo, timestamp, type)
         this.msgs.push(msg)
     }
+
+    getPubk(){
+        return this.user.pk;
+    }
+    getUserName(){
+        return this.user.username;
+    }
 }    

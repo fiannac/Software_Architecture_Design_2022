@@ -29,7 +29,7 @@ export default class loggedUser{
         this.id = id
     }
     setUser(usr){
-        this.usr = usr
+        this.userName = usr
     }
     setPsw(psw){
         this.password = psw
@@ -41,21 +41,30 @@ export default class loggedUser{
         this.token = token
     }
 
-    createChat(id, username, pk){
-        const user = new User(id, username, pk)
+    createChat(id, username, puk){
+        const user = new User(id, username, puk)
         const chat = new Chat('0', '0', user)
-        this.chats.set(username,chat)
+        console.log("Aggiunta chat ", id, chat)
+        this.chats.set(id,chat)
 
-        notifyChat(username)
+        notifyChat(id, username)
     }
-    createMessage(text, usernameDest, timestamp){
-        const chat = this.chats.get(usernameDest);
+    createMessage(text, id, timestamp){
+        console.log(text, id, this.chats, this.chats.get(id))
+        const chat = this.chats.get(id);
         chat.addMessage(text,'0','0');
-
-        notifyMessage(usernameDest,text)
+        notifyMessage(id,text)
     }
-    getChat(usernameDest){
-        return this.chats.get(usernameDest).msgs();
+    getChat(idMittente){
+        return this.chats.get(idMittente).msgs();
+    }
+
+    getUserPbk(idMittente){
+        console.log(this.chats, idMittente)
+        return this.chats.get(idMittente).getPubk()
+    }
+    getUserUserName(idMittente){
+        return this.chats.get(idMittente).getUserName()
     }
     
 }

@@ -35,7 +35,6 @@ export default class LoginPage extends React.Component {
             onPress={() => this.setState({hidePass: !this.state.hidePass})}
           />
         </View>
-        <TextInput/>
         <View style={styles.bottone}>
           <View style={styles.bottoneLogin}>
             <Button title="Log in" onPress = {()=>this.controller.login(this.usrname, this.psw)}  />

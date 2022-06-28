@@ -13,6 +13,7 @@ import ChatPage from './View/chatPage.js';
 
 import Controller from './Controller/Controller.js';
 
+import Crypto from './Services/crypto.js';
 import networkAccess from './Services/networkAccess.js'
 
 export let setLoggedState
@@ -65,7 +66,7 @@ export default class App extends React.Component {
       );
     } else {
       return(
-        <MainPage/>
+        <MainPage controller = {this.controller}/>
       );
     }
     

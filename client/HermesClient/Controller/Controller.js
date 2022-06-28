@@ -15,14 +15,17 @@ export default class Controller{
         this.crypto = new Crypto()
 
         this.CreateChatController = new CreateChatController(this.NetworkAccess, this.loggedUser)
-        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto)
-        this.RcvMsgController = new RcvMsgController(this.NetworkAccess, this.loggedUser, this.crypto)
+        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController)
+        this.RcvMsgController = new RcvMsgController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController)
         this.RegistrationController = new RegistrationController(this.NetworkAccess, this.crypto)
         this.SendMessageController = new SendMessageController(this.NetworkAccess, this.loggedUser, this.crypto)
     }
 
-    async createChat(username){
-        this.CreateChatController.createChat(username)
+    async createChatFromUsername(username){
+        return await this.CreateChatController.createChatFromUsername(username)
+    }
+    async createChatFromId(id){
+        return await this.CreateChatController.createChatFromId(id)
     }
     async login(user, psw){
         this.LoginController.login(user,psw)

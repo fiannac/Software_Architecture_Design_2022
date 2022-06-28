@@ -1,23 +1,19 @@
 export default class SendMessageController {
-    constructor(network, loggedUser) {
+    constructor(network, loggedUser, crypto) {
         this.network = network
         this.loggedUser = loggedUser
+        this.crypto = crypto
     }
 
-    async inviaMessaggio(dest, text){  
-
-        //fetcha dal database la pubk del destinatario, cripta il testo.
-
-        //fetcha id, destId, token
+    async inviaMessaggio(idDest, text){  
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
-        const destId = 0; //aggiungere metodi al loggedUser
-        const destUser = user;
-        //cripta il testo
-        const res = await this.network.msgRequest(id, destId, token, text);
-
+        const destPubk = this.loggedUser.getUserPbk(idDest)
+        const ctext = this.crypto.encryptMsg(text, destPubk)
+        
+        const res = await this.network.msgRequest(id, idDest, token, ctext);
+        this.loggedUser.createMessage(text, idDest, 0)
         //salva in locale il messaggio
-        this.loggedUser.createMessage(text, destUser, 0)
     }
     
 }

@@ -1,20 +1,18 @@
 export default class RcvMsgController {
-    constructor(network, loggedUser, crypto) {
+    constructor(network, loggedUser, crypto, createChat) {
         this.network = network
         this.loggedUser = loggedUser
+        this.createChat = createChat
         this.crypto = crypto
     }
 
-    rcvMsg(text, usernameDest, timestamp){  
-        console.log(usernameDest)
-        if(!this.loggedUser.chats.has(usernameDest)){
-            //devo fetchare id, pubk zio peto dal network
-            const data = this.network.userDataRequest(usernameDest, this.loggedUser.id, this.loggedUser.token) 
-            const idDest = data.id
-            const pubk = data.pubk
-            this.loggedUser.createChat(idDest, usernameDest,pubk)
+    rcvMsg(text, idMittente, timestamp){  
+        if(!this.loggedUser.chats.has(idMittente)){
+            this.createChat.createChatFromId(idMittente)
+            
         }
-        this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), usernameDest, 0)
+
+        this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), idMittente, 0)
         //stora in locale
     }
     

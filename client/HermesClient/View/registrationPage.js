@@ -21,8 +21,7 @@ export default class RegistrationPage extends React.Component {
     //faccio il controllo di validità della psw
     
     const res = await this.controller.registerUser(this.usrname, this.mail, this.psw)
-
-    console.log(res)
+    
     if(res == true){
       this.props.navigation.goBack()
     } else {
