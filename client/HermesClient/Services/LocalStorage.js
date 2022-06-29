@@ -23,69 +23,70 @@ export default class LocalStorage {
         return val1 && val2 && val3 && val4;
     }
 
+    async insertData(table, data){
+        const query = `INSERT INTO ${table} VALUES(${data})`;
+        const ok = new Promise((resolve, reject) => {
+              this.db.transaction(tx => { tx.executeSql(query)},
+                () => resolve(false),
+                () => resolve(true))
+        });
+        return ok;
+    }
+    
     async insertAuthInfo(userName, id, token, prk){
-        const query = `INSERT INTO authInfo(userName, id, token, prk) VALUES('${userName}', ${id}, '${token}', '${prk}')`;
-        this.db.transaction(tx => {tx.executeSql(query)},
-        (tx, error) => console.log(error, 'error'),
-        () => console.log('insert auth info'));
+        const res = await this.insertData('authInfo', `${userName}, ${id}, ${token}, ${prk}`);
+        return res; 
     }
 
     async insertUser(id, userName, puk){
-        const query = `INSERT INTO users(id, userName, puk) VALUES(${id}, '${userName}', '${puk}')`;
-        this.db.transaction(tx => {tx.executeSql(query)})
-
+        const res = await this.insertData('users', `${id}, ${userName}, ${puk}`);
+        return res;
     }
 
     async insertChat(id, idDestinatario, idChat){
-        const query = `INSERT INTO chats(id, idDestinatario, idChat) VALUES(${id}, ${idDestinatario}, ${idChat})`;
-        this.db.transaction(tx => {tx.executeSql(query)})
+        const res = await this.insertData('chats', `${id}, ${idDestinatario}, ${idChat}`);
+        return res;
     }
 
     async insertMessage(id, idDestinatario, text, timestamp, idMess){
-        const query = `INSERT INTO messages(id, idDestinatario, text, timestamp, idMess) VALUES(${id}, ${idDestinatario}, '${text}', ${timestamp}, ${idMess})`;
-        this.db.transaction(tx => {tx.executeSql(query)})
+        const res = await this.insertData('messages', `${id}, ${idDestinatario}, ${text}, ${timestamp}, ${idMess}`);
+        return res;
+    }
+
+    async getData(table, condition){
+        const query = `SELECT * FROM ${table} WHERE ${condition}`;
+        const val = new Promise((resolve, reject) => {
+            this.db.transaction(tx => { 
+                tx.executeSql(query), null, 
+                (tx, { rows: { _array } }) => resolve(_array),
+            (tx, error) => resolve(null)})
+        });
+        return val;
     }
 
     async getAuthInfo(){
-        const query = `SELECT * FROM authInfo`;
-        //const result = this.db.transaction(tx => {tx.executeSql(query, null, (tx, results) => {console.log(results)})})
-
-        this.db.transaction(tx => {
-            tx.executeSql(query, null,
-              (txObj, { rows: { _array } }) => console.log(_array ) ,
-              // failure callback which sends two things Transaction object and Error
-              (txObj, error) => console.log('Error ', error)
-              ) // end executeSQL
-          }) // end transaction        return result;
+        const val = await this.getData('authInfo', '1');
+        return val;
     }
 
     async getMessagesByChat(idChat){
-        const query = `SELECT * FROM messages WHERE idChat = ${idChat}`;
-        const result = this.db.transaction(tx => {tx.executeSql(query)})
-
-        return result;
+        const val = await this.getData('messages', `idChat = ${idChat}`);
+        return val;
     }
 
     async getChatsByUser(id){
-        const query = `SELECT * FROM chats WHERE id = ${id}`;
-        const result = this.db.transaction(tx => {tx.executeSql(query)})
-
-        return result;
+        const val = await this.getData('chats', `idDestinatario = ${id}`);
+        return val;
     }
 
     async getUserById(id){
-        const query = `SELECT * FROM users WHERE id = ${id}`;
-        const result = this.db.transaction(tx => {tx.executeSql(query)})
-
-        return result;
+        const val = await this.getData('users', `id = ${id}`);
+        return val;
     }
 
     async getUserByUserName(userName){
-        const query = `SELECT * FROM users WHERE userName = '${userName}'`;
-        const result = this.db.transaction(tx => {tx.executeSql(query)})
-
-        return result;
+        const val = await this.getData('users', `userName = ${userName}`);
+        return val;
     }
-
 
 }
