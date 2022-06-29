@@ -25,19 +25,6 @@ export let setConnState
 const LoginStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
 
-//funzione
-async function foo() {
-
-  const lp= new LocalStorage()
-
-  const risultato=await lp.initDatabase();
-  console.log('init completa', risultato)
-  const risultato2=await lp.insertAuthInfo("pippozzo",1, "123abc", "aaha");
-  console.log('insert', risultato2)
-  const risultato3=await lp.getAuthInfo();
-  console.log(risultato3)
-}
-
 
 
 
@@ -52,10 +39,7 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
-    foo();
   }
-
-
 
   setLoggedState = (state) =>{
     this.setState({logged: state})

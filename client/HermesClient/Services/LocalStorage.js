@@ -50,6 +50,7 @@ export default class LocalStorage {
         return res;
     }
 
+
     async getData(table, condition){
         const query = `SELECT * FROM ${table} WHERE ${condition}`;
         
@@ -61,20 +62,32 @@ export default class LocalStorage {
           )})
         return val;
     }
-
+        
     async getAuthInfo(){
         console.log("entrato")
         const val = await this.getData('authInfo', '1');
         return val;
     }
 
-    async getMessagesByChat(idChat){
-        const val = await this.getData('messages', `idChat = ${idChat}`);
+    async getMessagesByChat(id, idDest){
+        const val = await this.getData('messages', `id = ${id} and idDestinatario = ${idDest}`);
         return val;
     }
 
     async getChatsByUser(id){
-        const val = await this.getData('chats', `idDestinatario = ${id}`);
+        const val = await this.getData('chats', `id = ${id}`);
+        return val;
+    }
+
+    async loadChats(id){
+        const query = `SELECT * FROM chats INNER JOIN users ON chats.idDest = users.id WHERE chats.id = ${id}`;
+        const val = new Promise((resolve, reject) => {
+            this.db.transaction(tx => {
+            tx.executeSql(query, null,
+                (tx, { rows: { _array } }) => { resolve(_array)})},  
+                (tx, error) => console.log('Error ', error)
+            )})
+        val = await val;
         return val;
     }
 

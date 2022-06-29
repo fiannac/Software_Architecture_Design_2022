@@ -1,7 +1,8 @@
 export default class CreateChatController {
-    constructor(network, loggedUser) {
+    constructor(network, loggedUser, storage) {
         this.network = network
         this.loggedUser = loggedUser
+        this.storage = storage
     }
 
     async createChatFromUsername(username){  
@@ -23,8 +24,11 @@ export default class CreateChatController {
         const puk = data.puk
         this.loggedUser.createChat(idDest, username, puk)
 
+        this.storage.insertUser(idDest, username, puk)
+        this.storage.insertChat(id, idDest, 0)
+
         return true;
-        //memorizza chat in locale
+        
     }
 
     async createChatFromId(idMittente){  
@@ -43,8 +47,12 @@ export default class CreateChatController {
         const userNameMittente = data.userName
         const puk = data.puk
         this.loggedUser.createChat(idMittente, userNameMittente, puk)
-        return true;
+        
         //memorizza chat in locale
+        this.storage.insertUser(idMittente, userNameMittente, puk)
+        this.storage.insertChat(id, idMittente, 0)
+        
+        return true
     }
     
 }

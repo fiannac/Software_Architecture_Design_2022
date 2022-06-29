@@ -11,9 +11,13 @@ export default class SendMessageController {
         const destPubk = this.loggedUser.getUserPbk(idDest)
         const ctext = this.crypto.encryptMsg(text, destPubk)
         
+        
+        const date = new Date()
+
         const res = await this.network.msgRequest(id, idDest, token, ctext);
         this.loggedUser.createMessage(text, idDest, 0)
         //salva in locale il messaggio
+        this.storage.insertMessage(id,idDest, text, 0, '0')
     }
     
 }
