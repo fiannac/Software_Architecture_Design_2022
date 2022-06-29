@@ -26,7 +26,7 @@ export default class Conversation extends React.Component {
                 }}
             >
                 <View style={{flexDirection: 'row'}}>
-                    <Text h5 style={{ fontWeight: 700 }}>
+                    <Text h5 style={{ fontWeight: '700' }}>
                         {this.props.id}
                     </Text>
                     <Text style={{ color: 'gray', marginLeft: 5}}>

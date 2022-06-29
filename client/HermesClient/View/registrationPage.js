@@ -19,6 +19,7 @@ export default class RegistrationPage extends React.Component {
   }
 
   async registratiButton(){
+    /*
     //faccio il controllo di validità della psw
     //controlla se la password è di almeno 8 caratteri e ha una lettera maiuscola e un numero
     if(this.psw.length < 8 || !this.psw.match(/[A-Z]/i) || !this.psw.match(/[0-9]/i)){
@@ -44,6 +45,7 @@ export default class RegistrationPage extends React.Component {
       alert('Password non uguali')
       return
     }
+    */
     //controlla se l'username è già stato usato
 
     //se non ci sono errori, registro l'utente    

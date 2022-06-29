@@ -35,7 +35,7 @@ app.post('/register', (req, res) => {
     console.log("utente gia registrato")
     res.send(JSON.stringify({ok:false}));
   } else{
-    console.log("registrazione riusvita")
+    console.log("registrazione riuscita")
     console.log("Utente:", req.body.userName)
     users.set(req.body.userName, {email:req.body.email, password:req.body.password, puk:req.body.puk, prk:req.body.prk, id:'id'+currId})
     mapIdInUsername.set('id'+currId,req.body.userName)
@@ -159,6 +159,16 @@ wss.on('connection', function connection(ws) {
     onlineUsers.get(msg.id).socket = this;
     ws.send(JSON.stringify({ok:true, type:'auth'}))
   });
+
+  ws.onclose = function close() {
+    console.log("Connessione chiusa")
+    onlineUsers.forEach((value, key) => {
+      if(value.socket == this){
+        onlineUsers.delete(key)
+      }
+    }
+    )
+  }
 
 });
 

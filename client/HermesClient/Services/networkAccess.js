@@ -1,7 +1,7 @@
 import { setConnState, setLoggedState } from "../App.js";
 
 export default class NetworkAccess {
-    constructor(controller, ws = 'ws://localhost:8888/') {
+    constructor(controller, ws = 'ws://192.168.1.55:8888/') {
         this.ws = this.createWS(ws,controller)
         this.controller = controller
 
@@ -40,7 +40,7 @@ export default class NetworkAccess {
     }
 
     async msgRequest(idMittente, idDestinatario, token, text){
-        const response = await fetch('http://localhost:8888/msg', 
+        var response = await fetch('http://192.168.1.55:8888/msg', 
             {
             method: 'POST',
             headers: {
@@ -58,7 +58,7 @@ export default class NetworkAccess {
     }
 
     async rcvOldMsgReq(idDestinatario, token){
-        const response = await fetch('http://localhost:8888/storedmsg', 
+        var response = await fetch('http://192.168.1.55:8888/storedmsg', 
             {
             method: 'POST',
             headers: {
@@ -69,12 +69,12 @@ export default class NetworkAccess {
                 idDestinatario: idDestinatario,
                 token: token
             })
-        }).then((respone) => respone.json())
+        }).then((response) => response.json())
         return response;
     }
 
     async registerRequest(user, email, psw, puk, prk){
-        return await fetch('http://localhost:8888/register', 
+        var response= await fetch('http://192.168.1.55:8888/register', 
             {
             method: 'POST',
             headers: {
@@ -88,11 +88,13 @@ export default class NetworkAccess {
                 puk:puk,
                 prk:prk
             })
-        }).then((respone) => respone.json()).then(json => json.ok)
-    }
+        })
+        response = await response.json()
+        return response.ok
+    }   
 
     async loginRequest(usr, psw){
-        const response = await fetch('http://localhost:8888/login', 
+        var response = await fetch('http://192.168.1.55:8888/login', 
             {
             method: 'POST',
             headers: {
@@ -122,7 +124,7 @@ export default class NetworkAccess {
     }
 
     async logoutRequest(id, token){
-        const response = await fetch('http://localhost:8888/logout',
+        var response = await fetch('http://192.168.1.55:8888/logout',
             {
             method: 'POST',
             headers: {
@@ -138,7 +140,7 @@ export default class NetworkAccess {
     }
 
     async userDataRequest(destUsr, id, token){
-        return await fetch('http://localhost:8888/userdata', 
+        var response = await fetch('http://192.168.1.55:8888/userdata', 
             {
             method: 'POST',
             headers: {
@@ -150,11 +152,13 @@ export default class NetworkAccess {
                 idMittente: id,
                 token: token
             })
-        }).then((respone) => respone.json())
+        })
+        response = await response.json()
+        return response;
     }
 
     async userDataFromIdRequest(idMittente, id, token){
-        return await fetch('http://localhost:8888/userdataId', 
+        var response = await fetch('http://192.168.1.55:8888/userdataId', 
             {
             method: 'POST',
             headers: {
@@ -166,7 +170,9 @@ export default class NetworkAccess {
                 idMittente: id,
                 token: token
             })
-        }).then((respone) => respone.json())
+        })
+        response = await response.json()
+        return response;
     }
 
 }
