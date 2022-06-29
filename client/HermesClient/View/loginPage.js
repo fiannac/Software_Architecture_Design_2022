@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from 'react-native';
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -22,7 +22,7 @@ export default class LoginPage extends React.Component {
   render(){
 
     return (
-      <View>
+      <SafeAreaView>
         <Text>Effettua il login o registrati!</Text>
         <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
         <View style={styles.stilePassword}>
@@ -41,7 +41,7 @@ export default class LoginPage extends React.Component {
           </View>
           <Button title="Crea Nuovo account" onPress={() => this.navigation.push('RegisterPage')} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }

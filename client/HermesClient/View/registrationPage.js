@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from 'react-native';
 
 
 export default class RegistrationPage extends React.Component {
@@ -60,7 +60,7 @@ export default class RegistrationPage extends React.Component {
 
   render(){
     return (
-        <View>
+        <SafeAreaView>
           <Text>Registrati con username e password</Text>
           <TextInput onChangeText = {(value) => {this.mail = value}} style={styles.inserimentoTestoMail} placeholder="Inserisci mail"/>
           <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
@@ -71,7 +71,7 @@ export default class RegistrationPage extends React.Component {
             <Button title="Registrati!" onPress={this.registratiButton}/>
           </View>
           <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
-        </View>
+        </SafeAreaView>
     );
   }
 }
@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
   bottone: {
     marginVertical: 5,
     marginLeft: 5,
-    width: 100,
+    width: 150,
   }
 });

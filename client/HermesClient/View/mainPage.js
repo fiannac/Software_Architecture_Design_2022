@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { Avatar, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Conversation from "../components/Conversation";
@@ -67,8 +67,8 @@ export default class MainPage extends React.Component {
   render(){
     if(this.state.chatOpen == false){
       return (
-        <View style={{ flex: 1, backgroundColor: '#122643'}}>
-          <View style={{paddingVertical: 15, paddingHorizontal: 30,}}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#122643'}}>
+          <View style={{paddingVertical: 50, paddingHorizontal: 30,}}>
             <View style={styles.container}>
               <TouchableOpacity activeOpacity={0.5} onPress={this.signOutUser}>
                 <Avatar
@@ -98,7 +98,7 @@ export default class MainPage extends React.Component {
           <View style={styles.chatContainer}>
             <ScrollView
               style={{
-              minHeight: Dimensions.get('window').height - 150,
+              minHeight: Dimensions.get('window').height - 180,
               marginTop: 5,
               paddingTop: 5,
               }}
@@ -127,7 +127,7 @@ export default class MainPage extends React.Component {
           </View>
 
           <TextInput placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
-        </View>
+        </SafeAreaView>
       );
     } else {
       return(
