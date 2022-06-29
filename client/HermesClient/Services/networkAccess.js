@@ -121,6 +121,22 @@ export default class NetworkAccess {
 
     }
 
+    async logoutRequest(id, token){
+        const response = await fetch('http://localhost:8888/logout',
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                token: token
+            })
+        }).then((res) => res.json()).then((res) => {return res})
+        return response.ok;
+    }
+
     async userDataRequest(destUsr, id, token){
         return await fetch('http://localhost:8888/userdata', 
             {

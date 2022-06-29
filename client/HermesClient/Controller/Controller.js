@@ -39,5 +39,8 @@ export default class Controller{
     async inviaMessaggio(dest, text){
         this.SendMessageController.inviaMessaggio(dest,text)
     }
+    async logout(){
+        this.LoginController.logout()
+    }
 
 }

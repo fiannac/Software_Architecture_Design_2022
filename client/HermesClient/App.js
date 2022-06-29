@@ -13,6 +13,7 @@ import ChatPage from './View/chatPage.js';
 
 import Controller from './Controller/Controller.js';
 
+import LocalStorage from './Services/LocalStorage.js';
 import Crypto from './Services/crypto.js';
 import networkAccess from './Services/networkAccess.js'
 
@@ -36,8 +37,14 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
+    this.LocalStorage= new LocalStorage()
 
+    this.LocalStorage.initDatabase();
+    this.LocalStorage.insertUser(1, "pippo", "123abc");
+    console.log(this.LocalStorage.getUserById(1));
   }
+
+
 
   setLoggedState = (state) =>{
     this.setState({logged: state})

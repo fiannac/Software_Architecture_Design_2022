@@ -22,6 +22,7 @@ export default class ChatPage extends React.Component {
     }
   }
 
+  
   render(){
     
     return (
@@ -33,6 +34,7 @@ export default class ChatPage extends React.Component {
 
       <TextInput onChangeText = {(value) => {this.msg = value}} ref={input => { this.textInput = input }}/>
       <Button onPress={this.handleMsgSend} title = "Invia messaggio"/>
+      <Button onPress={()=>{this.props.handleNavigation()}} title = "Torna alla chat"/>
       </View>
     );
   }

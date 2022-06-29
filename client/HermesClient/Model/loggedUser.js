@@ -63,5 +63,8 @@ export default class loggedUser{
     getUserUserName(idMittente){
         return this.chats.get(idMittente).getUserName()
     }
-    
+
+    chatExists(id){
+        return this.chats.has(id)
+    }
 }

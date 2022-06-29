@@ -24,6 +24,7 @@
     "react-native-elements": "^3.4.2",
     "react-native-rsa": "^0.0.3",
     "react-native-rsa-native": "^2.0.5",
+    "react-native-sqlite-storage": "^6.0.1",
     "react-native-web": "0.17.7"
   },
   "devDependencies": {

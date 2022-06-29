@@ -63,6 +63,25 @@ app.post('/login', (req, res) => {
   }
 })
 
+app.post('/logout', (req, res) => {
+  console.log("Richiesta di logout")
+  console.log(`Dati: ${req.body.id}, ${req.body.token}`)
+  res.setHeader('Content-Type', 'application/json');
+  const id = req.body.id
+  const token = req.body.token
+  if(!onlineUsers.has(id)){
+    console.log("Utente non registrato")
+    res.send(JSON.stringify({ok:false}))
+  } else if(onlineUsers.get(id).token != token){
+    console.log("UTENTE HA SBAGLIATO TOKEN")
+    res.send(JSON.stringify({ok:false}))
+  } else {
+    console.log("logout ok")
+    onlineUsers.delete(id)
+    res.send(JSON.stringify({ok:true}));
+  }
+})
+
 app.post('/storedmsg', (req, res) => {
   console.log("Richiesta di stored msg")
   res.setHeader('Content-Type', 'application/json');

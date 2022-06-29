@@ -5,8 +5,9 @@ export default class CreateChatController {
     }
 
     async createChatFromUsername(username){  
-        //se la chat esiste già non la devo creare.
-
+        if(username == this.loggedUser.userName){
+            return false
+        }
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
 
@@ -15,10 +16,11 @@ export default class CreateChatController {
         if(data.ok == false){
             return false;
         }
-
+        if(this.loggedUser.chatExists(data.id)){
+            return false;
+        }
         const idDest = data.id
-        const puk = JSON.stringify(data.puk)
-        //controlla se effettivamente l'utente esiste!
+        const puk = data.puk
         this.loggedUser.createChat(idDest, username, puk)
 
         return true;
@@ -26,8 +28,9 @@ export default class CreateChatController {
     }
 
     async createChatFromId(idMittente){  
-        //se la chat esiste già non la devo creare.
-
+        if(this.loggedUser.chats.has(idMittente)){
+            return false;
+        }
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
 
@@ -38,8 +41,7 @@ export default class CreateChatController {
         }
 
         const userNameMittente = data.userName
-        const puk = JSON.stringify(data.puk)
-        //controlla se effettivamente l'utente esiste!
+        const puk = data.puk
         this.loggedUser.createChat(idMittente, userNameMittente, puk)
         return true;
         //memorizza chat in locale

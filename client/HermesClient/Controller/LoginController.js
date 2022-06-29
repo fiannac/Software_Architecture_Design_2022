@@ -19,7 +19,7 @@ export default class LoginController {
             this.loggedUser.setPsw(Opsw)
             this.loggedUser.setUser(user)
 
-            this.loggedUser.setPrk(this.crypto.encryptPrk(reply.prk,Opsw))
+            this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk,Opsw))
 
             const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
             for(let msg of msgs.list){
@@ -34,5 +34,17 @@ export default class LoginController {
         } else {
             return false;
         }
+    }
+
+    async logout(){
+        const res = await this.network.logoutRequest(this.loggedUser.id, this.loggedUser.token);
+        this.loggedUser.setId('')
+        this.loggedUser.setToken('')
+        this.loggedUser.setPsw('')
+        this.loggedUser.setUser('')
+        this.loggedUser.setPrk('')
+        this.loggedUser.setLoggedState(false)
+        this.loggedUser.chats.clear()
+        return true;
     }
 }

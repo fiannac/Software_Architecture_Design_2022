@@ -34,14 +34,14 @@ export default class Crypto {
     }
     
     encryptMsg(msg, puk){ //se non decripyo messaggi buoni bugga
-        //this.rsa.setPublicString(puk);
-        //return this.rsa.encrypt(msg);
-        return msg;
+        this.rsa.setPublicString(puk);
+        return this.rsa.encrypt(msg);
+        //return msg;
     }
 
     decryptMsg(msg, prk){
-        //this.rsa.setPrivateString(prk);
-        //return  this.rsa.decrypt(msg); // decrypted == originText
-        return msg;
+        this.rsa.setPrivateString(prk);
+        return  this.rsa.decrypt(msg); // decrypted == originText
+        //return msg;
     }
 }
