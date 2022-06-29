@@ -34,37 +34,36 @@ export default class LocalStorage {
     }
     
     async insertAuthInfo(userName, id, token, prk){
-        const res = await this.insertData('authInfo', `${userName}, ${id}, ${token}, ${prk}`);
+        const res = await this.insertData('authInfo', `'${userName}', '${id}', '${token}', '${prk}'`);
         return res; 
     }
-
     async insertUser(id, userName, puk){
-        const res = await this.insertData('users', `${id}, ${userName}, ${puk}`);
+        const res = await this.insertData('users', `'${id}', '${userName}', '${puk}'`);
         return res;
     }
-
     async insertChat(id, idDestinatario, idChat){
-        const res = await this.insertData('chats', `${id}, ${idDestinatario}, ${idChat}`);
+        const res = await this.insertData('chats', `'${id}', '${idDestinatario}', '${idChat}'`);
         return res;
     }
-
     async insertMessage(id, idDestinatario, text, timestamp, idMess){
-        const res = await this.insertData('messages', `${id}, ${idDestinatario}, ${text}, ${timestamp}, ${idMess}`);
+        const res = await this.insertData('messages', `'${id}', '${idDestinatario}', '${text}', '${timestamp}', '${idMess}'`);
         return res;
     }
 
     async getData(table, condition){
         const query = `SELECT * FROM ${table} WHERE ${condition}`;
+        
         const val = new Promise((resolve, reject) => {
-            this.db.transaction(tx => { 
-                tx.executeSql(query), null, 
-                (tx, { rows: { _array } }) => resolve(_array),
-            (tx, error) => resolve(null)})
-        });
+            this.db.transaction(tx => {
+            tx.executeSql(query, null,
+              (tx, { rows: { _array } }) => { resolve(_array)})},  
+              (tx, error) => console.log('Error ', error)
+          )})
         return val;
     }
 
     async getAuthInfo(){
+        console.log("entrato")
         const val = await this.getData('authInfo', '1');
         return val;
     }

@@ -33,7 +33,7 @@ async function foo() {
   const risultato=await lp.initDatabase();
   console.log('init completa', risultato)
   const risultato2=await lp.insertAuthInfo("pippozzo",1, "123abc", "aaha");
-  console.log('insert')
+  console.log('insert', risultato2)
   const risultato3=await lp.getAuthInfo();
   console.log(risultato3)
 }
