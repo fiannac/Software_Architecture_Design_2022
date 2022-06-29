@@ -15,13 +15,28 @@ import Controller from './Controller/Controller.js';
 
 import LocalStorage from './Services/LocalStorage.js';
 import Crypto from './Services/crypto.js';
-import networkAccess from './Services/networkAccess.js'
+import networkAccess from './Services/networkAccess.js';
+import * as SQLite from 'expo-sqlite';
+
 
 export let setLoggedState
 export let setConnState
 
 const LoginStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
+
+//funzione
+async function foo() {
+
+  const lp= new LocalStorage()
+
+  const risultato=await lp.initDatabase();
+  console.log('init completa', risultato)
+  const risultato2=await lp.insertAuthInfo("pippozzo",1, "123abc", "aaha");
+  console.log('insert')
+  const risultato3=await lp.getAuthInfo();
+  console.log(risultato3)
+}
 
 
 
@@ -37,11 +52,7 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
-    this.LocalStorage= new LocalStorage()
-
-    this.LocalStorage.initDatabase();
-    this.LocalStorage.insertUser(1, "pippo", "123abc");
-    console.log(this.LocalStorage.getUserById(1));
+    foo();
   }
 
 
