@@ -13,6 +13,7 @@ export default class RcvMsgController {
         this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), idMittente, 0)
         
         //stora in locale
+        this.storage.insertMessage(this.loggedUser.id,idMittente, text, timestamp, '0')
     }
     
 }

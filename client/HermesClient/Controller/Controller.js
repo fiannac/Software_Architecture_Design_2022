@@ -6,19 +6,20 @@ import SendMessageController from "./SendMsgController";
 import NetworkAccess from "../Services/networkAccess.js"
 import loggedUser from "../Model/loggedUser";
 import Crypto from '../Services/crypto.js';
+import LocalStorage from '../Services/LocalStorage.js';
 
 export default class Controller{
     constructor(){
         this.NetworkAccess = new NetworkAccess(this)
         this.loggedUser = new loggedUser()
-
+        this.storage = new LocalStorage()
         this.crypto = new Crypto()
 
-        this.CreateChatController = new CreateChatController(this.NetworkAccess, this.loggedUser)
-        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController)
-        this.RcvMsgController = new RcvMsgController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController)
-        this.RegistrationController = new RegistrationController(this.NetworkAccess, this.crypto)
-        this.SendMessageController = new SendMessageController(this.NetworkAccess, this.loggedUser, this.crypto)
+        this.CreateChatController = new CreateChatController(this.NetworkAccess, this.loggedUser, this.storage)
+        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController, this.storage)
+        this.RcvMsgController = new RcvMsgController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController, this.storage)
+        this.RegistrationController = new RegistrationController(this.NetworkAccess, this.crypto, this.storage)
+        this.SendMessageController = new SendMessageController(this.NetworkAccess, this.loggedUser, this.crypto, this.storage)
     }
 
     async createChatFromUsername(username){

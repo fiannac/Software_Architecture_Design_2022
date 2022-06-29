@@ -1,9 +1,10 @@
 export default class LoginController {
-    constructor(network, loggedUser, crypto, createChat) {
+    constructor(network, loggedUser, crypto, createChat, storage) {
         this.network = network
         this.loggedUser = loggedUser
         this.createChat = createChat
         this.crypto = crypto
+        this.storage = storage
     }
 
     async login(user, Opsw){
@@ -27,9 +28,21 @@ export default class LoginController {
                     const res = await this.createChat.createChatFromId(msg.idMittente)
                 } 
                 this.loggedUser.createMessage(this.crypto.decryptMsg(msg.text, this.loggedUser.prk), msg.idMittente, 0)
+                this.storage.insertMessage(reply.id,msg.idMittente, msg.text, msg.timestamp, '0')
             }
             
             //storo queste info in locale per i prossimi login
+
+
+            //carica tutte le chat!
+            const chats = await this.storage.loadChats(reply.id);
+            for(let chat of chats){
+                this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
+                const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
+                for(let m of msg){
+                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp)
+                }
+            }
             return true;
         } else {
             return false;
