@@ -1,11 +1,6 @@
 import Chat from './chat.js'
 import User from './user.js'
 
-import { setConnState, setLoggedState } from "../App.js";
-import { useReducer } from 'react';
-
-import {notifyChat,notifyMessage} from '../View/mainPage.js';
-
 export default class loggedUser{
 
     constructor(){
@@ -17,12 +12,16 @@ export default class loggedUser{
 
     setConnState(state){
         this.connState = state
-        setConnState(this.connState)
+        if(this.observerState != null){
+            this.observerState(this.connState, this.loggedState)
+        }
     }
 
     setLoggedState(state){
         this.loggedState = state
-        setLoggedState(this.loggedState)
+        if(this.observerState != null){
+            this.observerState(this.connState, this.loggedState)
+        }
     }
 
     setId(id){
@@ -45,13 +44,19 @@ export default class loggedUser{
         const user = new User(id, username, puk)
         const chat = new Chat('0', '0', user)
         this.chats.set(id,chat)
-        
-        notifyChat(id, username)
+        console.log("Chat creata")
+        if(this.observerChat != null){
+            console.log("Renderizzo...")
+            this.observerChat(this.chats)
+        }
     }
-    createMessage(text, id, timestamp){
+    createMessage(text, id, timestamp, type){
         const chat = this.chats.get(id);
-        chat.addMessage(text,'0','0');
-        notifyMessage(id,text)
+        chat.addMessage(text,timestamp, type);
+
+        if(this.observerChat != null){
+            this.observerChat(this.chats)
+        }
     }
     getChat(idMittente){
         return this.chats.get(idMittente).msgs();
@@ -67,4 +72,22 @@ export default class loggedUser{
     chatExists(id){
         return this.chats.has(id)
     }
+
+
+    subscribeChatObserver(observer){
+        this.observerChat = observer
+        this.observerChat(this.chats)
+    }
+    unsubscribeChatObserver(){
+        this.observerChat = null
+    }
+
+    subscribeStateObserver(observer){
+        this.observerState = observer
+        this.observerState(this.loggedState)
+    }  
+    unsubscribeStateObserver(){
+        this.observerState = null
+    }
+
 }

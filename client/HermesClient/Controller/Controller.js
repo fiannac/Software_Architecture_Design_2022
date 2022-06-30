@@ -22,6 +22,30 @@ export default class Controller{
         this.SendMessageController = new SendMessageController(this.NetworkAccess, this.loggedUser, this.crypto, this.storage)
     }
 
+    subscribeChatObserver(observer){
+        this.loggedUser.subscribeChatObserver(observer)
+    }
+
+    unsubscribeChatObserver(){
+        this.loggedUser.unsubscribeChatObserver()
+    }
+
+    subscribeStateObserver(observer){
+        this.loggedUser.subscribeStateObserver(observer)
+    }
+    
+    unsubscribeStateObserver(){
+        this.loggedUser.unsubscribeStateObserver()
+    }
+    
+    updateConnectionState(val){
+        this.loggedUser.setConnState(val)
+    }
+
+    updateLoggedState(val){
+        this.loggedUser.setLoggedState(val)
+    }
+
     async createChatFromUsername(username){
         return await this.CreateChatController.createChatFromUsername(username)
     }

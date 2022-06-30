@@ -10,9 +10,6 @@ import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 import ChatPage from './chatPage.js'
 
-export let notifyChat
-export let notifyMessage
-
 const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
 
 export default class MainPage extends React.Component {
@@ -21,38 +18,52 @@ export default class MainPage extends React.Component {
     this.state = {
       chats : [],
       chatOpen : false,
-      chatOpenNumber : 0
+      chatOpenNumber : -1
     }
 
     this.newUser = ''
     this.controller = props.controller
 
-    notifyChat = this.notifyChat
-    notifyMessage = this.notifyMessage
-
     this.handleCreateChat = this.handleCreateChat.bind(this)
     this.handleNavigation = this.handleNavigation.bind(this)
     this.signOutUser = this.signOutUser.bind(this)
   }
-
-  notifyChat = (id, userName)=>{
-    this.setState({chats:[...this.state.chats, {user:userName, id:id, chat:[]}]})
+  
+  componentDidMount(){
+    this.controller.subscribeChatObserver(this.notify.bind(this))
   }
 
-  notifyMessage = (id,msg)=>{
-    for(let i=0; i<this.state.chats.length; i++){
-      if(this.state.chats[i].id == id){
-        this.state.chats[i].chat = [...this.state.chats[i].chat,msg]
+  componentWillUnmount(){
+    this.controller.unsubscribeChatObserver()
+  }
+  
+  notify(chats){
+    var newChats = []
+    chats.forEach((chat, id) => {
+      var toAdd = {
+        user:chat.getUserName(),
+        id:id,
+        chat:[]
       }
-    }
-
-    this.setState({chats:[...this.state.chats]})
+      
+      chat.getMessages().forEach((msg) => {
+        toAdd.chat.push({
+          text:msg.getText(),
+          timestamp:msg.getTimestamp(),
+          sender:msg.getSender()
+        })
+      })
+      newChats = newChats.concat(toAdd)
+    });
+    console.log("new chats: " + JSON.stringify(newChats))
+    this.setState({chats:newChats})
   }
 
   handleCreateChat = () =>{
     if(this.newUser != ''){
       this.controller.createChatFromUsername(this.newUser)
       this.textInput.clear()
+      this.newUser = ''
     }
   }
 
@@ -110,7 +121,7 @@ export default class MainPage extends React.Component {
                 key={i}
                 id={id.user}
                 handleNavigation={()=>this.setState({chatOpen:true, chatOpenNumber:i})}
-                text={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1]}
+                text={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1].text}
               />
             ))}
             </ScrollView>

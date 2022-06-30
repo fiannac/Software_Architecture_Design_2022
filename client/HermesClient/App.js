@@ -1,22 +1,8 @@
 import React from 'react';
 import { Text } from 'react-native';
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import LoginPage from './View/loginPage.js'
 import MainPage from './View/mainPage.js';
-
 import Controller from './Controller/Controller.js';
-
-
-export let setLoggedState
-export let setConnState
-
-const LoginStack = createNativeStackNavigator();
-const MainStack = createNativeStackNavigator();
-
-
-
 
 export default class App extends React.Component {
   constructor(){
@@ -29,13 +15,25 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
+
+
   }
 
-  setLoggedState = (state) =>{
-    this.setState({logged: state})
+  componentDidMount(){
+    this.controller.subscribeStateObserver(this.notify.bind(this))
   }
-  setConnState = (state) =>{
-    this.setState({connected:state})
+
+  componentWillUnmount(){
+    this.controller.unsubscribeStateObserver()
+  }
+
+  notify(connected, logged){
+    const newState = {
+      connected: connected,
+      logged: logged
+    }
+
+    this.setState(newState)
   }
 
   render(){

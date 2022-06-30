@@ -17,6 +17,9 @@ export default class Chat{
         return this.user.pk;
     }
     getUserName(){
-        return this.user.username;
+        return this.user.userName;
+    }
+    getMessages(){
+        return this.msgs;
     }
 }    

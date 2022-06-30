@@ -10,9 +10,9 @@ export default class LoginController {
     async login(user, Opsw){
         const psw = this.crypto.hashPsw(Opsw)
         const reply = await this.network.loginRequest(user,psw);
-
-        if(reply.ok == true){
-        
+        if(reply.ok == false){
+            return false
+        }else {
             this.network.authWSRequest(reply.id, reply.token);
 
             this.loggedUser.setId(reply.id)
@@ -22,13 +22,12 @@ export default class LoginController {
 
             this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk,Opsw))
 
-            //carica tutte le chat!
+            
             const chats = await this.storage.loadChats(reply.id);
             console.log(chats)
             for(let chat of chats){
                 this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
                 const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
-                console.log("ooooh",msg)
                 for(let m of msg){
                     this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp)
                 }
@@ -39,17 +38,13 @@ export default class LoginController {
                 if(!this.loggedUser.chats.has(msg.idMittente)){
                     const res = await this.createChat.createChatFromId(msg.idMittente)
                 } 
-                this.loggedUser.createMessage(this.crypto.decryptMsg(msg.text, this.loggedUser.prk), msg.idMittente, 0)
-                this.storage.insertMessage(reply.id,msg.idMittente, msg.text, msg.timestamp, '0')
+                this.loggedUser.createMessage(this.crypto.decryptMsg(msg.text, this.loggedUser.prk), msg.idMittente, msg.timestamp, 'rcv')
+                this.storage.insertMessage(reply.id,msg.idMittente, msg.text, msg.timestamp, 'rcv')
             }
             
             //storo queste info in locale per i prossimi login
 
-
-            
             return true;
-        } else {
-            return false;
         }
     }
 

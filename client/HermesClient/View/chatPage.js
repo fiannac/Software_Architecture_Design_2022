@@ -61,7 +61,7 @@ export default class ChatPage extends React.Component {
       <SafeAreaView>
           <Text>Chat con {this.userName}</Text>
           {this.props.chat.map(((msg, i) => (
-            <Text key={i}>{msg}</Text>
+            <Text key={i}>{msg.text}</Text>
           )))}
 
           <TextInput onChangeText={(value) => { this.msg = value; } } ref={input => { this.textInput = input; } } />

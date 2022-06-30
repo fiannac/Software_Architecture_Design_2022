@@ -4,4 +4,16 @@ export default class messaggio{
         this.timestamp = timestamp;
         this.type = type;
     }
+
+    getText(){
+        return this.text;
+    }
+
+    getTimestamp(){
+        return this.timestamp;
+    }
+   
+    getSender(){
+        return this.type;
+    }
 }
