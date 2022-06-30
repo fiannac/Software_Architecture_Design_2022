@@ -3,6 +3,7 @@ import * as SQLite from 'expo-sqlite'
 export default class LocalStorage {
     constructor() {
         this.db = SQLite.openDatabase('hermes.db');
+        this.initDatabase();
     }
 
     async createTable(tableName, columns){
@@ -20,16 +21,19 @@ export default class LocalStorage {
         val2 = await this.createTable('users', 'id INTEGER, userName TEXT, puk TEXT');
         val3 = await this.createTable('chats', 'id INTEGER, idDestinatario INTEGER, idChat INTEGER');
         val4 = await this.createTable('messages', 'id INTEGER, idDestinatario INTEGER, text TEXT, timestamp INTEGER, idMess INTEGER');
+        console.log("Creazione database:", val1 && val2 && val3 && val4); 
         return val1 && val2 && val3 && val4;
     }
 
     async insertData(table, data){
         const query = `INSERT INTO ${table} VALUES(${data})`;
-        const ok = new Promise((resolve, reject) => {
+        var ok = new Promise((resolve, reject) => {
               this.db.transaction(tx => { tx.executeSql(query)},
-                () => resolve(false),
+                () => {resolve(false); console.log('Error insert data')},
                 () => resolve(true))
         });
+        ok = await ok
+        console.log("insert data:", ok)
         return ok;
     }
     
@@ -53,12 +57,11 @@ export default class LocalStorage {
 
     async getData(table, condition){
         const query = `SELECT * FROM ${table} WHERE ${condition}`;
-        
         const val = new Promise((resolve, reject) => {
             this.db.transaction(tx => {
             tx.executeSql(query, null,
               (tx, { rows: { _array } }) => { resolve(_array)})},  
-              (tx, error) => console.log('Error ', error)
+              (tx, error) => console.log('Error get data', error)
           )})
         return val;
     }
@@ -70,34 +73,37 @@ export default class LocalStorage {
     }
 
     async getMessagesByChat(id, idDest){
-        const val = await this.getData('messages', `id = ${id} and idDestinatario = ${idDest}`);
+        console.log(id, idDest)
+
+        const val = await this.getData('messages', `id = '${id}' AND idDestinatario = '${idDest}'`);
+        console.log(val)
         return val;
     }
 
     async getChatsByUser(id){
-        const val = await this.getData('chats', `id = ${id}`);
+        const val = await this.getData('chats', `id = '${id}'`);
         return val;
     }
 
     async loadChats(id){
-        const query = `SELECT * FROM chats INNER JOIN users ON chats.idDest = users.id WHERE chats.id = ${id}`;
-        const val = new Promise((resolve, reject) => {
+        const query = `SELECT t1.idDestinatario, t2.userName, t2.puk FROM chats t1 JOIN users t2 ON t1.idDestinatario = t2.id WHERE t1.id = '${id}'`;
+        var val = new Promise((resolve, reject) => {
             this.db.transaction(tx => {
             tx.executeSql(query, null,
                 (tx, { rows: { _array } }) => { resolve(_array)})},  
-                (tx, error) => console.log('Error ', error)
+                (tx, error) => console.log('Error load chats', error)
             )})
         val = await val;
         return val;
     }
 
     async getUserById(id){
-        const val = await this.getData('users', `id = ${id}`);
+        const val = await this.getData('users', `id = '${id}'`);
         return val;
     }
 
     async getUserByUserName(userName){
-        const val = await this.getData('users', `userName = ${userName}`);
+        const val = await this.getData('users', `userName = '${userName}'`);
         return val;
     }
 

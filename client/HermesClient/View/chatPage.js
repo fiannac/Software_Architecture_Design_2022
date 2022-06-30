@@ -5,8 +5,6 @@ import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 
-import {setConnState} from '../App.js'
-
 export default class ChatPage extends React.Component {
   constructor(props){
     super(props)
@@ -28,6 +26,7 @@ export default class ChatPage extends React.Component {
   render(){
     
     return (
+      /*
       <SafeAreaView style={styles.container}>
         <View
           style={[styles.flexify, { paddingHorizontal: 15, paddingVertical: 25 }]}
@@ -57,7 +56,8 @@ export default class ChatPage extends React.Component {
 
       </SafeAreaView>
     );
-    /*
+    */
+    
       <SafeAreaView>
           <Text>Chat con {this.userName}</Text>
           {this.props.chat.map(((msg, i) => (
@@ -69,7 +69,7 @@ export default class ChatPage extends React.Component {
           <Button onPress={() => { this.props.handleNavigation(); } } title="Torna alla chat" />
         </SafeAreaView>
     );
-    */
+    
   }
 }
 

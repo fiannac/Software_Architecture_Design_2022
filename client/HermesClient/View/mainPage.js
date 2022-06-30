@@ -8,11 +8,11 @@ import Conversation from "../components/Conversation";
 
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
-import {setConnState} from '../App.js'
 import ChatPage from './chatPage.js'
 
 export let notifyChat
 export let notifyMessage
+
 const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
 
 export default class MainPage extends React.Component {

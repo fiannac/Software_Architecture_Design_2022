@@ -1,9 +1,10 @@
 export default class RcvMsgController {
-    constructor(network, loggedUser, crypto, createChat) {
+    constructor(network, loggedUser, crypto, createChat, storage) {
         this.network = network
         this.loggedUser = loggedUser
         this.createChat = createChat
         this.crypto = crypto
+        this.storage = storage
     }
 
     async rcvMsg(text, idMittente, timestamp){  
@@ -13,7 +14,7 @@ export default class RcvMsgController {
         this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), idMittente, 0)
         
         //stora in locale
-        this.storage.insertMessage(this.loggedUser.id,idMittente, text, timestamp, '0')
+        const res = await this.storage.insertMessage(this.loggedUser.id,idMittente, text, timestamp, '0')
     }
     
 }

@@ -13,8 +13,7 @@ export default class RegistrationPage extends React.Component {
     this.psw = ''
     this.psw2= ''
     this.mail = ''
-    this.controller = props.route.params.controller
-
+    this.controller = props.controller
     this.registratiButton = this.registratiButton.bind(this);
   }
 
@@ -52,7 +51,7 @@ export default class RegistrationPage extends React.Component {
     const res = await this.controller.registerUser(this.usrname, this.mail, this.psw)
     
     if(res == true){
-      this.props.navigation.goBack()
+      this.props.setRegisterPage(false)
     } else {
       this.setState({errore:true})
     }
@@ -61,6 +60,7 @@ export default class RegistrationPage extends React.Component {
   render(){
     return (
         <SafeAreaView>
+          
           <Text>Registrati con username e password</Text>
           <TextInput onChangeText = {(value) => {this.mail = value}} style={styles.inserimentoTestoMail} placeholder="Inserisci mail"/>
           <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
@@ -71,6 +71,7 @@ export default class RegistrationPage extends React.Component {
             <Button title="Registrati!" onPress={this.registratiButton}/>
           </View>
           <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
+          <Button title='Torna indietro' onPress={()=>{this.props.setRegisterPage(false)}}/>
         </SafeAreaView>
     );
   }

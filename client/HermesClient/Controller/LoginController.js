@@ -22,6 +22,18 @@ export default class LoginController {
 
             this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk,Opsw))
 
+            //carica tutte le chat!
+            const chats = await this.storage.loadChats(reply.id);
+            console.log(chats)
+            for(let chat of chats){
+                this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
+                const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
+                console.log("ooooh",msg)
+                for(let m of msg){
+                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp)
+                }
+            }
+
             const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
             for(let msg of msgs.list){
                 if(!this.loggedUser.chats.has(msg.idMittente)){
@@ -34,15 +46,7 @@ export default class LoginController {
             //storo queste info in locale per i prossimi login
 
 
-            //carica tutte le chat!
-            const chats = await this.storage.loadChats(reply.id);
-            for(let chat of chats){
-                this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
-                const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
-                for(let m of msg){
-                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp)
-                }
-            }
+            
             return true;
         } else {
             return false;

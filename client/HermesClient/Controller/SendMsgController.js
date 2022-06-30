@@ -1,8 +1,9 @@
 export default class SendMessageController {
-    constructor(network, loggedUser, crypto) {
+    constructor(network, loggedUser, crypto, storage) {
         this.network = network
         this.loggedUser = loggedUser
         this.crypto = crypto
+        this.storage = storage
     }
 
     async inviaMessaggio(idDest, text){  
@@ -14,10 +15,10 @@ export default class SendMessageController {
         
         const date = new Date()
 
-        const res = await this.network.msgRequest(id, idDest, token, ctext);
-        this.loggedUser.createMessage(text, idDest, 0)
+        var res = await this.network.msgRequest(id, idDest, token, ctext);
+        res = await this.loggedUser.createMessage(text, idDest, 0)
         //salva in locale il messaggio
-        this.storage.insertMessage(id,idDest, text, 0, '0')
+        res = await this.storage.insertMessage(id,idDest, text, 0, '0')
     }
     
 }
