@@ -24,7 +24,6 @@ export default class CreateChatController {
         const puk = data.puk
         this.loggedUser.createChat(idDest, username, puk)
 
-        console.log("Salvo la chat con idDest ", idDest, " e id source ", id)
         var res = await this.storage.insertUser(idDest, username, puk)
         var res = await this.storage.insertChat(id, idDest, 0)
 

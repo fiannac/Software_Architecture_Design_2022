@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import LoginPage from './View/loginPage.js'
 import MainPage from './View/mainPage.js';
 import Controller from './Controller/Controller.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default class App extends React.Component {
   constructor(){
@@ -16,9 +17,26 @@ export default class App extends React.Component {
 
     this.controller = new Controller()
 
-
+    const app = this
+    console.log("interval setted")
+    
+    this.timer = setInterval(function(){
+      if(this.state.connected == false){
+        this.controller.reconnect()
+      }
+    }.bind(this), 1000
+    )
+    
   }
 
+  connect(){
+    if(!this.state.connected){
+      console.log("False")
+      this.controller = new Controller()
+    } else {
+      console.log("True")
+    }
+  }
   componentDidMount(){
     this.controller.subscribeStateObserver(this.notify.bind(this))
   }
@@ -32,26 +50,31 @@ export default class App extends React.Component {
       connected: connected,
       logged: logged
     }
-
     this.setState(newState)
   }
 
   render(){
     if(!this.state.connected){
       return(
-        <Text>
-          Impossibile connettersi al server, controlla la connessione...
-        </Text>
+        <SafeAreaView style = {{flex:1}}>
+          <Text>
+            Impossibile connettersi al server, controlla la connessione...
+          </Text>
+        </SafeAreaView>
       )
     }
 
     if(!this.state.logged){
       return(
-        <LoginPage controller={this.controller}/>
+        <SafeAreaView style = {{flex:1}}>
+          <LoginPage controller={this.controller}/>
+        </SafeAreaView>
       );
       } else {
       return(
-        <MainPage controller = {this.controller}/>
+        <SafeAreaView style = {{flex:1}}>
+          <MainPage controller = {this.controller}/>
+        </SafeAreaView>
       );
     }
     

@@ -1,5 +1,8 @@
+export const serverIp = '192.168.1.7'
+export const serverPort = '8888'
+
 export default class NetworkAccess {
-    constructor(controller, ws = 'ws://192.168.1.55:8888/') {
+    constructor(controller, ws = `ws://${serverIp}:${serverPort}/`) {
         this.ws = this.createWS(ws,controller)
         this.controller = controller
 
@@ -14,6 +17,9 @@ export default class NetworkAccess {
         return ws;
     }
 
+    reconnect(){
+        this.ws = this.createWS(`ws://${serverIp}:${serverPort}/`, this.controller)
+    }
     WSopen(){
         this.controller.updateConnectionState(true)
     }
@@ -27,7 +33,6 @@ export default class NetworkAccess {
         if(msg?.type == 'auth' && msg?.ok == true){
             this.controller.updateLoggedState(true)
         } else if(msg?.type == 'msg'){
-            console.log(msg)
             this.controller.rcvMsg(msg.text, msg.idMittente, msg.timestamp)
         }
     }
@@ -38,7 +43,7 @@ export default class NetworkAccess {
     }
 
     async msgRequest(idMittente, idDestinatario, token, text){
-        var response = await fetch('http://192.168.1.55:8888/msg', 
+        var response = await fetch(`http://${serverIp}:${serverPort}/msg`, 
             {
             method: 'POST',
             headers: {
@@ -56,7 +61,7 @@ export default class NetworkAccess {
     }
 
     async rcvOldMsgReq(idDestinatario, token){
-        var response = await fetch('http://192.168.1.55:8888/storedmsg', 
+        var response = await fetch(`http://${serverIp}:${serverPort}/storedmsg`, 
             {
             method: 'POST',
             headers: {
@@ -72,7 +77,7 @@ export default class NetworkAccess {
     }
 
     async registerRequest(user, email, psw, puk, prk){
-        var response= await fetch('http://192.168.1.55:8888/register', 
+        var response= await fetch(`http://${serverIp}:${serverPort}/register`, 
             {
             method: 'POST',
             headers: {
@@ -92,7 +97,7 @@ export default class NetworkAccess {
     }   
 
     async loginRequest(usr, psw){
-        var response = await fetch('http://192.168.1.55:8888/login', 
+        var response = await fetch(`http://${serverIp}:${serverPort}/login`, 
             {
             method: 'POST',
             headers: {
@@ -112,7 +117,6 @@ export default class NetworkAccess {
             const prk = response.prk;
             return {ok, token, id, prk};
         } else {
-            console.log(response.ok)
             const ok = false;
             const token = "";
             const id = "";
@@ -122,7 +126,7 @@ export default class NetworkAccess {
     }
 
     async logoutRequest(id, token){
-        var response = await fetch('http://192.168.1.55:8888/logout',
+        var response = await fetch(`http://${serverIp}:${serverPort}/logout`,
             {
             method: 'POST',
             headers: {
@@ -138,7 +142,7 @@ export default class NetworkAccess {
     }
 
     async userDataRequest(destUsr, id, token){
-        var response = await fetch('http://192.168.1.55:8888/userdata', 
+        var response = await fetch(`http://${serverIp}:${serverPort}/userdata`, 
             {
             method: 'POST',
             headers: {
@@ -156,7 +160,7 @@ export default class NetworkAccess {
     }
 
     async userDataFromIdRequest(idMittente, id, token){
-        var response = await fetch('http://192.168.1.55:8888/userdataId', 
+        var response = await fetch(`http://${serverIp}:${serverPort}/userdataId`, 
             {
             method: 'POST',
             headers: {

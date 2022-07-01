@@ -24,12 +24,13 @@ export default class LoginController {
 
             
             const chats = await this.storage.loadChats(reply.id);
-            console.log(chats)
+
             for(let chat of chats){
                 this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
                 const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
                 for(let m of msg){
-                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp)
+                    console.log(m)
+                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp, m.idMess)
                 }
             }
 
@@ -43,7 +44,6 @@ export default class LoginController {
             }
             
             //storo queste info in locale per i prossimi login
-
             return true;
         }
     }

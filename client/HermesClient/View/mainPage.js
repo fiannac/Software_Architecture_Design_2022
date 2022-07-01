@@ -1,12 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { Avatar, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Conversation from "../components/Conversation";
-
-
-import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 import ChatPage from './chatPage.js'
 
@@ -55,7 +51,6 @@ export default class MainPage extends React.Component {
       })
       newChats = newChats.concat(toAdd)
     });
-    console.log("new chats: " + JSON.stringify(newChats))
     this.setState({chats:newChats})
   }
 
@@ -137,7 +132,9 @@ export default class MainPage extends React.Component {
             </TouchableOpacity>
           </View>
 
-          <TextInput placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
+          <TextInput style = {{position: 'absolute',
+    bottom: 100,
+    right: 30,}} placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
         </SafeAreaView>
       );
     } else {
@@ -145,11 +142,6 @@ export default class MainPage extends React.Component {
         <View>
           <ChatPage controller = {this.controller} chat = {this.state.chats[this.state.chatOpenNumber].chat} userName = {this.state.chats[this.state.chatOpenNumber].user} id = {this.state.chats[this.state.chatOpenNumber].id} handleNavigation={this.handleNavigation}/>
         </View>
-      /*<View>
-        <Button onPress = {()=>this.setState({chatOpen:false})}/>
-        <ChatPage controller = {this.controller} chat = {this.state.chats[this.state.chatOpenNumber].chat} userName = {this.state.chats[this.state.chatOpenNumber].user} id = {this.state.chats[this.state.chatOpenNumber].id}/>
-      </View>
-      */
       )      
     }
   }
@@ -187,9 +179,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#122643',
   },
 })
-//<Button title = "Aggiungi chat" onPress={()=>this.createChat('Mimmo' + this.state.chats.length)}></Button>
-//<Button title = "Aggiungi msg" onPress={()=>this.createMessage('Mimmo0','we puppy')}></Button>
-/*{this.state.chats.map(( (id,i) => (
-            <Button key = {i} title = {id.user} onPress={()=>this.setState({chatOpen:true, chatOpenNumber:i})}/>
-          )))}
-*/

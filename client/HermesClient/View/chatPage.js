@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useRef} from 'react';
 import { Text } from 'react-native-elements'
-import { StyleSheet, View, Button, TextInput, SafeAreaView, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, Button, TextInput, SafeAreaView, TouchableOpacity, Dimensions, ScrollView, Keyboard } from 'react-native';
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Message from "../components/Message";
-
 
 export default class ChatPage extends React.Component {
   constructor(props){
@@ -18,6 +17,11 @@ export default class ChatPage extends React.Component {
     this.userName = props.userName
     this.id = props.id
     this.ref = React.createRef()
+    console.log(this.props.chat)
+
+    const listner = Keyboard.addListener("keyboardDidShow", () => {
+      console.log("ziopeto");
+    })
   }
 
   handleMsgSend = ()=>{
@@ -33,59 +37,48 @@ export default class ChatPage extends React.Component {
     
     return (
       
-      <View style={styles.container}>
-        <View
-            style={[styles.flexify, { paddingHorizontal: 15, paddingVertical: 25, marginVertical: 28}]}
+    <View style={styles.container}>
+
+      <View style={[styles.flexify,{height:55 ,paddingLeft:50, paddingRight:50}]}
           >
             <TouchableOpacity onPress={() => { this.props.handleNavigation(); } } activeOpacity={0.5}>
               <Icon name="arrow-left" size={18} color="white" />
             </TouchableOpacity>
-            <View style={[styles.flexify, { flex: 1, marginLeft: 15 }]}>
-              <View style={styles.flexify}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: "600",
-                    marginLeft: 10,
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  {this.userName}
-                </Text>
-              </View>
-            </View>
-          </View>
-      <ScrollView
+            
+            <Text
+              style={{
+              color: 'white',
+              fontWeight: "600",
+              marginLeft: 10,
+              textTransform: 'capitalize',
+              }}
+            > {this.userName}
+            </Text>
+           
+      </View>
       
+      <View style = {{backgroundColor: 'white', height:Dimensions.get('window').height - 105,
+          paddingLeft: 20,
+          paddingRight: 20, paddingBottom: 0}}>
+        <ScrollView
         ref={this.ref}
         onContentSizeChange={(width, height) =>
           this.ref.current.scrollTo({ y: height })
         }
-        style={{
-          backgroundColor: 'white',
-          maxHeight: Dimensions.get('window').height - 162,
-          padding: 20,
-        }}
+        
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginVertical: 5,
-          }}
-        ></View>
         {this.props.chat.map((msg, i) => (
           <Message
             key={i}
-            type={msg.type}
+            type={msg.sender}
             message={msg.text}
           />
         ))}
-      </ScrollView>
-
-      <View style={[styles.flexify, styles.positAtBottom, styles.shadow, {marginTop: 615}]}>
+        </ScrollView>
+      </View>
+      
+      <View style={[styles.flexify, styles.shadow, {height: 50, paddingLeft:20, paddingRight:20}]}>
           <TextInput
             placeholder="Invia messaggio"
             inputContainerStyle={{ borderBottomWidth: 0 }}
@@ -93,7 +86,6 @@ export default class ChatPage extends React.Component {
             onChangeText={(value) => { this.setState({msg:value}) }}
             inputStyle={{ fontSize: 12 }}
             autoFocus={true}
-            //style={{flex:1}}
           />
 
         <TouchableOpacity
@@ -109,16 +101,14 @@ export default class ChatPage extends React.Component {
         >
           <Icon name="arrow-right" size={12} color="black" />
         </TouchableOpacity>
-        </View>
       </View>
-
+    </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
     backgroundColor: '#122643',
   },
   flexify: {
@@ -143,13 +133,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     backgroundColor: 'white',
-  },
-  positAtBottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-  },
+  }
 });

@@ -20,8 +20,7 @@ export default class LocalStorage {
         const val1 = await this.createTable('authInfo','userName TEXT, id INTEGER, token TEXT, prk TEXT');    
         val2 = await this.createTable('users', 'id INTEGER, userName TEXT, puk TEXT');
         val3 = await this.createTable('chats', 'id INTEGER, idDestinatario INTEGER, idChat INTEGER');
-        val4 = await this.createTable('messages', 'id INTEGER, idDestinatario INTEGER, text TEXT, timestamp TEXT, idMess INTEGER');
-        console.log("Creazione database:", val1 && val2 && val3 && val4); 
+        val4 = await this.createTable('messages', 'id INTEGER, idDestinatario INTEGER, text TEXT, timestamp TEXT, idMess TEXT');
         return val1 && val2 && val3 && val4;
     }
 
@@ -33,7 +32,6 @@ export default class LocalStorage {
                 () => resolve(true))
         });
         ok = await ok
-        console.log("insert data:",data ," ", ok)
         return ok;
     }
     
@@ -67,15 +65,12 @@ export default class LocalStorage {
     }
         
     async getAuthInfo(){
-        console.log("entrato")
         const val = await this.getData('authInfo', '1');
         return val;
     }
 
     async getMessagesByChat(id, idDest){
-        console.log(id, idDest)
         const val = await this.getData('messages', `id = '${id}' AND idDestinatario = '${idDest}'`);
-        console.log(val)
         return val;
     }
 

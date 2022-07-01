@@ -10,7 +10,7 @@ export default class Message extends React.Component {
         if(this.props.type == 'snd'){
             return(
                 <View style={[styles.flexify, styles.spaceMsg]}>
-                  <View style={[styles.msgBg, { marginLeft: 10 }]}>
+                  <View style={[styles.msgBg, { marginLeft: 20 }]}>
                     <Text style={{ fontWeight: "600", marginVertical: 5 }}>
                       {this.props.message}
                     </Text>
@@ -20,7 +20,7 @@ export default class Message extends React.Component {
                 return(
                     <View style={[styles.flexify, styles.spaceMsg]}>
                         <View
-                        style={[styles.msgBg, { backgroundColor: '#c5c5c5', marginRight: 10 }]}
+                        style={[styles.msgBg, { backgroundColor: '#c5c5c5', marginRight: 20 }]}
                         >
                             <Text styles={{ fontWeight: "600", marginVertical: 5 }}>
                                 {this.props.message}

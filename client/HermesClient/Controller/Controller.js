@@ -10,8 +10,9 @@ import LocalStorage from '../Services/LocalStorage.js';
 
 export default class Controller{
     constructor(){
-        this.NetworkAccess = new NetworkAccess(this)
         this.loggedUser = new loggedUser()
+
+        this.NetworkAccess = new NetworkAccess(this)
         this.storage = new LocalStorage()
         this.crypto = new Crypto()
 
@@ -20,6 +21,10 @@ export default class Controller{
         this.RcvMsgController = new RcvMsgController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController, this.storage)
         this.RegistrationController = new RegistrationController(this.NetworkAccess, this.crypto, this.storage)
         this.SendMessageController = new SendMessageController(this.NetworkAccess, this.loggedUser, this.crypto, this.storage)
+    }
+
+    reconnect(){
+        this.NetworkAccess.reconnect()
     }
 
     subscribeChatObserver(observer){

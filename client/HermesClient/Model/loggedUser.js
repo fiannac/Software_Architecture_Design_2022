@@ -44,12 +44,11 @@ export default class loggedUser{
         const user = new User(id, username, puk)
         const chat = new Chat('0', '0', user)
         this.chats.set(id,chat)
-        console.log("Chat creata")
         if(this.observerChat != null){
-            console.log("Renderizzo...")
             this.observerChat(this.chats)
         }
     }
+
     createMessage(text, id, timestamp, type){
         const chat = this.chats.get(id);
         chat.addMessage(text,timestamp, type);
@@ -72,7 +71,6 @@ export default class loggedUser{
     chatExists(id){
         return this.chats.has(id)
     }
-
 
     subscribeChatObserver(observer){
         this.observerChat = observer

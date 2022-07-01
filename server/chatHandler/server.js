@@ -4,7 +4,6 @@ const axios = require('axios');
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -21,7 +20,7 @@ const mapIdInUsername = new Map()
 const onlineUsers = new Map(); // memorizzato per id
 const storedMsg = new Map(); // memorizzato per id
 
-var currId = 0;
+var currId = 69;
 
 app.use(cors({origin: '*'}));
 

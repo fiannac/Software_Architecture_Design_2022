@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import RegistrationPage from './registrationPage.js'
 
@@ -22,14 +22,12 @@ export default class LoginPage extends React.Component {
     this.setState({registerPage:value})
   }
 
-
-
   render(){
     if(this.state.registerPage){
       return(<RegistrationPage  controller={this.controller} setRegisterPage = {this.setRegisterPage}/>);
     }else{
       return (
-        <SafeAreaView>
+        <View>
           <Text>Effettua il login o registrati!</Text>
           <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
           <View style={styles.stilePassword}>
@@ -48,7 +46,7 @@ export default class LoginPage extends React.Component {
             </View>
             <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
           </View>
-        </SafeAreaView>
+        </View>
       );
     }
   }
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   bottone: {
-    flexDirection: "row",//allineo sull'asse x
+    flexDirection: "row",
     marginVertical: 5,
   }
 });
