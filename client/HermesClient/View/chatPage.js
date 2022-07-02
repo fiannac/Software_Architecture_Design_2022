@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useRef} from 'react';
 import { Text } from 'react-native-elements'
-import { StyleSheet, View, Button, TextInput, SafeAreaView, TouchableOpacity, Dimensions, ScrollView, Keyboard } from 'react-native';
+import { StyleSheet, View, Button, TextInput, SafeAreaView, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler} from 'react-native';
 import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Message from "../components/Message";
@@ -28,6 +28,11 @@ export default class ChatPage extends React.Component {
       this.setState({height : Dimensions.get('window').height})
     }.bind(this))
 
+
+    this.listnerBack = BackHandler.addEventListener('hardwareBackPress', function () {
+      this.props.handleNavigation()
+      return true;
+    }.bind(this))
   }
 
   handleMsgSend = ()=>{
@@ -41,6 +46,7 @@ export default class ChatPage extends React.Component {
   componentWillUnmount(){
     this.listnerShow.remove()
     this.listnerHide.remove()
+    this.listnerBack.remove()
   }
 
   render(){
@@ -70,19 +76,14 @@ export default class ChatPage extends React.Component {
       <View style = {{backgroundColor: 'white', height: this.state.height - 105,
           paddingLeft: 20,
           paddingRight: 20, paddingBottom: 0}}>
-        <ScrollView
-        ref={this.ref}
-        onContentSizeChange={(width, height) =>
-          this.ref.current.scrollTo({ y: height })
-        }
-        
-        showsVerticalScrollIndicator={false}
-      >
+          <ScrollView ref={this.ref} onContentSizeChange={(width, height) => this.ref.current.scrollTo({ y: height }) }
+          showsVerticalScrollIndicator={false}>
         {this.props.chat.map((msg, i) => (
           <Message
             key={i}
             type={msg.sender}
             message={msg.text}
+            timestamp={msg.timestamp}
           />
         ))}
         </ScrollView>

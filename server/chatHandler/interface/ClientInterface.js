@@ -60,6 +60,10 @@ export default class ClientInterface {
 
         this.app.post('/storedmsg', this.MsgHandler.storedMsgRequest.bind(this.MsgHandler));
         this.app.post('/msg', this.MsgHandler.msgRequest.bind(this.MsgHandler));  
+
+        this.app.get('/test', (req, res) => {
+            res.send('Il server è funzionante!');
+        })
     }
     
     initWSS(){
@@ -70,18 +74,23 @@ export default class ClientInterface {
         this.wss.on('connection', function(ws, req, client) {
             console.log("Nuovo client connesso")
             ws.on('message', async function(message) {
-                const msg = JSON.parse(message);
+                console.log("Messaggio ricevuto: " + message)
+                const msg = await JSON.parse(message);
+                console.log("Nuovo messaggio:" + msg)
                 if(msg.id == null || msg.token == null){
+                    console.log("Errore: id o token nulli "+ msg.id +" "+ msg.token)
                     return
                 }
                 if(userConnections.has(msg.id)){
                     if(userConnections.get(msg.id).token == msg.token){
-                        userConnections.get(msg.id).socket = ws
-                        socketToId.set(ws, msg.id)
+                        console.log("Aggiungo la socket alla mappa")
+                        userConnections.get(msg.id).ws = ws
+                        console.log(userConnections.get(msg.id))
                         ws.send(JSON.stringify({type:'auth',ok:true}))
                         console.log("ID: " + msg.id + " joined")
                     }
                 } else { //potrebbe essere inutile
+                    console.log("Aggiungo user alla mappa")
                     const val = await AuthHandler.checkToken(msg.id,msg.token);
                     if(val == true){
                         userConnections.set(msg.id, new UserConnection(msg.id, msg.token, ws));

@@ -35,24 +35,26 @@ export default class LoginPage extends React.Component {
       return(<RegistrationPage  controller={this.controller} setRegisterPage = {this.setRegisterPage}/>);
     }else{
       return (
-        <View>
-          <Text>Effettua il login o registrati!</Text>
-          <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
-          <View style={styles.stilePassword}>
-            <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
-            <Icon
-              name={this.state.hidePass ? 'eye-slash' : 'eye'}
-              size={15}
-              style={{marginLeft: 5}}
-              color="grey"
-              onPress={() => this.setState({hidePass: !this.state.hidePass})}
-            />
-          </View>
-          <View style={styles.bottone}>
-            <View style={styles.bottoneLogin}>
-              <Button title="Log in" onPress = {this.loginPress}  />
+        <View style = {{flex: 1,justifyContent: "center",paddingHorizontal: 10}}>
+          <View style = {{alignItems: "center",padding: 10}}>
+            <Text>Effettua il login o registrati!</Text>
+            <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
+            <View style={styles.stilePassword}>
+              <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
             </View>
-            <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
+            <Icon
+                name={this.state.hidePass ? 'eye-slash' : 'eye'}
+                size={15}
+                style={{marginLeft: 5}}
+                color="grey"
+                onPress={() => this.setState({hidePass: !this.state.hidePass})}
+              />
+            <View style={styles.bottone}>
+              <View style={styles.bottoneLogin}>
+                <Button title="Log in" onPress = {this.loginPress}  />
+              </View>
+              <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
+            </View>
           </View>
         </View>
       );

@@ -14,17 +14,13 @@ export default class LoginController {
             console.log("Login fallito")
             return false
         }else {
-            this.network.authWSRequest(reply.id, reply.token);
-
             this.loggedUser.setId(reply.id)
             this.loggedUser.setToken(reply.token)
             this.loggedUser.setPsw(Opsw)
             this.loggedUser.setUser(user)
             this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk,Opsw))
 
-            
             const chats = await this.storage.loadChats(reply.id);
-
 
             for(let chat of chats){
                 this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
@@ -43,7 +39,7 @@ export default class LoginController {
                 this.storage.insertMessage(reply.id,msg.idMittente, msg.text, msg.timestamp, 'rcv')
             }
             
-            //storo queste info in locale per i prossimi login
+            this.network.authWSRequest(reply.id, reply.token);
             return true;
         }
     }

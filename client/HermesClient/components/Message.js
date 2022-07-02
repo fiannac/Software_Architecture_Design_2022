@@ -4,27 +4,41 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 export default class Message extends React.Component {
     constructor(props) {
         super(props);
+        this.date = new Date(this.props.timestamp);
     } 
+
+    pad(d) {
+      return (d < 10) ? '0' + d.toString() : d.toString();
+    }
 
     render() { 
         if(this.props.type == 'snd'){
             return(
                 <View style={[styles.flexify, styles.spaceMsg]}>
                   <View style={[styles.msgBg, { marginLeft: 20 }]}>
+                    <>
                     <Text style={{ fontWeight: "600", marginVertical: 5 }}>
                       {this.props.message}
                     </Text>
+                    <Text styles = {{fontWeight:"300", fontSize: 6}}>
+                    {`${this.pad(this.date.getHours())}:${this.pad(this.date.getMinutes())}`}
+                    </Text>
+                    </>
                   </View>
                 </View>
             )}else{
                 return(
                     <View style={[styles.flexify, styles.spaceMsg]}>
-                        <View
-                        style={[styles.msgBg, { backgroundColor: '#c5c5c5', marginRight: 20 }]}
-                        >
-                            <Text styles={{ fontWeight: "600", marginVertical: 5 }}>
-                                {this.props.message}
-                        </Text>
+                        <View style={[styles.msgBg, { backgroundColor: '#c5c5c5', marginRight: 20 }]}>
+                          
+                          <>
+                          <Text styles={{ fontWeight: "600", marginVertical: 5 }}>
+                            {this.props.message}
+                          </Text>
+                          <Text styles = {{fontWeight:"300", fontSize: 6}}>
+                            {`${this.pad(this.date.getHours())}:${this.pad(this.date.getMinutes())}`}
+                          </Text>
+                          </>
                         </View>
                     </View>
                 );
