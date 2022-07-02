@@ -6,9 +6,6 @@ import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from 'react-n
 export default class RegistrationPage extends React.Component {
   constructor(props){
     super(props)
-    this.state = {
-      errore: false
-    }
     this.usrname = ''
     this.psw = ''
     this.psw2= ''
@@ -53,7 +50,7 @@ export default class RegistrationPage extends React.Component {
     if(res == true){
       this.props.setRegisterPage(false)
     } else {
-      this.setState({errore:true})
+      alert('Username o email già utilizzata!')
     }
   }
 
@@ -70,7 +67,6 @@ export default class RegistrationPage extends React.Component {
           <View style={styles.bottone}>
             <Button title="Registrati!" onPress={this.registratiButton}/>
           </View>
-          <Text>{this.state.errore ? 'ERRORE' : '' }</Text>
           <Button title='Torna indietro' onPress={()=>{this.props.setRegisterPage(false)}}/>
         </SafeAreaView>
     );

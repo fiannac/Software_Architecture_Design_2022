@@ -1,27 +1,27 @@
-const WebSocket = require('ws');
-const express = require('express');
-const http = require('http');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import { WebSocketServer } from 'ws';
+import  express  from 'express';
+import http from 'http';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
-const UserConnection = require('./userConnection.js');
-const AuthHandler = require('../controller/authHandler.js');
-const MsgHandler = require('../controller/msgHandler.js');
-const InfoHandler = require('../controller/infoHandler.js');
+import UserConnection from './userConnection.js';
+import AuthHandler from '../controller/authHandler.js';
+import MsgHandler from '../controller/msgHandler.js';
+import InfoHandler from '../controller/infoHandler.js';
 
-class ClientInterface {
+export default class ClientInterface {
     constructor() {
 
         this.socketToId = new Map();
         this.userConnections = new Map(); //mappa di userconnection
 
-        this.AuthHandler = new AuthHandler()
-        this.MsgHandler = new MsgHandler()
+        this.AuthHandler = new AuthHandler(this)
+        this.MsgHandler = new MsgHandler(this.userConnections)
         this.InfoHandler = new InfoHandler()
 
         this.app = express();
         this.server = http.createServer(this.app);
-        this.wss = new WebSocket.Server({ server: this.server });
+        this.wss = new WebSocketServer({ server: this.server });
 
         this.initServer();
         this.initWSS()
@@ -32,21 +32,34 @@ class ClientInterface {
         });
     }
 
+    addUserConnection(id, token){
+        this.userConnections.set(id, new UserConnection(id, token, null));
+    }
+    removeUserConnection(id){
+        if(this.userConnections.has(id)){
+            if(this.userConnections.get(id).ws != null){
+                this.socketToId.delete(this.userConnections.get(id).ws)
+            }
+            this.userConnections.delete(id);  
+        }
+        
+    }
+
     initServer(){
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/register', this.AuthHandler.registerRequest); //bind?
-        this.app.post('/login', this.AuthHandler.loginRequest);
-        this.app.post('/logout', this.AuthHandler.logoutRequest);
+        this.app.post('/register', this.AuthHandler.registerRequest.bind(this.AuthHandler)); //bind?
+        this.app.post('/login', this.AuthHandler.loginRequest.bind(this.AuthHandler));
+        this.app.post('/logout', this.AuthHandler.logoutRequest.bind(this.AuthHandler));
 
-        this.app.post('/userdata', this.InfoHandler.userDataRequest);
-        this.app.post('/userdataId', this.InfoHandler.userDataIdRequest);
+        this.app.post('/userdata', this.InfoHandler.userDataRequest.bind(this.InfoHandler));
+        this.app.post('/userdataId', this.InfoHandler.userDataIdRequest.bind(this.InfoHandler));
 
-        this.app.post('/storedmsg', this.MsgHandler.storedMsgRequest);
-        this.app.post('/msg', this.MsgHandler.msgRequest);  
+        this.app.post('/storedmsg', this.MsgHandler.storedMsgRequest.bind(this.MsgHandler));
+        this.app.post('/msg', this.MsgHandler.msgRequest.bind(this.MsgHandler));  
     }
     
     initWSS(){
@@ -64,10 +77,11 @@ class ClientInterface {
                 if(userConnections.has(msg.id)){
                     if(userConnections.get(msg.id).token == msg.token){
                         userConnections.get(msg.id).socket = ws
+                        socketToId.set(ws, msg.id)
                         ws.send(JSON.stringify({type:'auth',ok:true}))
                         console.log("ID: " + msg.id + " joined")
                     }
-                } else {
+                } else { //potrebbe essere inutile
                     const val = await AuthHandler.checkToken(msg.id,msg.token);
                     if(val == true){
                         userConnections.set(msg.id, new UserConnection(msg.id, msg.token, ws));
@@ -91,5 +105,3 @@ class ClientInterface {
 
 
 }
-
-module.exports = ClientInterface;

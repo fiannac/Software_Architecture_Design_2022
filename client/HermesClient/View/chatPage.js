@@ -11,17 +11,23 @@ export default class ChatPage extends React.Component {
     super(props)
     this.state = {
       msg : "",
+      height: Dimensions.get('window').height,
     }
     this.handleMsgSend = this.handleMsgSend.bind(this)
     this.controller = props.controller
     this.userName = props.userName
     this.id = props.id
     this.ref = React.createRef()
-    console.log(this.props.chat)
 
-    const listner = Keyboard.addListener("keyboardDidShow", () => {
-      console.log("ziopeto");
-    })
+    this.listnerShow = Keyboard.addListener("keyboardDidShow", function(e){
+      this.setState({height : Dimensions.get('window').height-e.endCoordinates.height})
+      this.ref.current.scrollToEnd()
+    }.bind(this))
+
+    this.listnerHide = Keyboard.addListener("keyboardDidHide", function(e){
+      this.setState({height : Dimensions.get('window').height})
+    }.bind(this))
+
   }
 
   handleMsgSend = ()=>{
@@ -32,7 +38,11 @@ export default class ChatPage extends React.Component {
     }
   }
 
-  
+  componentWillUnmount(){
+    this.listnerShow.remove()
+    this.listnerHide.remove()
+  }
+
   render(){
     
     return (
@@ -57,7 +67,7 @@ export default class ChatPage extends React.Component {
            
       </View>
       
-      <View style = {{backgroundColor: 'white', height:Dimensions.get('window').height - 105,
+      <View style = {{backgroundColor: 'white', height: this.state.height - 105,
           paddingLeft: 20,
           paddingRight: 20, paddingBottom: 0}}>
         <ScrollView

@@ -16,10 +16,18 @@ export default class LoginPage extends React.Component {
     this.psw = '';
 
     this.setRegisterPage = this.setRegisterPage.bind(this)
+    this.loginPress = this.loginPress.bind(this)
   }
 
   setRegisterPage(value){
     this.setState({registerPage:value})
+  }
+
+  async loginPress(){
+    if(await this.controller.login(this.usrname, this.psw) == false){
+      alert("Login fallito")
+      console.log("fallito allert")
+    }
   }
 
   render(){
@@ -42,7 +50,7 @@ export default class LoginPage extends React.Component {
           </View>
           <View style={styles.bottone}>
             <View style={styles.bottoneLogin}>
-              <Button title="Log in" onPress = {()=> this.controller.login(this.usrname, this.psw)}  />
+              <Button title="Log in" onPress = {this.loginPress}  />
             </View>
             <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
           </View>

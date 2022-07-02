@@ -44,11 +44,11 @@ export default class Controller{
     }
     
     updateConnectionState(val){
-        this.loggedUser.setConnState(val)
+        return this.loggedUser.setConnState(val)
     }
 
     updateLoggedState(val){
-        this.loggedUser.setLoggedState(val)
+        return this.loggedUser.setLoggedState(val)
     }
 
     async createChatFromUsername(username){
@@ -58,7 +58,7 @@ export default class Controller{
         return await this.CreateChatController.createChatFromId(id)
     }
     async login(user, psw){
-        this.LoginController.login(user,psw)
+        return this.LoginController.login(user,psw)
     }
     rcvMsg(text, usernameDest, timestamp){
         this.RcvMsgController.rcvMsg(text, usernameDest, timestamp)

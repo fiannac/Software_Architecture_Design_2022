@@ -15,7 +15,7 @@ export default class SendMessageController {
         
         const date = new Date()
 
-        var res = await this.network.msgRequest(id, idDest, token, ctext);
+        var res = await this.network.msgRequest(id, idDest, token, ctext, date);
         res = await this.loggedUser.createMessage(text, idDest, date, 'snd')
         //salva in locale il messaggio
         res = await this.storage.insertMessage(id,idDest, text, date, 'snd')

@@ -11,6 +11,7 @@ export default class LoginController {
         const psw = this.crypto.hashPsw(Opsw)
         const reply = await this.network.loginRequest(user,psw);
         if(reply.ok == false){
+            console.log("Login fallito")
             return false
         }else {
             this.network.authWSRequest(reply.id, reply.token);
@@ -19,17 +20,16 @@ export default class LoginController {
             this.loggedUser.setToken(reply.token)
             this.loggedUser.setPsw(Opsw)
             this.loggedUser.setUser(user)
-
             this.loggedUser.setPrk(this.crypto.decryptPrk(reply.prk,Opsw))
 
             
             const chats = await this.storage.loadChats(reply.id);
 
+
             for(let chat of chats){
                 this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
                 const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
                 for(let m of msg){
-                    console.log(m)
                     this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp, m.idMess)
                 }
             }

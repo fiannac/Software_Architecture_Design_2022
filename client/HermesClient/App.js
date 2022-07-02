@@ -18,7 +18,6 @@ export default class App extends React.Component {
     this.controller = new Controller()
 
     const app = this
-    console.log("interval setted")
     
     this.timer = setInterval(function(){
       if(this.state.connected == false){
@@ -31,12 +30,10 @@ export default class App extends React.Component {
 
   connect(){
     if(!this.state.connected){
-      console.log("False")
       this.controller = new Controller()
-    } else {
-      console.log("True")
     }
   }
+  
   componentDidMount(){
     this.controller.subscribeStateObserver(this.notify.bind(this))
   }

@@ -42,7 +42,7 @@ export default class NetworkAccess {
         this.ws.send(jmsg);
     }
 
-    async msgRequest(idMittente, idDestinatario, token, text){
+    async msgRequest(idMittente, idDestinatario, token, text, timestamp){
         var response = await fetch(`http://${serverIp}:${serverPort}/msg`, 
             {
             method: 'POST',
@@ -54,7 +54,8 @@ export default class NetworkAccess {
                 idMittente: idMittente,
                 idDestinatario: idDestinatario,
                 token: token,
-                text: text
+                text: text,
+                timestamp: timestamp
             })
         }).then((respone) => respone.json()).then(json => json.ok)
         return response;
@@ -108,8 +109,7 @@ export default class NetworkAccess {
                 userName: usr,
                 password: psw
             })
-        }).then((res) => res.json()).then((res) => {return res})
-
+        }).then((res) => res.json())
         if(response.ok == true){
             const ok = true;
             const token = response.token;
@@ -176,5 +176,4 @@ export default class NetworkAccess {
         response = await response.json()
         return response;
     }
-
 }

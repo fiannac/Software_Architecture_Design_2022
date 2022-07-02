@@ -1,4 +1,4 @@
-class UserConnection {
+export default class UserConnection {
     constructor(id, token, ws) {
         this.id = id
         this.token = token
@@ -15,5 +15,3 @@ class UserConnection {
         return this.ws
     }
 }
-
-module.exports = UserConnection

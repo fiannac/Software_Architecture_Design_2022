@@ -58,8 +58,7 @@ export default class LocalStorage {
         const val = new Promise((resolve, reject) => {
             this.db.transaction(tx => {
             tx.executeSql(query, null,
-              (tx, { rows: { _array } }) => { resolve(_array)})},  
-              (tx, error) => console.log('Error get data', error)
+              (tx, { rows: { _array } }) => { resolve(_array)})}
           )})
         return val;
     }
@@ -84,8 +83,7 @@ export default class LocalStorage {
         var val = new Promise((resolve, reject) => {
             this.db.transaction(tx => {
             tx.executeSql(query, null,
-                (tx, { rows: { _array } }) => { resolve(_array)})},  
-                (tx, error) => console.log('Error load chats', error)
+                (tx, { rows: { _array } }) => { resolve(_array)})}
             )})
         val = await val;
         return val;
