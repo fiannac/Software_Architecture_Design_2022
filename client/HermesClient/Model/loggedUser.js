@@ -36,6 +36,9 @@ export default class loggedUser{
     setPrk(prk){
         this.prk = prk
     }
+    setPuk(puk){
+        this.puk = puk
+    }
     setToken(token){
         this.token = token
     }

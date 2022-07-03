@@ -1,29 +1,37 @@
 class DAO{
     constructor(){
         this.data = new Map();
+        this.msgIdMittente = new Map()
     }
 
-    async storeMsg(idMittente, idDestinatario, text, timestamp){
-        console.log("Store msg request: ", idMittente, idDestinatario, text, timestamp);
+    async storeMsg(idMittente, idDestinatario, text, keyM, keyD, timestamp){
         if(this.data.has(idDestinatario)){
-            console.log("Some messages found ", this.data.get(idDestinatario));
-            this.data.get(idDestinatario).push({idMittente: idMittente, idDestinatario: idDestinatario, text: text, timestamp: timestamp});
+            this.data.get(idDestinatario).push({idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD, timestamp: timestamp});
         } else {
-            console.log("No messages found");
-            this.data.set(idDestinatario, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, timestamp: timestamp}]);
+            this.data.set(idDestinatario, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp}]);
         }
+
+        if(this.msgIdMittente.has(idMittente)){
+            this.msgIdMittente.get(idMittente).push({idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp});
+        } else {
+            this.msgIdMittente.set(idMittente, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp}]);
+        }
+
+
         return true;
     }
 
-    async storedMsgRequest(idDestinatario){
+    async storedMsgRequest(idDestinatario, token, timestamp){
+
         var list = [];
         if(this.data.has(idDestinatario)){
-            console.log("Some messages found ", this.data.get(idDestinatario));
             list = this.data.get(idDestinatario);
-        } else {
-            console.log("No messages found for ", idDestinatario);
-            console.log("All messages: ", this.data);
+        }  
+        if(this.msgIdMittente.has(idDestinatario)){
+            var list2 = this.msgIdMittente.get(idDestinatario);
+            list = list2.concat(list);
         }
+        list = list.filter(msg => new Date(msg.timestamp) > new Date(timestamp));
         return {list: list};
     }
     

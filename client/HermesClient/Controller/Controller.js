@@ -5,7 +5,7 @@ import RegistrationController from "./RegistrationController";
 import SendMessageController from "./SendMsgController";
 import NetworkAccess from "../Services/networkAccess.js"
 import loggedUser from "../Model/loggedUser";
-import Crypto from '../Services/crypto.js';
+import Crypto from '../Services/cryptoService.js';
 import LocalStorage from '../Services/LocalStorage.js';
 
 export default class Controller{
@@ -60,8 +60,8 @@ export default class Controller{
     async login(user, psw){
         return this.LoginController.login(user,psw)
     }
-    rcvMsg(text, usernameDest, timestamp){
-        this.RcvMsgController.rcvMsg(text, usernameDest, timestamp)
+    rcvMsg(text, usernameDest, idMittente,timestamp){
+        return this.RcvMsgController.rcvMsg(text, usernameDest, idMittente,timestamp)
     }
     async registerUser(user, email, psw){
         return await this.RegistrationController.registerUser(user,email,psw)

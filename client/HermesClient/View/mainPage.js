@@ -14,9 +14,9 @@ export default class MainPage extends React.Component {
     this.state = {
       chats : [],
       chatOpen : false,
-      chatOpenNumber : -1
     }
 
+    this.chatOpenNumber = -1
     this.newUser = ''
     this.controller = props.controller
 
@@ -115,8 +115,9 @@ export default class MainPage extends React.Component {
               <Conversation
                 key={i}
                 id={id.user}
-                handleNavigation={()=>this.setState({chatOpen:true, chatOpenNumber:i})}
+                handleNavigation={()=>{this.chatOpenNumber = i; this.setState({chatOpen:true})}}
                 text={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1].text}
+                timestamp={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1].timestamp}
               />
             ))}
             </ScrollView>
@@ -131,16 +132,15 @@ export default class MainPage extends React.Component {
             <Icon name="plus" size={24} color="white" />
             </TouchableOpacity>
           </View>
-
           <TextInput style = {{position: 'absolute',
-    bottom: 100,
-    right: 30,}} placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
+            bottom: 100,
+            right: 30,}} placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
         </SafeAreaView>
       );
     } else {
       return(
         <View>
-          <ChatPage controller = {this.controller} chat = {this.state.chats[this.state.chatOpenNumber].chat} userName = {this.state.chats[this.state.chatOpenNumber].user} id = {this.state.chats[this.state.chatOpenNumber].id} handleNavigation={this.handleNavigation}/>
+          <ChatPage controller = {this.controller} chat = {this.state.chats[this.chatOpenNumber].chat.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)})} userName = {this.state.chats[this.chatOpenNumber].user} id = {this.state.chats[this.chatOpenNumber].id} handleNavigation={this.handleNavigation}/>
         </View>
       )      
     }

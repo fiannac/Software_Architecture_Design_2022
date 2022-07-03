@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useRef} from 'react';
+import React from 'react';
 import { Text } from 'react-native-elements'
-import { StyleSheet, View, Button, TextInput, SafeAreaView, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler} from 'react-native';
-import { touchProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
+import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Message from "../components/Message";
 
@@ -76,16 +74,16 @@ export default class ChatPage extends React.Component {
       <View style = {{backgroundColor: 'white', height: this.state.height - 105,
           paddingLeft: 20,
           paddingRight: 20, paddingBottom: 0}}>
-          <ScrollView ref={this.ref} onContentSizeChange={(width, height) => this.ref.current.scrollTo({ y: height }) }
+          <ScrollView ref={this.ref} onContentSizeChange={(width, height) => this.ref.current.scrollTo({ y: height, animated: false }) }
           showsVerticalScrollIndicator={false}>
-        {this.props.chat.map((msg, i) => (
-          <Message
-            key={i}
-            type={msg.sender}
-            message={msg.text}
-            timestamp={msg.timestamp}
-          />
-        ))}
+            {this.props.chat.map((msg, i) => (
+            <Message
+              key={i}
+              type={msg.sender}
+              message={msg.text}
+              timestamp={msg.timestamp}
+            />
+          ))}
         </ScrollView>
       </View>
       
@@ -96,7 +94,6 @@ export default class ChatPage extends React.Component {
             ref={input => { this.textInput = input; }}
             onChangeText={(value) => { this.setState({msg:value}) }}
             inputStyle={{ fontSize: 12 }}
-            autoFocus={true}
           />
 
         <TouchableOpacity

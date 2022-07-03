@@ -5,7 +5,7 @@ const msgServerIp = '192.168.1.7'
 const msgServerPort = '8890' 
 
 export default class msgSerivceConnection{
-    async storeMsg(idMittente, idDestinatario, text, timestamp){
+    async storeMsg(idMittente, idDestinatario, text, keyM, keyD, timestamp){
         var resp = await fetch(`http://${msgServerIp}:${msgServerPort}/storeMsg`, 
             {
             method: 'POST',
@@ -17,6 +17,8 @@ export default class msgSerivceConnection{
                 idMittente: idMittente,
                 idDestinatario: idDestinatario,
                 text: text,
+                keyM: keyM,
+                keyD: keyD,
                 timestamp: timestamp
             })
         })
@@ -28,7 +30,7 @@ export default class msgSerivceConnection{
         return resp;
     }
     
-    async storedMsgRequest(idDestinatario){
+    async storedMsgRequest(idDestinatario, token, timestamp){
         var resp = await fetch(`http://${msgServerIp}:${msgServerPort}/storedMsgRequest`, 
             {
             method: 'POST',
@@ -37,7 +39,9 @@ export default class msgSerivceConnection{
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                idDestinatario: idDestinatario
+                idDestinatario: idDestinatario,
+                token: token,
+                timestamp: timestamp
             })
         })
         try{

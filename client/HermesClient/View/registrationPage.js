@@ -6,6 +6,7 @@ import { StyleSheet, Text, View, Button, TextInput, BackHandler } from 'react-na
 export default class RegistrationPage extends React.Component {
   constructor(props){
     super(props)
+ 
     this.usrname = ''
     this.psw = ''
     this.psw2= ''
@@ -27,6 +28,7 @@ export default class RegistrationPage extends React.Component {
   }  
 
   async registratiButton(){
+    this.setState({loading: true})
     if(this.psw.length < 8 || !this.psw.match(/[A-Z]/i) || !this.psw.match(/[0-9]/i)){
       this.setState({errore: true})
       alert('Password non valida')

@@ -47,7 +47,6 @@ export default class CreateChatController {
         const puk = data.puk
         this.loggedUser.createChat(idMittente, userNameMittente, puk)
         
-        //memorizza chat in locale
         var res = this.storage.insertUser(idMittente, userNameMittente, puk)
         var res = this.storage.insertChat(id, idMittente, 0)
         

@@ -9,17 +9,18 @@ export default class SendMessageController {
     async inviaMessaggio(idDest, text){  
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
-        const destPubk = this.loggedUser.getUserPbk(idDest)
-        const ctext = this.crypto.encryptMsg(text, destPubk)
-        
+        const destPuk = this.loggedUser.getUserPbk(idDest)
+
+        const key = this.crypto.generateKey()
+        const keyM = await this.crypto.encryptKey(key, this.loggedUser.puk)
+        const keyD = await this.crypto.encryptKey(key, destPuk)
+        const ctext = await this.crypto.encryptMsg(text, key)
         
         var date = new Date()
         date = date.toString()
         
-        var res = await this.network.msgRequest(id, idDest, token, ctext, date);
+        var res = await this.network.msgRequest(id, idDest, token, ctext, keyM, keyD , date);
         res = await this.loggedUser.createMessage(text, idDest, date, 'snd')
-        //salva in locale il messaggio
-        res = await this.storage.insertMessage(id,idDest, text, date, 'snd')
+        res = await this.storage.insertMessage(id, idDest, text, date, 'snd')
     }
-    
 }

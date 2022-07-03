@@ -33,7 +33,7 @@ export default class NetworkAccess {
         if(msg?.type == 'auth' && msg?.ok == true){
             this.controller.updateLoggedState(true)
         } else if(msg?.type == 'msg'){
-            this.controller.rcvMsg(msg.text, msg.idMittente, msg.timestamp)
+            this.controller.rcvMsg(msg.text, msg.keyD, msg.idMittente, msg.timestamp)
         }
     }
 
@@ -42,7 +42,7 @@ export default class NetworkAccess {
         this.ws.send(jmsg);
     }
 
-    async msgRequest(idMittente, idDestinatario, token, text, timestamp){
+    async msgRequest(idMittente, idDestinatario, token, text, keyM, keyD, timestamp){
         var response = await fetch(`http://${serverIp}:${serverPort}/msg`, 
             {
             method: 'POST',
@@ -55,13 +55,15 @@ export default class NetworkAccess {
                 idDestinatario: idDestinatario,
                 token: token,
                 text: text,
+                keyM: keyM,
+                keyD: keyD,
                 timestamp: timestamp
             })
         }).then((respone) => respone.json()).then(json => json.ok)
         return response;
     }
 
-    async rcvOldMsgReq(idDestinatario, token){
+    async rcvOldMsgReq(idDestinatario, token, timestamp){
         var response = await fetch(`http://${serverIp}:${serverPort}/storedmsg`, 
             {
             method: 'POST',
@@ -71,7 +73,8 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 idDestinatario: idDestinatario,
-                token: token
+                token: token,
+                timestamp: timestamp
             })
         }).then((response) => response.json())
         return response;
@@ -115,7 +118,8 @@ export default class NetworkAccess {
             const token = response.token;
             const id = response.id;
             const prk = response.prk;
-            return {ok, token, id, prk};
+            const puk = response.puk;
+            return {ok, token, id, prk, puk};
         } else {
             const ok = false;
             const token = "";

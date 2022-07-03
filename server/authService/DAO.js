@@ -12,13 +12,13 @@ class DAO{
 
     }
 
-    async register(userName, password, prk, email){
+    async register(userName, password, prk, puk, email){
         if(this.UsernameToId.has(userName)){
             return {ok: false, error: "User already exists"};
         } else {
             let id = uuid.v4();
             this.UsernameToId.set(userName, id);
-            this.data.set(id, {userName: userName, password: password, prk: prk, email: email, id:id, token:null});
+            this.data.set(id, {userName: userName, password: password, prk: prk, puk:puk, email: email, id:id, token:null});
             return {ok: true, id: id};
         }
     }
@@ -29,20 +29,16 @@ class DAO{
             if(user.password == password){
                 let token = uuid.v4();
                 user.token = token;
-                console.log("Ok login: ", user);
-                return {ok: true, id: id, token: token, prk: user.prk};
+                return {ok: true, id: id, token: token, prk: user.prk, puk: user.puk};
             } else {
-                console.log("Password wrong");
                 return {ok: false, error: "Wrong password"};
             }
         } else {
-            console.log("User not found");
             return {ok: false, error: "User does not exist"};
         }
     }
     async logout(id, token){
         let user = this.data.get(id);
-        console.log("Logout request: ", user);
         if(user?.token === token){
             user.token = null;
             return {ok: true};

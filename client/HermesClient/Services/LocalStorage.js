@@ -28,7 +28,7 @@ export default class LocalStorage {
         const query = `INSERT INTO ${table} VALUES(${data})`;
         var ok = new Promise((resolve, reject) => {
               this.db.transaction(tx => { tx.executeSql(query)},
-                () => {resolve(false); console.log('Error insert data')},
+                () => resolve(false),
                 () => resolve(true))
         });
         ok = await ok

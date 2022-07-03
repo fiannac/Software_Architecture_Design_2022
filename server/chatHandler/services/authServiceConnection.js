@@ -22,7 +22,6 @@ export default class AuthServiceConnection{
             })
         })
         response = await response.json()
-        console.log("response: ", response)
         return response;
     }
     async loginRequest(userName, password){
@@ -39,10 +38,9 @@ export default class AuthServiceConnection{
             })
         })
         response = await response.json()
-        console.log("response: ", response.body)
         return response;
     }
-    async logoutRequest(token, id){
+    async logoutRequest(id, token){
         var response = await fetch(`http://${authServerIp}:${authServerPort}/logout`, 
             {
             method: 'POST',
@@ -72,7 +70,7 @@ export default class AuthServiceConnection{
             })
         })
         response = await response.json()
-        return response;s
+        return response;
     }
 }
 

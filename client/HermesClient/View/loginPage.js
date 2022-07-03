@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import RegistrationPage from './registrationPage.js'
 
@@ -8,7 +8,8 @@ export default class LoginPage extends React.Component {
     super(props)
     this.state = {
       hidePass: true,
-      registerPage: false
+      registerPage: false,
+      loading: false
     }
 
     this.controller = props.controller
@@ -24,10 +25,11 @@ export default class LoginPage extends React.Component {
   }
 
   async loginPress(){
+    this.setState({loading: true})
     if(await this.controller.login(this.usrname, this.psw) == false){
       alert("Login fallito")
-      console.log("fallito allert")
     }
+    this.setState({loading: false})
   }
 
   render(){
@@ -56,6 +58,7 @@ export default class LoginPage extends React.Component {
               <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
             </View>
           </View>
+          {<ActivityIndicator size="large" /> && this.state.loading}
         </View>
       );
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View, ActivityIndicator } from 'react-native';
 import LoginPage from './View/loginPage.js'
 import MainPage from './View/mainPage.js';
 import Controller from './Controller/Controller.js';
@@ -53,11 +53,13 @@ export default class App extends React.Component {
   render(){
     if(!this.state.connected){
       return(
-        <SafeAreaView style = {{flex:1}}>
-          <Text>
+        
+        <View style = {{flex: 1,justifyContent: "center", paddingHorizontal:10}}>
+          <Text style = {{textAlign: 'center', paddingBottom: 50}}>
             Impossibile connettersi al server, controlla la connessione...
           </Text>
-        </SafeAreaView>
+          <ActivityIndicator size="large" />
+        </View>
       )
     }
 

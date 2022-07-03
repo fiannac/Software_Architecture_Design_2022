@@ -7,13 +7,15 @@ export default class RcvMsgController {
         this.storage = storage
     }
 
-    async rcvMsg(text, idMittente, timestamp){  
+    async rcvMsg(text, keyD, idMittente, timestamp){  
         if(!this.loggedUser.chats.has(idMittente)){
             const res = await this.createChat.createChatFromId(idMittente)
         }
-        this.loggedUser.createMessage(this.crypto.decryptMsg(text, this.loggedUser.prk), idMittente, timestamp, 'rcv')
 
-        const res = await this.storage.insertMessage(this.loggedUser.id,idMittente,text, timestamp, 'rcv')
+        const key = await this.crypto.decryptKey(keyD, this.loggedUser.prk)
+        const msg = await this.crypto.decryptMsg(text, key)
+        this.loggedUser.createMessage(msg, idMittente, timestamp, 'rcv')
+        const res = await this.storage.insertMessage(this.loggedUser.id,idMittente,msg, timestamp, 'rcv')
     }
     
 }

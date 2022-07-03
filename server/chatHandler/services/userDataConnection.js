@@ -22,7 +22,6 @@ export default class UserDataConnection {
         return response;
     }
     async userDataRequest(userName){
-        console.log("Richiedo dati utente: ", userName)
         var response = await fetch(`http://${userServerIp}:${userServerPort}/userData`,
             {
             method: 'POST',
