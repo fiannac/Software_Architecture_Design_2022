@@ -67,10 +67,16 @@ export default class Controller{
         return await this.RegistrationController.registerUser(user,email,psw)
     }
     async inviaMessaggio(dest, text){
-        this.SendMessageController.inviaMessaggio(dest,text)
+        return this.SendMessageController.inviaMessaggio(dest,text)
     }
     async logout(){
         this.LoginController.logout()
     }
+
+    async bloccaUtente(idDaBloccare){
+        const id = this.loggedUser.id
+        const token = this.loggedUser.token
+        return await this.CreateChatController.bloccaUtente(id, token, idDaBloccare)
+    } 
 
 }

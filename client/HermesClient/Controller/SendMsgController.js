@@ -18,9 +18,14 @@ export default class SendMessageController {
         
         var date = new Date()
         date = date.toString()
-        
+        this.loggedUser.createMessage(text, idDest, date, 'snd')
         var res = await this.network.msgRequest(id, idDest, token, ctext, keyM, keyD , date);
-        res = await this.loggedUser.createMessage(text, idDest, date, 'snd')
-        res = await this.storage.insertMessage(id, idDest, text, date, 'snd')
+        
+        if(res == true){
+            res = await this.storage.insertMessage(id, idDest, text, date, 'snd')
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -54,9 +54,19 @@ export default class MainPage extends React.Component {
     this.setState({chats:newChats})
   }
 
-  handleCreateChat = () =>{
+  async handleCreateChat(){
     if(this.newUser != ''){
-      this.controller.createChatFromUsername(this.newUser)
+      const res = await this.controller.createChatFromUsername(this.newUser)
+      if(res == true){
+        this.chatOpenNumber = this.state.chats.length-1;
+        this.setState({chatOpen:true})
+      } else if(res == -1) {
+        alert('Non puoi creare una chat con te stesso!')
+      } else if(res == -2){
+        alert('Non esiste un utente con questo username!')
+      } else if(res == -3){
+        alert('Hai già una chat con questo utente!')
+      }
       this.textInput.clear()
       this.newUser = ''
     }

@@ -7,18 +7,18 @@ export default class CreateChatController {
 
     async createChatFromUsername(username){  
         if(username == this.loggedUser.userName){
-            return false
+            return -1
         }
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
 
         const data = await this.network.userDataRequest(username, id, token) 
-
         if(data.ok == false){
-            return false;
+            return -2;
         }
+
         if(this.loggedUser.chatExists(data.id)){
-            return false;
+            return -3;
         }
         const idDest = data.id
         const puk = data.puk
@@ -52,5 +52,12 @@ export default class CreateChatController {
         
         return true
     }
-    
+
+    async bloccaUtente(id, token, idDaBloccare){ //id è l'id dell'utente che sta bloccando/sbloccando
+        const res = await this.network.blockUser(id, token, idDaBloccare)
+        if(res.ok == false){
+            return false;
+        }
+        return true;
+    }
 }

@@ -66,5 +66,14 @@ export default class AuthHandler {
             return true;
         }
     }
+
+    async activateAccount(req, res){
+        const ok = await this.authServiceConnection.activateAccount(req.params.id)
+        if(ok == true){
+            res.send("Account attivato!")
+        } else {
+            res.send("Il link di attivazione utilizzato non è valido!")
+        }
+    }
 }
 

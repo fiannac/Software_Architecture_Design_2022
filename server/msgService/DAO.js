@@ -1,7 +1,7 @@
 class DAO{
     constructor(){
         this.data = new Map();
-        this.msgIdMittente = new Map()
+        this.blocked = new Map();
     }
 
     async storeMsg(idMittente, idDestinatario, text, keyM, keyD, timestamp){
@@ -10,31 +10,46 @@ class DAO{
         } else {
             this.data.set(idDestinatario, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp}]);
         }
-
-        if(this.msgIdMittente.has(idMittente)){
-            this.msgIdMittente.get(idMittente).push({idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp});
-        } else {
-            this.msgIdMittente.set(idMittente, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp}]);
-        }
-
-
         return true;
     }
 
     async storedMsgRequest(idDestinatario, token, timestamp){
-
         var list = [];
         if(this.data.has(idDestinatario)){
             list = this.data.get(idDestinatario);
         }  
-        if(this.msgIdMittente.has(idDestinatario)){
-            var list2 = this.msgIdMittente.get(idDestinatario);
-            list = list2.concat(list);
-        }
         list = list.filter(msg => new Date(msg.timestamp) > new Date(timestamp));
         return {list: list};
     }
-    
+
+    async deleteStoredMsg(idDestinatario){
+        if(this.data.has(idDestinatario)){
+            this.data.delete(idDestinatario);
+        }  
+    }
+
+    async blockUser(id, idBlocked){
+        if(this.blocked.has(id)){
+            if(this.blocked.get(id).has(idBlocked)){
+                this.blocked.get(id).delete(idBlocked);
+            } else {
+                this.blocked.get(id).set(idBlocked,true);
+            }
+        } else {
+            const newBlocklist = new Map();
+            newBlocklist.set(idBlocked,true);
+            this.blocked.set(id,newBlocklist);
+        }
+    }
+
+    async checkBlockedUser(id, idBlocked){
+        if(this.blocked.has(idDestinatario)){
+            if(this.blocked.get(idDestinatario).has(idMittente)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 module.exports = DAO

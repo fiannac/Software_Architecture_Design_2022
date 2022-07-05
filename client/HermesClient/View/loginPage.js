@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 're
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import RegistrationPage from './registrationPage.js'
 
+
 export default class LoginPage extends React.Component {
   constructor(props){
     super(props)
@@ -33,6 +34,8 @@ export default class LoginPage extends React.Component {
   }
 
   render(){
+  
+
     if(this.state.registerPage){
       return(<RegistrationPage  controller={this.controller} setRegisterPage = {this.setRegisterPage}/>);
     }else{

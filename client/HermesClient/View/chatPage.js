@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native-elements'
 import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon2 from 'react-native-vector-icons/Entypo'
 import Message from "../components/Message";
 
 export default class ChatPage extends React.Component {
@@ -33,11 +34,14 @@ export default class ChatPage extends React.Component {
     }.bind(this))
   }
 
-  handleMsgSend = ()=>{
+  async handleMsgSend(){
     if(this.state.msg != ''){
-      this.controller.inviaMessaggio(this.id,this.state.msg)
+      const res = await this.controller.inviaMessaggio(this.id,this.state.msg)
       this.setState({msg:''})
       this.textInput.clear()
+      if(res == false){
+        alert("Il messaggio non è stato consegnato, potresti essere stato bloccato!")
+      }
     }
   }
 
@@ -53,22 +57,19 @@ export default class ChatPage extends React.Component {
       
     <View style={styles.container}>
 
-      <View style={[styles.flexify,{height:55 ,paddingLeft:50, paddingRight:50}]}
-          >
-            <TouchableOpacity onPress={() => { this.props.handleNavigation(); } } activeOpacity={0.5}>
-              <Icon name="arrow-left" size={18} color="white" />
-            </TouchableOpacity>
-            
-            <Text
-              style={{
-              color: 'white',
-              fontWeight: "600",
-              marginLeft: 10,
-              textTransform: 'capitalize',
-              }}
-            > {this.userName}
-            </Text>
-           
+      <View style={[styles.flexify,{height:55 }]}>
+        <TouchableOpacity onPress={() => { this.props.handleNavigation(); } } activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
+          <Icon name="arrow-left" size={20} color='white'/>
+        </TouchableOpacity>
+
+        <Text style={{color: 'white',fontWeight: "600",textTransform: 'capitalize',}}>
+          {this.userName}
+        </Text>
+
+        <TouchableOpacity onPress={()=>{this.controller.bloccaUtente(this.props.id)}} activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
+          <Icon2 name="dots-three-vertical" size={20} color='white' />
+        </TouchableOpacity>
+
       </View>
       
       <View style = {{backgroundColor: 'white', height: this.state.height - 105,

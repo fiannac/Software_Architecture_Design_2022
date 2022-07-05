@@ -72,6 +72,22 @@ export default class AuthServiceConnection{
         response = await response.json()
         return response;
     }
+
+    async activateAccount(id){
+        var response = await fetch(`http://${authServerIp}:${authServerPort}/checkToken`, 
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            })
+        })
+        response = await response.json()
+        return response.ok;
+    }
 }
 
 

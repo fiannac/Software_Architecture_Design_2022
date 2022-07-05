@@ -29,6 +29,8 @@ class HTTPinterface{
         this.app.post('/login', this.controller.login.bind(this.controller));
         this.app.post('/logout', this.controller.logout.bind(this.controller));
         this.app.post('/checkToken', this.controller.checkToken.bind(this.controller));
+        
+        this.app.post('/activate', this.controller.activate.bind(this.controller)); //implementa nel chathandler
     }
 }
 

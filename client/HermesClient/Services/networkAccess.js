@@ -180,4 +180,21 @@ export default class NetworkAccess {
         response = await response.json()
         return response;
     }
+
+    async blockUser(id, token, idBlocked){
+        var response = await fetch(`http://${serverIp}:${serverPort}/blockUser`, 
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                token: token,
+                idBlocked: idBlocked
+            })
+        }).then((res) => res.json())
+        return response.ok;
+    }
 }

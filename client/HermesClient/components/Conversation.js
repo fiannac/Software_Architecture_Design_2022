@@ -8,6 +8,7 @@ const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/
 export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
+
         this.date = new Date(this.props.timestamp);
     } 
 
@@ -26,7 +27,6 @@ export default class Conversation extends React.Component {
             }}
             onPress={this.props.handleNavigation}
             >
-    
             <View
                 style={{
                     flex: 1,
@@ -42,20 +42,18 @@ export default class Conversation extends React.Component {
                     uri: PLACEHOLDER_AVATAR,
                   }}
                 />
-                <View style={{flexDirection: 'column', paddingLeft:15}}>
+                <View style={{flexDirection: 'column', paddingLeft:15, width:'75%'}}>
                     
-                    <View style ={{flexDirection: 'row', justifyContent:'space-between', width:'70%'}}>
-                        <Text h5 style={{ fontWeight: '700' }}>
-                            {this.props.id}
-                        </Text>
-                        {<Text style={{ fontWeight: '200' }}>{this.pad(this.date.getHours())}:{this.pad(this.date.getMinutes())}</Text>}
-                    </View>
+                    <Text h5 style={{ fontWeight: '700' }}>
+                        {this.props.id}
+                    </Text>
+                 
 
-                    <Text style={{ color: 'gray', marginLeft: 5}}>
+                    <Text style={{ color: 'gray'}}>
                         {this.props.text.length >30 ? this.props.text.slice(0, 30) + '...' : this.props.text.slice(0, 30) }
                     </Text>
-
                 </View>
+                {(this.props.timestamp != ' ') && <Text style={{ fontWeight: '200' }}>{this.pad(this.date.getHours())}:{this.pad(this.date.getMinutes())}</Text>}
             </View>
 
             </TouchableOpacity>

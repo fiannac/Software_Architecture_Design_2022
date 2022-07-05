@@ -51,7 +51,7 @@ export default class ClientInterface {
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/register', this.AuthHandler.registerRequest.bind(this.AuthHandler)); //bind?
+        this.app.post('/register', this.AuthHandler.registerRequest.bind(this.AuthHandler));
         this.app.post('/login', this.AuthHandler.loginRequest.bind(this.AuthHandler));
         this.app.post('/logout', this.AuthHandler.logoutRequest.bind(this.AuthHandler));
 
@@ -60,7 +60,10 @@ export default class ClientInterface {
 
         this.app.post('/storedmsg', this.MsgHandler.storedMsgRequest.bind(this.MsgHandler));
         this.app.post('/msg', this.MsgHandler.msgRequest.bind(this.MsgHandler));  
+        this.app.post('/blockUser', this.MsgHandler.blockUserRequest.bind(this.MsgHandler));
 
+        this.app.get('/activate/:id', this.AuthHandler.activateAccount.bind(this.controller)); //implementa nel chathandler
+        
         this.app.get('/test', (req, res) => {
             res.send('Server is running...');
         })
