@@ -43,8 +43,14 @@ class DAO{
     }
 
     async checkBlockedUser(id, idBlocked){
-        if(this.blocked.has(idDestinatario)){
-            if(this.blocked.get(idDestinatario).has(idMittente)){
+        console.log(this.blocked);
+        if(this.blocked.has(id)){
+            console.log('has id');
+            console.log(this.blocked.get(id));
+            console.log(idBlocked);
+
+            console.log(this.blocked.get(id).has(idBlocked));
+            if(this.blocked.get(id).has(idBlocked)){
                 return true;
             }
         }

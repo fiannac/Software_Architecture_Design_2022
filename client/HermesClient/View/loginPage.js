@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 'react-native';
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import RegistrationPage from './registrationPage.js'
 
@@ -10,7 +11,8 @@ export default class LoginPage extends React.Component {
     this.state = {
       hidePass: true,
       registerPage: false,
-      loading: false
+      loading: false,
+      rememberMeLogin: false
     }
 
     this.controller = props.controller
@@ -27,7 +29,7 @@ export default class LoginPage extends React.Component {
 
   async loginPress(){
     this.setState({loading: true})
-    if(await this.controller.login(this.usrname, this.psw) == false){
+    if(await this.controller.login(this.usrname, this.psw, this.state.rememberMeLogin) == false){
       alert("Login fallito")
     }
     this.setState({loading: false})
@@ -53,6 +55,13 @@ export default class LoginPage extends React.Component {
                 style={{marginLeft: 5}}
                 color="grey"
                 onPress={() => this.setState({hidePass: !this.state.hidePass})}
+              />
+            <Icon
+                name={this.state.rememberMeLogin ? 'eye-slash' : 'eye'}
+                size={15}
+                style={{marginLeft: 5}}
+                color="black"
+                onPress={() => this.setState({rememberMeLogin: !this.state.rememberMeLogin})}
               />
             <View style={styles.bottone}>
               <View style={styles.bottoneLogin}>
@@ -94,5 +103,8 @@ const styles = StyleSheet.create({
   bottone: {
     flexDirection: "row",
     marginVertical: 5,
-  }
+  },
+  checkbox: {
+    alignSelf: "center",
+  },
 });

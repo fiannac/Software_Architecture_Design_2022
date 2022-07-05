@@ -2,7 +2,7 @@ const DAO = require('./DAO.js');
 const uuid = require('uuid');
 var nodemailer = require('nodemailer');
 
-const serverIp = '109.116.253.181'
+const serverIp = '87.6.137.124'
 const serverPort = '8888'
 
 
@@ -69,7 +69,7 @@ class RequestController{
 
     async activate(req, res){
         console.log("Activate request: "+ JSON.stringify(req.body.id));
-        const data = this.dao.confirmAccount(req.params.id);
+        const data = await this.dao.confirmAccount(req.body.id);
         if(data == true){
             res.send(JSON.stringify({ok:true}));
         } else {

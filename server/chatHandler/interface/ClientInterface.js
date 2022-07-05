@@ -62,7 +62,7 @@ export default class ClientInterface {
         this.app.post('/msg', this.MsgHandler.msgRequest.bind(this.MsgHandler));  
         this.app.post('/blockUser', this.MsgHandler.blockUserRequest.bind(this.MsgHandler));
 
-        this.app.get('/activate/:id', this.AuthHandler.activateAccount.bind(this.controller)); //implementa nel chathandler
+        this.app.get('/activate/:id', this.AuthHandler.activateAccount.bind(this.AuthHandler)); //implementa nel chathandler
         
         this.app.get('/test', (req, res) => {
             res.send('Server is running...');

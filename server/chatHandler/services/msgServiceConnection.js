@@ -1,7 +1,7 @@
 import { response } from 'express';
 import fetch from 'node-fetch';
 
-const msgServerIp = '192.168.1.7'
+const msgServerIp = '192.168.1.18'
 const msgServerPort = '8890' 
 
 export default class msgSerivceConnection{

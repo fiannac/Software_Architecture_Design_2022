@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const userServerIp = '192.168.1.7'
+const userServerIp = '192.168.1.18'
 const userServerPort = '8891' 
 
 export default class UserDataConnection {

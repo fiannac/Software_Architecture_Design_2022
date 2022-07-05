@@ -17,7 +17,7 @@ export default class LocalStorage {
     }
 
     async initDatabase(){
-        const val1 = await this.createTable('authInfo','userName TEXT, id INTEGER, token TEXT, prk TEXT');    
+        const val1 = await this.createTable('authData','userName TEXT, valid INTEGER, psw TEXT');    
         val2 = await this.createTable('users', 'id INTEGER, userName TEXT, puk TEXT');
         val3 = await this.createTable('chats', 'id INTEGER, idDestinatario INTEGER, idChat INTEGER');
         val4 = await this.createTable('messages', 'id INTEGER, idDestinatario INTEGER, text TEXT, timestamp TEXT, idMess TEXT');
@@ -35,10 +35,6 @@ export default class LocalStorage {
         return ok;
     }
     
-    async insertAuthInfo(userName, id, token, prk){
-        const res = await this.insertData('authInfo', `'${userName}', '${id}', '${token}', '${prk}'`);
-        return res; 
-    }
     async insertUser(id, userName, puk){
         const res = await this.insertData('users', `'${id}', '${userName}', '${puk}'`);
         return res;
@@ -60,11 +56,6 @@ export default class LocalStorage {
             tx.executeSql(query, null,
               (tx, { rows: { _array } }) => { resolve(_array)})}
           )})
-        return val;
-    }
-        
-    async getAuthInfo(){
-        const val = await this.getData('authInfo', '1');
         return val;
     }
 
@@ -99,4 +90,37 @@ export default class LocalStorage {
         return val;
     }
 
+    async getAuthData(){
+        const query = `SELECT * FROM authData`;
+        const val = new Promise((resolve, reject) => {
+            this.db.transaction(tx => {
+            tx.executeSql(query, null,
+              (tx, { rows: { _array } }) => { resolve(_array)})}
+          )})
+        return val;
+    }
+
+    async storeAuthData(userName, psw){
+        console.log(userName, psw);
+        const query = `INSERT INTO authData VALUES('${userName}', '1', '${psw}')`;
+        var ok = new Promise((resolve, reject) => {
+              this.db.transaction(tx => { tx.executeSql(query)},
+                () => resolve(false),
+                () => resolve(true))
+        });
+        ok = await ok
+        console.log("store riuscita ", ok)
+        return ok;        
+    }
+
+    async clearAuthData(){
+        const query = `DELETE FROM authData`;
+        var ok = new Promise((resolve, reject) => {
+              this.db.transaction(tx => { tx.executeSql(query)},
+                () => resolve(false),
+                () => resolve(true))
+        });
+        ok = await ok
+        return ok;
+    }
 }

@@ -7,7 +7,8 @@ class RequestController{
 
     async storeMsg(req, res){
         console.log("Store msg request: "+ JSON.stringify(req.body));
-        const blocked = await this.dao.checkBlockedUser(req.body.idDestinatario,req.body.idMittende)
+        const blocked = await this.dao.checkBlockedUser(req.body.idDestinatario,req.body.idMittente)
+        console.log('blocked: '+blocked);
         if(blocked == true){
             res.send(JSON.stringify({ok:false, err:'User blocked'}))
         } else {

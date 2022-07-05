@@ -57,8 +57,8 @@ export default class Controller{
     async createChatFromId(id){
         return await this.CreateChatController.createChatFromId(id)
     }
-    async login(user, psw){
-        return this.LoginController.login(user,psw)
+    async login(user, psw, rememberMe){
+        return this.LoginController.login(user,psw, rememberMe)
     }
     rcvMsg(text, usernameDest, idMittente,timestamp){
         return this.RcvMsgController.rcvMsg(text, usernameDest, idMittente,timestamp)
@@ -79,4 +79,7 @@ export default class Controller{
         return await this.CreateChatController.bloccaUtente(id, token, idDaBloccare)
     } 
 
+    async rememberMeLogin(){
+        return this.LoginController.rememberMeLogin()
+    }
 }

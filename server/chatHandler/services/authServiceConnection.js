@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const authServerIp = '192.168.1.7'
+const authServerIp = '192.168.1.18'
 const authServerPort = '8889' 
 
 
@@ -74,7 +74,7 @@ export default class AuthServiceConnection{
     }
 
     async activateAccount(id){
-        var response = await fetch(`http://${authServerIp}:${authServerPort}/checkToken`, 
+        var response = await fetch(`http://${authServerIp}:${authServerPort}/activate`, 
             {
             method: 'POST',
             headers: {

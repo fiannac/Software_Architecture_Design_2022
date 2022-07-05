@@ -1,3 +1,5 @@
+const uuid = require('uuid');
+
 class DAO{
     constructor(){
         this.data = new Map();
@@ -20,8 +22,9 @@ class DAO{
     }
 
     async confirmAccount(id){
+        console.log(id)
         if(this.data.has(id)){
-            if(this.data.get(id).confirm){
+            if(this.data.get(id).confirm==true){
                 return false
             }
             this.data.get(id).confirm = true;

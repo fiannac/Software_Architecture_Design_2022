@@ -16,7 +16,6 @@ export default class App extends React.Component {
     setLoggedState = this.setLoggedState
 
     this.controller = new Controller()
-
     const app = this
     
     this.timer = setInterval(function(){
@@ -36,6 +35,7 @@ export default class App extends React.Component {
   
   componentDidMount(){
     this.controller.subscribeStateObserver(this.notify.bind(this))
+    this.controller.rememberMeLogin()
   }
 
   componentWillUnmount(){

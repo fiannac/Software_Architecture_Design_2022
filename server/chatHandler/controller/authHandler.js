@@ -27,12 +27,14 @@ export default class AuthHandler {
     }
     async loginRequest(req, res) {
         res.setHeader('Content-Type', 'application/json');
+        console.log(req.body.userName, req.body.password)
         if(req.body.userName == null || req.body.password == null){
             res.send(JSON.stringify({
                 "ok": false
             }));
         } else {
             const loginReq = await this.authServiceConnection.loginRequest(req.body.userName, req.body.password);
+            console.log(loginReq)
             if(loginReq.ok == false){
                 res.send(JSON.stringify({ok:false}));
             } else {
