@@ -91,4 +91,11 @@ export default class loggedUser{
         this.observerState = null
     }
 
+    deleteChat(id){
+        this.chats.delete(id)
+        if(this.observerChat != null){
+            this.observerChat(this.chats)
+        }
+    }
+
 }

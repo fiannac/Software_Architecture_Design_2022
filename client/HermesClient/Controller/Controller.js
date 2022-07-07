@@ -82,4 +82,8 @@ export default class Controller{
     async rememberMeLogin(){
         return this.LoginController.rememberMeLogin()
     }
+
+    async deleteChat(id){
+        return await this.CreateChatController.deleteChat(id)
+    }
 }

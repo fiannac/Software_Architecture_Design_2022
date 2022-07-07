@@ -60,4 +60,15 @@ export default class CreateChatController {
         }
         return true;
     }
+
+    async deleteChat(idDaEliminare){
+        const id = this.loggedUser.id;
+        await this.storage.deleteChat(id, idDaEliminare)
+        await this.storage.deleteMsg(id, idDaEliminare)
+
+        this.loggedUser.deleteChat(idDaEliminare)
+        return true;
+
+
+    }
 }

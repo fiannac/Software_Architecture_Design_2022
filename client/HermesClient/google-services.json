@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "286151625346",
+    "project_id": "hermespushnotify-33add",
+    "storage_bucket": "hermespushnotify-33add.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286151625346:android:9700ad620622b6078b029b",
+        "android_client_info": {
+          "package_name": "hermes1.apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286151625346-m39u15ulbnvcrb9io34pfn7a9nrii7fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq28vWu1c5aEX3LKYD0xzxQdu5wQuAggU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286151625346-m39u15ulbnvcrb9io34pfn7a9nrii7fh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,21 +3,19 @@ import UserDataConnection from '../services/userDataConnection.js';
 import NotifyServiceConnection from '../services/notifyServiceConnection.js';
 
 export default class AuthHandler {
-    constructor(clientInterface){
+    constructor(register){
         this.authServiceConnection = new AuthServiceConnection();
         this.userDataConnection = new UserDataConnection();
         this.notifyServiceConnection = new NotifyServiceConnection();
-        this.ClientInterface = clientInterface
+        this.register = register
     }
     async registerRequest(req, res) {
         res.setHeader('Content-Type', 'application/json');
-        
         if(req.body.userName == null || req.body.password == null || req.body.email == null || req.body.puk == null || req.body.prk == null){ 
             res.send(JSON.stringify({
                 "ok": false
             }));
         } else  {
-        //
             const regReq = await this.authServiceConnection.registerRequest(req.body.userName, req.body.password, req.body.email, req.body.puk, req.body.prk);
             if(regReq.ok == false){
                 res.send(JSON.stringify({ok:false}));
@@ -40,7 +38,7 @@ export default class AuthHandler {
             if(loginReq.ok == false){
                 res.send(JSON.stringify({ok:false}));
             } else {
-                this.ClientInterface.addUserConnection(loginReq.id, loginReq.token); //aggiusta questo codice
+                this.register.createUser(loginReq.id, loginReq.token);
                 this.notifyServiceConnection.insert(loginReq.id, req.body.notifyToken);
                 res.send(JSON.stringify({ok:true, token: loginReq.token, id: loginReq.id, prk: loginReq.prk, puk: loginReq.puk}));
             }
@@ -58,7 +56,7 @@ export default class AuthHandler {
             if(logoutReq.ok == false){
                 res.send(JSON.stringify({ok:false}));
             } else {
-                this.ClientInterface.removeUserConnection(req.body.id);
+                this.register.deleteUser(req.body.id);
                 res.send(JSON.stringify({ok:true}));
                 this.notifyServiceConnection.delete(req.body.id);
             }
@@ -80,6 +78,31 @@ export default class AuthHandler {
         } else {
             res.send("Il link di attivazione utilizzato non è valido!")
         }
+    }
+
+    async authWs(message, ws){
+        const msg = await JSON.parse(message);
+        if(msg.id == null || msg.token == null){
+            return
+        }
+        if(this.register.checkToken(msg.id, msg.token)){
+            console.log("User authenticated")
+            this.register.authConnection(msg.id,ws);
+            ws.send(JSON.stringify({type:'auth',ok:true}))
+        } /*else { 
+            const val = await AuthHandler.checkToken(msg.id,msg.token);
+            if(val == true){
+                console.log("User authenticated")
+                userConnections.set(msg.id, new UserConnection(msg.id, msg.token, ws));
+                socketToId.set(ws, msg.id);
+                ws.send(JSON.stringify({type:'auth',ok:true}))
+            }
+        }*/
+    }
+
+    async deleteWs(ws){
+        console.log('Client disconnected');
+        this.register.deleteUserByWs(ws);
     }
 }
 

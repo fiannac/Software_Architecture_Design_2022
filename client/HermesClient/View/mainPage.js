@@ -67,8 +67,6 @@ export default class MainPage extends React.Component {
       } else if(res == -3){
         alert('Hai già una chat con questo utente!')
       }
-      this.textInput.clear()
-      this.newUser = ''
     }
   }
 

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const authServerIp = '192.168.1.18'
+const authServerIp = 'localhost';
 const authServerPort = '8889' 
 
 

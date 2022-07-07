@@ -1,4 +1,4 @@
-import ClientInterface from "./ClientInterface.js";
+import ClientInterface from "./interface/ClientInterface.js";
 
 function main(){
     const clientInterface = new ClientInterface();

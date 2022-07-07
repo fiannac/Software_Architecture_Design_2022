@@ -16,7 +16,7 @@ class DAO{
             return {ok: false, error: "User already exists"};
         } else {
             this.UsernameToId.set(userName, id);
-            this.data.set(id, {userName: userName, password: password, prk: prk, puk:puk, email: email, id:id, token:null, confirm:false});
+            this.data.set(id, {userName: userName, password: password, prk: prk, puk:puk, email: email, id:id, token:null, confirm:true});
             return {ok: true, id: id};
         }
     }

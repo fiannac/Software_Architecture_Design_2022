@@ -14,7 +14,7 @@ export default class LoginPage extends React.Component {
       hidePass: true,
       registerPage: false,
       loading: false,
-      rememberMeLogin: false
+      rememberMeLogin: true
     }
 
     this.controller = props.controller

@@ -123,4 +123,26 @@ export default class LocalStorage {
         ok = await ok
         return ok;
     }
+
+    async deleteChat(id1, id2){
+        const query = `DELETE FROM chats WHERE id = '${id1}' AND idDestinatario = '${id2}'`;
+        var ok = new Promise((resolve, reject) => {
+              this.db.transaction(tx => { tx.executeSql(query)},
+                () => resolve(false),
+                () => resolve(true))
+        });
+        ok = await ok
+        return ok;
+    }
+
+    async deleteMsg(id1, id2){
+        const query = `DELETE FROM messages WHERE id = '${id1}' AND idDestinatario = '${id2}'`;
+        var ok = new Promise((resolve, reject) => {
+              this.db.transaction(tx => { tx.executeSql(query)},
+                () => resolve(false),
+                () => resolve(true))
+        });
+        ok = await ok
+        return ok;
+    }
 }

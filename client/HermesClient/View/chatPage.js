@@ -63,12 +63,12 @@ export default class ChatPage extends React.Component {
         },
         {
           text: "Elimina Chat",
-          onPress: () => console.log("Ask me later pressed"), 
+          onPress: () => {this.props.handleNavigation();this.controller.deleteChat(this.id)}, 
           style: 'destructive'
         },
         {
           text: "Blocca utente",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => this.controller.bloccaUtente(this.id),
           style: "cancel"
         }
       ]
@@ -82,7 +82,7 @@ export default class ChatPage extends React.Component {
     <View style={styles.container}>
 
       <View style={[styles.flexify,{height:55 }]}>
-        <TouchableOpacity onPress={() => { this.props.handleNavigation(); } } activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
+        <TouchableOpacity onPress={() => {this.props.handleNavigation(); } } activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
           <Icon name="arrow-left" size={20} color='white'/>
         </TouchableOpacity>
 
@@ -119,6 +119,7 @@ export default class ChatPage extends React.Component {
             ref={input => { this.textInput = input; }}
             onChangeText={(value) => { this.setState({msg:value}) }}
             inputStyle={{ fontSize: 12 }}
+            style = {{width : '90%'}}
           />
 
         <TouchableOpacity
