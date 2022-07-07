@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import RegistrationPage from './registrationPage.js'
 
 
@@ -56,13 +58,16 @@ export default class LoginPage extends React.Component {
                 color="grey"
                 onPress={() => this.setState({hidePass: !this.state.hidePass})}
               />
-            <Icon
-                name={this.state.rememberMeLogin ? 'eye-slash' : 'eye'}
-                size={15}
-                style={{marginLeft: 5}}
-                color="black"
-                onPress={() => this.setState({rememberMeLogin: !this.state.rememberMeLogin})}
-              />
+            <View style = {{flexDirection: "row",justifyContent: "space-between", alignContent:"center"}}>
+            <Icon2
+              name={this.state.rememberMeLogin ? 'checkbox-intermediate' : 'checkbox-blank-outline'}
+              size={15}
+              style={{marginLeft: 5}}
+              color="black"
+              onPress={() => this.setState({rememberMeLogin: !this.state.rememberMeLogin})}
+            />
+            <Text style={{paddingHorizontal:10}}>Remember me?</Text>
+            </View>
             <View style={styles.bottone}>
               <View style={styles.bottoneLogin}>
                 <Button title="Log in" onPress = {this.loginPress}  />

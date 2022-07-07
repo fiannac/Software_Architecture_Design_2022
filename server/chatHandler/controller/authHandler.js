@@ -1,10 +1,12 @@
 import AuthServiceConnection from '../services/authServiceConnection.js';
 import UserDataConnection from '../services/userDataConnection.js';
+import NotifyServiceConnection from '../services/notifyServiceConnection.js';
 
 export default class AuthHandler {
     constructor(clientInterface){
         this.authServiceConnection = new AuthServiceConnection();
         this.userDataConnection = new UserDataConnection();
+        this.notifyServiceConnection = new NotifyServiceConnection();
         this.ClientInterface = clientInterface
     }
     async registerRequest(req, res) {
@@ -39,6 +41,7 @@ export default class AuthHandler {
                 res.send(JSON.stringify({ok:false}));
             } else {
                 this.ClientInterface.addUserConnection(loginReq.id, loginReq.token); //aggiusta questo codice
+                this.notifyServiceConnection.insert(loginReq.id, req.body.notifyToken);
                 res.send(JSON.stringify({ok:true, token: loginReq.token, id: loginReq.id, prk: loginReq.prk, puk: loginReq.puk}));
             }
         }
@@ -57,6 +60,7 @@ export default class AuthHandler {
             } else {
                 this.ClientInterface.removeUserConnection(req.body.id);
                 res.send(JSON.stringify({ok:true}));
+                this.notifyServiceConnection.delete(req.body.id);
             }
         }
     }

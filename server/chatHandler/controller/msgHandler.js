@@ -1,9 +1,11 @@
 import MsgServiceConnection from '../services/msgServiceConnection.js';
+import NotifyServiceConnection from '../services/notifyServiceConnection.js';
 
 export default class MsgHandler {
     constructor(userConnections) {
         this.userConnections = userConnections
         this.msgSerivceConnection = new MsgServiceConnection();
+        this.notifyServiceConnection = new NotifyServiceConnection();
     }
     async storedMsgRequest(req, res){
         if(req.body.idDestinatario == null || req.body.token == null || req.body.timestamp == null){
@@ -41,6 +43,7 @@ export default class MsgHandler {
                         }));
                     }
                     res.send(JSON.stringify({ok:true}));
+                    this.notifyServiceConnection.notify(req.body.idDestinatario);
                 } else {
                     res.send(JSON.stringify({ok:false}));
                 }

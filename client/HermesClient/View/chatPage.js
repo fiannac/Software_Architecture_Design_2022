@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native-elements'
-import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler, FlatList} from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/Entypo'
 import Message from "../components/Message";
@@ -51,6 +51,30 @@ export default class ChatPage extends React.Component {
     this.listnerBack.remove()
   }
 
+  settingPressed(){
+    Alert.alert(
+      "Impostazioni chat",
+      "Seleziona una delle seguenti opzioni",
+      [
+
+        {
+           text: "Annulla",
+            onPress: () => console.log("OK Pressed") 
+        },
+        {
+          text: "Elimina Chat",
+          onPress: () => console.log("Ask me later pressed"), 
+          style: 'destructive'
+        },
+        {
+          text: "Blocca utente",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        }
+      ]
+    );
+  }
+
   render(){
     
     return (
@@ -66,7 +90,7 @@ export default class ChatPage extends React.Component {
           {this.userName}
         </Text>
 
-        <TouchableOpacity onPress={()=>{this.controller.bloccaUtente(this.props.id)}} activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
+        <TouchableOpacity onPress={()=>{this.settingPressed()}} activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
           <Icon2 name="dots-three-vertical" size={20} color='white' />
         </TouchableOpacity>
 

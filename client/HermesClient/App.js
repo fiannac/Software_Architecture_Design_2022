@@ -5,6 +5,7 @@ import MainPage from './View/mainPage.js';
 import Controller from './Controller/Controller.js';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
 export default class App extends React.Component {
   constructor(){
     super()
@@ -49,6 +50,9 @@ export default class App extends React.Component {
     }
     this.setState(newState)
   }
+
+
+
 
   render(){
     if(!this.state.connected){

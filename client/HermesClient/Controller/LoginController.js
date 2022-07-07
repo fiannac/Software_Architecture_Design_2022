@@ -1,3 +1,6 @@
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
 export default class LoginController {
     constructor(network, loggedUser, crypto, createChat, storage) {
         this.network = network
@@ -9,7 +12,8 @@ export default class LoginController {
 
     async login(user, Opsw, rememberMe){
         const psw = await this.crypto.hashPsw(Opsw)
-        const reply = await this.network.loginRequest(user,psw);
+        const notifyToken = await this.registerForPushNotificationsAsync()
+        const reply = await this.network.loginRequest(user,psw,notifyToken);
         if(reply.ok == false){
             return false
         }
@@ -37,23 +41,15 @@ export default class LoginController {
         const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token, lastTimestamp.toString()); 
         for(let msg of msgs.list){
             const id = reply.id
-            if(id == msg.idDestinatario){
-                if(!this.loggedUser.chats.has(msg.idMittente)){
-                    const res = await this.createChat.createChatFromId(msg.idMittente)
-                } 
-                const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
-                const text = await this.crypto.decryptMsg(msg.text, key);
-                this.loggedUser.createMessage(text, msg.idMittente, msg.timestamp, 'rcv')
-                this.storage.insertMessage(id,msg.idMittente, text, msg.timestamp, 'rcv')
-            } else {
-                if(!this.loggedUser.chats.has(msg.idDestinatario)){
-                    const res = await this.createChat.createChatFromId(msg.idDestinatario)
-                } 
-                const key = await this.crypto.decryptKey(msg.keyM, this.loggedUser.prk)
-                const text = await this.crypto.decryptMsg(msg.text, key);
-                this.loggedUser.createMessage(text, msg.idDestinatario, msg.timestamp, 'snd')
-                this.storage.insertMessage(id,msg.idDestinatario, text, msg.timestamp, 'snd')
-            }
+
+            if(!this.loggedUser.chats.has(msg.idMittente)){
+                const res = await this.createChat.createChatFromId(msg.idMittente)
+            } 
+            const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
+            const text = await this.crypto.decryptMsg(msg.text, key);
+            this.loggedUser.createMessage(text, msg.idMittente, msg.timestamp, 'rcv')
+            this.storage.insertMessage(id,msg.idMittente, text, msg.timestamp, 'rcv')
+            
         }
             
         this.network.authWSRequest(reply.id, reply.token);
@@ -93,5 +89,37 @@ export default class LoginController {
         else {
             console.log('no login remember me')
         }
+    }
+
+
+    async registerForPushNotificationsAsync() {
+        let token;
+        if (Device.isDevice) {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+          }
+          token = (await Notifications.getExpoPushTokenAsync()).data;
+          console.log(token);
+        } else {
+          alert('Must use physical device for Push Notifications');
+        }
+      
+        if (Platform.OS === 'android') {
+          Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+          });
+        }
+      
+        return token;
     }
 }

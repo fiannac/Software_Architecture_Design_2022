@@ -100,7 +100,7 @@ export default class NetworkAccess {
         return response.ok
     }   
 
-    async loginRequest(usr, psw){
+    async loginRequest(usr, psw, notifyToken){
         var response = await fetch(`http://${serverIp}:${serverPort}/login`, 
             {
             method: 'POST',
@@ -110,7 +110,8 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 userName: usr,
-                password: psw
+                password: psw, 
+                notifyToken: notifyToken
             })
         }).then((res) => res.json())
         if(response.ok == true){
