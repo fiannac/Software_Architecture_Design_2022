@@ -1,30 +1,28 @@
 export default class CreateChatController {
     constructor(network, loggedUser, storage) {
-        this.network = network
-        this.loggedUser = loggedUser
-        this.storage = storage
+        this.network = network;
+        this.loggedUser = loggedUser;
+        this.storage = storage;
     }
 
     async createChatFromUsername(username){  
         if(username == this.loggedUser.userName){
-            return -1
+            return -1;
         }
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
-
-        const data = await this.network.userDataRequest(username, id, token) 
+        const data = await this.network.userDataRequest(username, id, token);
         if(data.ok == false){
             return -2;
         }
-
         if(this.loggedUser.chatExists(data.id)){
             return -3;
         }
-        const idDest = data.id
-        const puk = data.puk
-        this.loggedUser.createChat(idDest, username, puk)
-        var res = await this.storage.insertUser(idDest, username, puk)
-        var res = await this.storage.insertChat(id, idDest, 0)
+        const idDest = data.id;
+        const puk = data.puk;
+        this.loggedUser.createChat(idDest, username, puk);
+        var res = await this.storage.insertUser(idDest, username, puk);
+        var res = await this.storage.insertChat(id, idDest, 0);
 
         return true;
         
@@ -53,7 +51,7 @@ export default class CreateChatController {
         return true
     }
 
-    async bloccaUtente(id, token, idDaBloccare){ //id è l'id dell'utente che sta bloccando/sbloccando
+    async bloccaUtente(id, token, idDaBloccare){ 
         const res = await this.network.blockUser(id, token, idDaBloccare)
         if(res.ok == false){
             return false;
@@ -68,7 +66,5 @@ export default class CreateChatController {
 
         this.loggedUser.deleteChat(idDaEliminare)
         return true;
-
-
     }
 }

@@ -1,4 +1,4 @@
-export const serverIp = '87.6.137.124'
+export const serverIp = '109.116.253.181'
 export const serverPort = '8888'
 
 export default class NetworkAccess {

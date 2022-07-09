@@ -14,28 +14,31 @@ class RequestController{
 
     async login(req, res){
         console.log("Login request: "+ JSON.stringify(req.body));
-        const data = await this.dao.login(req.body.userName, req.body.password);
+        let token = uuid.v4();
+        const data = await this.dao.login(req.body.userName, req.body.password, token);
         res.send(JSON.stringify(data));
     }
 
     async logout(req, res){
         console.log("Logout request: "+ JSON.stringify(req.body));
-        const data = await this.dao.logout(req.body.id,req.body.token);
-        res.send(JSON.stringify(data));
+        const ok = await this.dao.logout(req.body.id,req.body.token);
+        res.send(JSON.stringify({ok:ok}));
     }
 
     async register(req, res){
         console.log("Register request: "+ JSON.stringify(req.body));
         let id = uuid.v4();
-        const data = await this.dao.register(req.body.userName, req.body.password, req.body.prk, req.body.puk ,req.body.email, id);
-        res.send(JSON.stringify(data));
-        this.sendEmail(req.body.email, data.id);
+        const ok = await this.dao.register(id,req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk, true );
+        res.send(JSON.stringify({ok:ok, id:id}));
+        if(ok == true){
+            this.sendEmail(req.body.email, id);
+        }
     }
 
     async checkToken(req, res){
         console.log("Check token request: "+ JSON.stringify(req.body));
-        const data = await this.dao.checkToken(req.body.id,req.body.token);
-        res.send(JSON.stringify(data));
+        const ok = await this.dao.checkToken(req.body.id,req.body.token);
+        res.send(JSON.stringify({ok:ok}));
     }
 
     async sendEmail(email, id){
@@ -69,8 +72,8 @@ class RequestController{
 
     async activate(req, res){
         console.log("Activate request: "+ JSON.stringify(req.body.id));
-        const data = await this.dao.confirmAccount(req.body.id);
-        if(data == true){
+        const ok = await this.dao.confirmAccount(req.body.id);
+        if(ok == true){
             res.send(JSON.stringify({ok:true}));
         } else {
             res.send(JSON.stringify({ok:false}));

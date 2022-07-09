@@ -1,87 +1,95 @@
 const uuid = require('uuid');
+var mysql = require('mysql2/promise');
 
 class DAO{
-    constructor(){
-        this.data = new Map();
-        this.UsernameToId = new Map();
-
-        this.login = this.login.bind(this);
-        this.register = this.register.bind(this);
-        this.logout = this.logout.bind(this);
-        this.checkToken = this.checkToken.bind(this);
-    }
-
-    async register(userName, password, prk, puk, email, id){
-        if(this.UsernameToId.has(userName)){
-            return {ok: false, error: "User already exists"};
-        } else {
-            this.UsernameToId.set(userName, id);
-            this.data.set(id, {userName: userName, password: password, prk: prk, puk:puk, email: email, id:id, token:null, confirm:true});
-            return {ok: true, id: id};
+    async connect(){
+        try{
+            var connection = await mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'root',
+                database : 'hermes'
+            });
+            return connection;
+        }catch(err){
+            console.log(err);
         }
     }
-
-    async confirmAccount(id){
-        console.log(id)
-        if(this.data.has(id)){
-            if(this.data.get(id).confirm==true){
-                return false
-            }
-            this.data.get(id).confirm = true;
+    
+    async register(id, username, password, email, prk, puk, confirm){
+        try{
+            var connection = await this.connect();
+            await connection.query("INSERT INTO user (id, username, password, email, prk, puk, confirm) VALUES (?, ?, ?, ?, ?, ?, ?)", [id, username, password, email, prk, puk, confirm]);
             return true;
-        }
-        return false;
-    }
-
-    async login(userName, password){
-        if(this.UsernameToId.has(userName)){
-            let id = this.UsernameToId.get(userName);
-            let user = this.data.get(id);
-            if(user.password == password && user.confirm == true){
-                let token = uuid.v4();
-                user.token = token;
-                return {ok: true, id: id, token: token, prk: user.prk, puk: user.puk};
-            } else {
-                return {ok: false, error: "Wrong password or account not confirmed"};
-            }
-        } else {
-            return {ok: false, error: "User does not exist"};
-        }
-    }
-
-    async checkLoginData(userName, password){
-        if(this.UsernameToId.has(userName)){
-            let user = this.data.get(id);
-            if(user.password == password && user.confirm == true){
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        }catch(err){
+            console.log(err);
             return false;
         }
     }
-
-    async setToken(id, token){
-        
-    }
-
-    async logout(id, token){
-        let user = this.data.get(id);
-        if(user?.token === token){
-            user.token = null;
-            return {ok: true};
-        } else {
-            return {ok: false, error: "Wrong token"};
+    
+    
+    //confirm user account
+    async confirmAccount(token){
+        try{
+            var connection = await this.connect();
+            await connection.query("UPDATE user SET confirm = 1 WHERE token = ?", [token]);
+            return true;
+        }catch(err){
+            return false;        
         }
     }
-
+    
+    async login(username, password, token){
+        try{
+            var connection = await this.connect();
+            let result = await connection.query("SELECT * FROM user WHERE username = ? AND password = ?", [username, password]);
+            result = result[0]
+            if(result.length == 1){
+                if(result[0].confirm == 1){
+                    await connection.query("UPDATE user SET token = ? WHERE username = ? AND password = ?", [token, username, password]);
+                    return {ok: true, id: result[0].id, token: token, prk: result[0].prk, puk: result[0].puk};
+                }else{
+                    return {ok: false, error: "Account not confirmed"};
+                }
+            }else{
+                return {ok: false, error: "User does not exist"};
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    
+    //logout user removin his token
+    async logout(id, token){
+        try{
+            var connection = await this.connect();
+            let result = await connection.query("SELECT * FROM user WHERE id = ? AND token = ?", [id, token]);
+            result = result[0]
+            if(result.length == 1){
+                await connection.query("UPDATE user SET token = NULL WHERE id = ? AND token = ?", [id, token]);
+                return true;
+            }else{
+                return false;
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    
+    
+    
     async checkToken(id, token){
-        let user = this.data.get(id);
-        if(user.token === token){
-            return {ok: true};
-        } else {
-            return {ok: false, error: "Wrong token"};
+        try{
+            var connection = await this.connect();
+            let result = await connection.query("SELECT * FROM user WHERE id = ? AND token = ?", [id, token]);
+            result = result[0]
+            if(result.length == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(err){
+            console.log(err);
         }
     }
     
