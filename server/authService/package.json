@@ -1,0 +1,14 @@
+{
+  "name": "interface",
+  "version": "1.0.0",
+  "description": "",
+  "main": "HTTPinterface.js",
+  "scripts": {
+    "test": "jest --coverage --detectOpenHandles"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

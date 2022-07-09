@@ -1,60 +1,92 @@
+var mysql = require('mysql2/promise');
+
 class DAO{
-    constructor(){
-        this.data = new Map();
-        this.blocked = new Map();
-    }
-
-    async storeMsg(idMittente, idDestinatario, text, keyM, keyD, timestamp){
-        if(this.data.has(idDestinatario)){
-            this.data.get(idDestinatario).push({idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD, timestamp: timestamp});
-        } else {
-            this.data.set(idDestinatario, [{idMittente: idMittente, idDestinatario: idDestinatario, text: text, keyM:keyM, keyD:keyD,  timestamp: timestamp}]);
+    
+    async connect(){
+        try{
+            var connection = await mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'root',
+                database : 'hermes'
+            });
+            return connection;
+        }catch(err){
+            console.log(err);
         }
-        return true;
     }
 
-    async storedMsgRequest(idDestinatario, token, timestamp){
-        var list = [];
-        if(this.data.has(idDestinatario)){
-            list = this.data.get(idDestinatario);
-        }  
-        list = list.filter(msg => new Date(msg.timestamp) > new Date(timestamp));
-        return {list: list};
+    async storeMsg(idMittente, idDestinatario, text, keyD, timestamp){
+        try{
+            var connection = await this.connect();
+            await connection.query("INSERT INTO messages (sender, receiver, text, keyD, timestamp) VALUES (?, ?, ?, ?, ?)", [idMittente, idDestinatario, text, keyD, timestamp]);
+            return true;
+        }catch(err){
+            console.log(err);
+            return false;
+        }
+    }
+
+    async storedMsgRequest(idDestinatario){
+        try{
+            var connection = await this.connect();
+            let result = await connection.query("SELECT * FROM messages WHERE receiver = ?", [idDestinatario]);
+            result = result[0]
+            console.log(result);
+            return {list:result};
+        }catch(err){
+            console.log(err);
+            return {ok: false, error: "Can't connect to database"};
+        }
     }
 
     async deleteStoredMsg(idDestinatario){
-        if(this.data.has(idDestinatario)){
-            this.data.delete(idDestinatario);
-        }  
+        try{
+            var connection = await this.connect();
+            await connection.query("DELETE FROM messages WHERE receiver = ?", [idDestinatario]);
+            return true;
+        }catch(err){
+            console.log(err);
+            return false;
+        }
     }
 
     async blockUser(id, idBlocked){
-        if(this.blocked.has(id)){
-            if(this.blocked.get(id).has(idBlocked)){
-                this.blocked.get(id).delete(idBlocked);
-            } else {
-                this.blocked.get(id).set(idBlocked,true);
-            }
-        } else {
-            const newBlocklist = new Map();
-            newBlocklist.set(idBlocked,true);
-            this.blocked.set(id,newBlocklist);
+        try{
+            var connection = await this.connect();
+            await connection.query("INSERT INTO blocked (receiver, sender) VALUES (?, ?)", [id, idBlocked]);
+            return true;
+        }catch(err){
+            console.log(err);
+            return false;
         }
     }
 
-    async checkBlockedUser(id, idBlocked){
-        console.log(this.blocked);
-        if(this.blocked.has(id)){
-            console.log('has id');
-            console.log(this.blocked.get(id));
-            console.log(idBlocked);
-
-            console.log(this.blocked.get(id).has(idBlocked));
-            if(this.blocked.get(id).has(idBlocked)){
-                return true;
-            }
+    async unblockUser(id, idBlocked){
+        try{
+            var connection = await this.connect();
+            await connection.query("DELETE FROM blocked WHERE receiver = ? AND sender = ?", [id, idBlocked]);
+            return true;
+        }catch(err){
+            console.log(err);
+            return false;
         }
-        return false;
+    }
+    
+    async checkBlockedUser(id, idBlocked){
+        try{
+            var connection = await this.connect();
+            let result = await connection.query("SELECT * FROM blocked WHERE receiver = ? AND sender = ?", [id, idBlocked]);
+            result = result[0]
+            if(result.length == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(err){
+            console.log(err);
+            return null;
+        }
     }
 }
 

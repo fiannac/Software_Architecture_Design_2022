@@ -6,11 +6,11 @@ export default class connectedUser{
     }
 
     send(text, idMittente, timestamp, keyD){
+        console.log("send to " + this.id)
         this.ws.send(JSON.stringify({
             "idMittente": idMittente,
             "text": text,
             "timestamp": timestamp,
-            "keyM": keyM,
             "keyD": keyD,
             "type": "msg"
         }));

@@ -35,7 +35,7 @@ export default class MsgHandler {
                     return;
                 }  
                 
-                if(this.register.gedUser(req.body.idDestinatario) != null){ // se l'utente destinatario è connesso
+                if(this.register.getUser(req.body.idDestinatario) != null){ // se l'utente destinatario è connesso
                     this.register.getUser(req.body.idDestinatario).send(req.body.text, req.body.idMittente, req.body.timestamp, req.body.keyD);
                 }
                 res.send(JSON.stringify({ok:true}));

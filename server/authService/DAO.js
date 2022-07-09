@@ -29,10 +29,10 @@ class DAO{
     
     
     //confirm user account
-    async confirmAccount(token){
+    async confirmAccount(id){
         try{
             var connection = await this.connect();
-            await connection.query("UPDATE user SET confirm = 1 WHERE token = ?", [token]);
+            await connection.query("UPDATE user SET confirm = 1 WHERE id = ?", [id]);
             return true;
         }catch(err){
             return false;        
@@ -56,6 +56,7 @@ class DAO{
             }
         }catch(err){
             console.log(err);
+            return {ok: false};
         }
     }
     
@@ -73,6 +74,7 @@ class DAO{
             }
         }catch(err){
             console.log(err);
+            return false;
         }
     }
     

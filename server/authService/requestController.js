@@ -28,7 +28,7 @@ class RequestController{
     async register(req, res){
         console.log("Register request: "+ JSON.stringify(req.body));
         let id = uuid.v4();
-        const ok = await this.dao.register(id,req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk, true );
+        const ok = await this.dao.register(id,req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk, false );
         res.send(JSON.stringify({ok:ok, id:id}));
         if(ok == true){
             this.sendEmail(req.body.email, id);
@@ -42,7 +42,6 @@ class RequestController{
     }
 
     async sendEmail(email, id){
-        console.log("Sending email to: "+ email);
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
             service: 'Outlook365',
@@ -50,6 +49,7 @@ class RequestController{
             user: 'hermesserver@outlook.it', // generated ethereal user
             pass: 'progettoSAD', // generated ethereal password
             },
+    
         });
         
         var mailOptions = {
@@ -77,11 +77,8 @@ class RequestController{
             res.send(JSON.stringify({ok:true}));
         } else {
             res.send(JSON.stringify({ok:false}));
-        }
-        
+        }       
     }
-
-
 }
 
 module.exports = RequestController;
