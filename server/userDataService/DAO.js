@@ -20,6 +20,7 @@ class DAO{
         try{
             var connection = await this.connect();
             await connection.query("INSERT INTO publicinfo (id, username, puk) VALUES (?, ?, ?)", [id, username, puk]);
+            await connection.end();
             return true;
         }catch(err){
             console.log(err);
@@ -31,6 +32,7 @@ class DAO{
         try{
             var connection = await this.connect();
             let result = await connection.query("SELECT * FROM publicinfo WHERE username = ?", [username]);
+            await connection.end();
             result = result[0]
             if(result.length == 1){
                 return {ok: true, id: result[0].id, puk: result[0].puk};
@@ -47,6 +49,7 @@ class DAO{
         try{
             var connection = await this.connect();
             let result = await connection.query("SELECT * FROM publicinfo WHERE id = ?", [id]);
+            await connection.end();
             result = result[0]
             if(result.length == 1){
                 return {ok: true, userName: result[0].username, puk: result[0].puk};

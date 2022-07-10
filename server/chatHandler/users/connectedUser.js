@@ -7,6 +7,9 @@ export default class connectedUser{
 
     send(text, idMittente, timestamp, keyD){
         console.log("send to " + this.id)
+        if(this.ws == null){
+            return false;
+        }
         this.ws.send(JSON.stringify({
             "idMittente": idMittente,
             "text": text,

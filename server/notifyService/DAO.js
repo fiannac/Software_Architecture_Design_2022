@@ -20,6 +20,7 @@ export default class DAO{
         try{
             var connection = await this.connect();
             let result = await connection.query("SELECT * FROM notifytoken WHERE id = ?", [id]);
+            await connection.end();
             result = result[0]
             if(result.length == 1){
                 return result[0].notifytoken;
@@ -36,6 +37,7 @@ export default class DAO{
         try{
             var connection = await this.connect();
             await connection.query("INSERT INTO notifytoken (id, notifytoken) VALUES (?, ?)", [id, token]);
+            await connection.end();
         }catch(err){
             console.log(err);
         }
@@ -45,6 +47,7 @@ export default class DAO{
         try{
             var connection = await this.connect();
             await connection.query("DELETE FROM notifytoken WHERE id = ?", [id]);
+            await connection.end();
         }catch(err){
             console.log(err);
         }

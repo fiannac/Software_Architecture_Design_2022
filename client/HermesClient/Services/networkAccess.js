@@ -156,7 +156,7 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 userNameDest: destUsr,
-                idMittente: id,
+                id: id,
                 token: token
             })
         })
@@ -174,7 +174,7 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 idRichiesto: idMittente,
-                idMittente: id,
+                id: id,
                 token: token
             })
         })

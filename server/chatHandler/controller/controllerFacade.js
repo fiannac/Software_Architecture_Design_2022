@@ -8,7 +8,7 @@ export default class ControllerFacade {
         this.register = new ConnectionRegister();
 
         this.authHandler = new AuthHandler(this.register);
-        this.infoHandler = new InfoHandler();
+        this.infoHandler = new InfoHandler(this.register);
         this.msgHandler = new MsgHandler(this.register);
     }
 

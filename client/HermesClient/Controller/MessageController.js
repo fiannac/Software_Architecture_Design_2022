@@ -1,14 +1,15 @@
 export default class MessageController {
-    constructor(network, loggedUser, crypto, storage) {
+    constructor(network, loggedUser, crypto, chat, storage) {
         this.network = network
         this.loggedUser = loggedUser
         this.crypto = crypto
         this.storage = storage
+        this.chat = chat
     }
 
     async rcvMsg(text, keyD, idMittente, timestamp){  
         if(!this.loggedUser.chats.has(idMittente)){
-            const res = await this.createChat.createChatFromId(idMittente)
+            const res = await this.chat.createChatFromId(idMittente)
         }
         const key = await this.crypto.decryptKey(keyD, this.loggedUser.prk)
         const msg = await this.crypto.decryptMsg(text, key)

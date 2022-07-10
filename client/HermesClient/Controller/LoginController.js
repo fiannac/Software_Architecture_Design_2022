@@ -28,6 +28,7 @@ export default class LoginController {
         var lastTimestamp = new Date('2000-01-01T00:00:00.000Z');
         const chats = await this.storage.loadChats(reply.id);
         for(let chat of chats){
+            console.log(chat)
             this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
             const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
             for(let m of msg){
@@ -42,14 +43,14 @@ export default class LoginController {
         for(let msg of msgs.list){
             const id = reply.id
 
-            if(!this.loggedUser.chats.has(msg.idMittente)){
-                const res = await this.createChat.createChatFromId(msg.idMittente)
+            if(!this.loggedUser.chats.has(msg.sender)){
+                const res = await this.createChat.createChatFromId(msg.sender)
             } 
             const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
+            console.log(msg.text)
             const text = await this.crypto.decryptMsg(msg.text, key);
-            this.loggedUser.createMessage(text, msg.idMittente, msg.timestamp, 'rcv')
-            this.storage.insertMessage(id,msg.idMittente, text, msg.timestamp, 'rcv')
-            
+            this.loggedUser.createMessage(text, msg.sender, msg.timestamp, 'rcv')
+            this.storage.insertMessage(id,msg.sender, text, msg.timestamp, 'rcv')
         }
             
         this.network.authWSRequest(reply.id, reply.token);

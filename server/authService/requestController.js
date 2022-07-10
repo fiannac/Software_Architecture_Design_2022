@@ -28,10 +28,10 @@ class RequestController{
     async register(req, res){
         console.log("Register request: "+ JSON.stringify(req.body));
         let id = uuid.v4();
-        const ok = await this.dao.register(id,req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk, false );
+        const ok = await this.dao.register(id,req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk, true );
         res.send(JSON.stringify({ok:ok, id:id}));
         if(ok == true){
-            this.sendEmail(req.body.email, id);
+            //this.sendEmail(req.body.email, id);
         }
     }
 

@@ -4,8 +4,9 @@
   "description": "",
   "main": "HTTPinterface.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test":"node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {

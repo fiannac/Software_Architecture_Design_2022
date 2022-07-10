@@ -40,7 +40,7 @@ export default class CreateChatController {
         if(data.ok == false){
             return false;
         }
-
+        console.log(data)
         const userNameMittente = data.userName
         const puk = data.puk
         this.loggedUser.createChat(idMittente, userNameMittente, puk)

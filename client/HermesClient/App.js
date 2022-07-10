@@ -60,7 +60,7 @@ export default class App extends React.Component {
         
         <View style = {{flex: 1,justifyContent: "center", paddingHorizontal:10}}>
           <Text style = {{textAlign: 'center', paddingBottom: 50}}>
-            Impossibile connettersi al server, controlla la connessione...
+            Connessione in corso...
           </Text>
           <ActivityIndicator size="large" />
         </View>

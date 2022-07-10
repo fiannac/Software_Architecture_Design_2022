@@ -16,29 +16,13 @@ export default class Controller{
         this.crypto = new Crypto()
 
         this.ChatController = new ChatController(this.NetworkAccess, this.loggedUser, this.storage)
-        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController, this.storage)
-        this.MessageController = new MessageController(this.NetworkAccess, this.loggedUser, this.crypto, this.CreateChatController, this.storage)
+        this.LoginController = new LoginController(this.NetworkAccess, this.loggedUser, this.crypto, this.ChatController, this.storage)
+        this.MessageController = new MessageController(this.NetworkAccess, this.loggedUser, this.crypto, this.ChatController, this.storage)
         this.RegistrationController = new RegistrationController(this.NetworkAccess, this.crypto, this.storage)
     }
 
     reconnect(){
         this.NetworkAccess.reconnect()
-    }
-
-    subscribeChatObserver(observer){
-        this.loggedUser.subscribeChatObserver(observer)
-    }
-
-    unsubscribeChatObserver(){
-        this.loggedUser.unsubscribeChatObserver()
-    }
-
-    subscribeStateObserver(observer){
-        this.loggedUser.subscribeStateObserver(observer)
-    }
-    
-    unsubscribeStateObserver(){
-        this.loggedUser.unsubscribeStateObserver()
     }
     
     updateConnectionState(val){
@@ -83,5 +67,21 @@ export default class Controller{
 
     async deleteChat(id){
         return await this.ChatController.deleteChat(id)
+    }
+
+    subscribeChatObserver(observer){
+        this.loggedUser.subscribeChatObserver(observer)
+    }
+
+    unsubscribeChatObserver(){
+        this.loggedUser.unsubscribeChatObserver()
+    }
+
+    subscribeStateObserver(observer){
+        this.loggedUser.subscribeStateObserver(observer)
+    }
+    
+    unsubscribeStateObserver(){
+        this.loggedUser.unsubscribeStateObserver()
     }
 }

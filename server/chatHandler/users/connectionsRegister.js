@@ -56,7 +56,9 @@ export default class ConnectionsRegister{
     checkUserOnline(id){
         const conn = this.connections.get(id);
         if(conn != null){
-            return true;
+            if(conn.ws != null){
+                return true;
+            }
         }
         return false;
     }

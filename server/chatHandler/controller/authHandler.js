@@ -62,15 +62,7 @@ export default class AuthHandler {
             }
         }
     }
-    async checkToken(id, token) {
-        const checkTokenReq = await this.authServiceConnection.checkToken(id, token); 
-        if(checkTokenReq.ok == false){
-            return false;
-        } else {
-            return true;
-        }
-    }
-
+    
     async activateAccount(req, res){
         const ok = await this.authServiceConnection.activateAccount(req.params.id)
         if(ok == true){
@@ -89,15 +81,7 @@ export default class AuthHandler {
             console.log("User authenticated")
             this.register.authConnection(msg.id,ws);
             ws.send(JSON.stringify({type:'auth',ok:true}))
-        } /*else { 
-            const val = await AuthHandler.checkToken(msg.id,msg.token);
-            if(val == true){
-                console.log("User authenticated")
-                userConnections.set(msg.id, new UserConnection(msg.id, msg.token, ws));
-                socketToId.set(ws, msg.id);
-                ws.send(JSON.stringify({type:'auth',ok:true}))
-            }
-        }*/
+        }
     }
 
     async deleteWs(ws){
