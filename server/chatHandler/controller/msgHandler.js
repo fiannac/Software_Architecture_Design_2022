@@ -9,7 +9,7 @@ export default class MsgHandler {
     }
 
     async storedMsgRequest(req, res){
-        if(req.body.idDestinatario == null || req.body.token == null || req.body.timestamp == null){
+        if(req.body.idDestinatario == null || req.body.token == null){
             res.send(JSON.stringify({
                 "ok": false
             }));
@@ -27,16 +27,15 @@ export default class MsgHandler {
                 "ok": false
             }));
         } else {
-            if(this.register.checkToken(req.body.idMittente, req.body.token)){ 
-                const reqMsg = await this.msgSerivceConnection.storeMsg(req.body.idMittente, req.body.idDestinatario, req.body.text, req.body.keyM, req.body.keyD , req.body.timestamp);
-                
-                if(reqMsg.ok == false){
-                    res.send(JSON.stringify({ok:false}));
-                    return;
-                }  
-                
+            if(this.register.checkToken(req.body.idMittente, req.body.token)){         
                 if(this.register.getUser(req.body.idDestinatario) != null){ // se l'utente destinatario è connesso
                     this.register.getUser(req.body.idDestinatario).send(req.body.text, req.body.idMittente, req.body.timestamp, req.body.keyD);
+                } else {
+                    const reqMsg = await this.msgSerivceConnection.storeMsg(req.body.idMittente, req.body.idDestinatario, req.body.text, req.body.keyM, req.body.keyD , req.body.timestamp); 
+                    if(reqMsg.ok == false){
+                        res.send(JSON.stringify({ok:false}));
+                        return;
+                    }  
                 }
                 res.send(JSON.stringify({ok:true}));
                 this.notifyServiceConnection.notify(req.body.idDestinatario);

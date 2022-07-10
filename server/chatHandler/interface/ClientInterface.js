@@ -54,10 +54,21 @@ export default class ClientInterface {
         let controller = this.controller;
         this.wss.on('connection', function(ws) {
             console.log('Client connected');
+            ws.isAlive = true;
+            ws.on('pong', ()=>{ws.isAlive = true;});
             ws.on('message', (data) => {controller.authWs(data, ws)})
             ws.on('close', () => {controller.deleteWs(ws)}) 
+            ws.on('error', () => {console.log("error");controller.deleteWs(ws)})
         });
 
+        let wss = this.wss;
+        const interval = setInterval(function ping() {
+            wss.clients.forEach(function each(ws) {
+              if (ws.isAlive === false) return ws.terminate();
+              ws.isAlive = false;
+              ws.ping();
+            });
+          }, 1000);
     }
 
 

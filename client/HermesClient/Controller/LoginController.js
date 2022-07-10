@@ -25,24 +25,22 @@ export default class LoginController {
         const prk = await this.crypto.decryptPrk(reply.prk, Opsw)
         this.loggedUser.setPrk(prk)
 
-        var lastTimestamp = new Date('2000-01-01T00:00:00.000Z');
-        const chats = await this.storage.loadChats(reply.id);
-        for(let chat of chats){
-            console.log(chat)
-            this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
-            const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
-            for(let m of msg){
-                this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp, m.idMess)
-                if(new Date(m.timestamp) > lastTimestamp){
-                    lastTimestamp = new Date(m.timestamp)
+        
+        if(this.loggedUser.loggedState != true){
+            const chats = await this.storage.loadChats(reply.id);
+            for(let chat of chats){
+                console.log(chat)
+                this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
+                const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
+                for(let m of msg){
+                    this.loggedUser.createMessage(m.text, chat.idDestinatario, m.timestamp, m.idMess)
                 }
             }
         }
 
-        const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token, lastTimestamp.toString()); 
+        const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
         for(let msg of msgs.list){
             const id = reply.id
-
             if(!this.loggedUser.chats.has(msg.sender)){
                 const res = await this.createChat.createChatFromId(msg.sender)
             } 
@@ -81,17 +79,12 @@ export default class LoginController {
         }
 
         if(DBquery[0].valid == 1){
-            console.log('login remember me')
             const user = DBquery[0].userName
             const psw = DBquery[0].psw
             const res = await this.login(user, psw, false)
-            console.log(res)
         }
-        else {
-            console.log('no login remember me')
-        }
+       
     }
-
 
     async registerForPushNotificationsAsync() {
         let token;

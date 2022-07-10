@@ -48,7 +48,6 @@ export default class LocalStorage {
         return res;
     }
 
-
     async getData(table, condition){
         const query = `SELECT * FROM ${table} WHERE ${condition}`;
         const val = new Promise((resolve, reject) => {

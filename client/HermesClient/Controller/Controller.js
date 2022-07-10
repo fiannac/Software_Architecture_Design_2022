@@ -84,4 +84,9 @@ export default class Controller{
     unsubscribeStateObserver(){
         this.loggedUser.unsubscribeStateObserver()
     }
+
+    disconnect(){
+        this.NetworkAccess.disconnect()
+        this.loggedUser.setConnState(false)
+    }
 }

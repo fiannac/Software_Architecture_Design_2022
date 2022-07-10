@@ -6,10 +6,14 @@ export default class NetworkAccess {
         this.ws = this.createWS(ws,controller)
         this.controller = controller
 
+        this.createWS = this.createWS.bind(this)
     }
     
-    createWS(ws,controller){
-        ws = new WebSocket(ws);
+    createWS(wsAddress,controller){
+        if(this.ws != null){
+            this.ws.close()
+        }
+        ws = new WebSocket(wsAddress);
         ws.controller = controller
         ws.onopen = this.WSopen; 
         ws.onclose = this.WSclose;
@@ -19,7 +23,13 @@ export default class NetworkAccess {
 
     reconnect(){
         this.ws = this.createWS(`ws://${serverIp}:${serverPort}/`, this.controller)
+        this.controller.rememberMeLogin()
     }
+
+    disconnect(){
+        this.ws.close();
+    }
+
     WSopen(){
         this.controller.updateConnectionState(true)
     }
@@ -40,6 +50,7 @@ export default class NetworkAccess {
     authWSRequest(id, token){
         const jmsg = JSON.stringify({type: 'authWS', id: id, token: token});
         this.ws.send(jmsg);
+        console.log("Richiesta di auth")
     }
 
     async msgRequest(idMittente, idDestinatario, token, text, keyM, keyD, timestamp){

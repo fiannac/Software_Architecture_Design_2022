@@ -44,7 +44,7 @@ export default class ConnectionsRegister{
 
     checkToken(id,token){
         const conn = this.connections.get(id);
-        if(conn == false){
+        if(conn == undefined || conn == null){
             return false;
         }
         if(conn.getToken() === token){

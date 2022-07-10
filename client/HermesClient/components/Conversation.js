@@ -8,8 +8,8 @@ const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/
 export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
-
         this.date = new Date(this.props.timestamp);
+        console.log(this.date);
     } 
 
     pad(d) {

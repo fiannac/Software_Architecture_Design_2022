@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import { Text, View, ActivityIndicator, AppState } from 'react-native';
 import LoginPage from './View/loginPage.js'
 import MainPage from './View/mainPage.js';
 import Controller from './Controller/Controller.js';
@@ -37,6 +37,13 @@ export default class App extends React.Component {
   componentDidMount(){
     this.controller.subscribeStateObserver(this.notify.bind(this))
     this.controller.rememberMeLogin()
+    
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if(nextAppState == "background"){
+        this.controller.disconnect()
+      } 
+    });
+  
   }
 
   componentWillUnmount(){
@@ -50,9 +57,6 @@ export default class App extends React.Component {
     }
     this.setState(newState)
   }
-
-
-
 
   render(){
     if(!this.state.connected){

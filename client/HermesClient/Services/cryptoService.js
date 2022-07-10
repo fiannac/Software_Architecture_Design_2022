@@ -1,9 +1,5 @@
 import * as CryptoJS from "react-native-crypto-js";
 var RSAKey = require('react-native-rsa');
-//import uuid from 'react-native-uuid';
-
-
-
 
 export default class Crypto {
     constructor(){
