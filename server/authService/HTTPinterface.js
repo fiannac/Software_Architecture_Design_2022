@@ -14,10 +14,10 @@ class HTTPinterface{
         this.initServer();
     
         this.port = 8889;
-        /*
+        
         this.server.listen(process.env.PORT || this.port, () => {
             console.log(`HTTP auth Server started on port ${this.server.address().port} :)`);
-        });*/
+        });
     }
 
     initServer(){
