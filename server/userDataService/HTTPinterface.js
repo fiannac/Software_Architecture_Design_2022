@@ -25,9 +25,24 @@ class HTTPinterface{
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/storeData', this.controller.storeData.bind(this.controller));
-        this.app.post('/userData', this.controller.userData.bind(this.controller));
-        this.app.post('/userDataById', this.controller.userDataById.bind(this.controller));
+        this.app.post('/storeData', this.storeData.bind(this));
+        this.app.post('/userData', this.userData.bind(this));
+        this.app.post('/userDataById', this.userDataById.bind(this));
+    }
+
+    async storeData(req, res){
+        const ack = await this.controller.storeData(req.body.id, req.body.userName, req.body.puk);
+        res.send(JSON.stringify(ack));
+    }
+
+    async userData(req, res){
+        let userData = await this.controller.userData(req.body.userName);
+        res.send(JSON.stringify(userData));
+    }
+
+    async userDataById(req, res){
+        let userData = await this.controller.userDataById(req.body.id);
+        res.send(JSON.stringify(userData));
     }
 }
 

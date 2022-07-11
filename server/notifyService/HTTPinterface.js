@@ -25,9 +25,24 @@ class HTTPinterface{
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/delete', this.controller.deleteRequest.bind(this.controller));
-        this.app.post('/insert', this.controller.insertRequest.bind(this.controller));
-        this.app.post('/notify', this.controller.notifyRequest.bind(this.controller));
+        this.app.post('/delete', this.deleteRequest.bind(this));
+        this.app.post('/insert', this.insertRequest.bind(this));
+        this.app.post('/notify', this.notifyRequest.bind(this));
+    }
+
+    async deleteRequest(req, res){
+        await this.controller.deleteRequest(req.body.id);
+        res.send(JSON.stringify({ok:true}));
+    }
+
+    async insertRequest(req, res){
+        await this.controller.insertRequest(req.body.id, req.body.notifyToken);
+        res.send(JSON.stringify({ok:true}));
+    }
+
+    async notifyRequest(req, res){
+        await this.controller.notifyRequest(req.body.id);
+        res.send(JSON.stringify({ok:true}));
     }
 }
 

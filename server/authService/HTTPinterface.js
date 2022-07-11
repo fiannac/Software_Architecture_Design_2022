@@ -26,12 +26,39 @@ class HTTPinterface{
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/register', this.controller.register.bind(this.controller));
-        this.app.post('/login', this.controller.login.bind(this.controller));
-        this.app.post('/logout', this.controller.logout.bind(this.controller));
-        this.app.post('/checkToken', this.controller.checkToken.bind(this.controller));
+        this.app.post('/register', this.register.bind(this));
+        this.app.post('/login', this.login.bind(this));
+        this.app.post('/logout', this.logout.bind(this));
+        this.app.post('/checkToken', this.checkToken.bind(this));
         
-        this.app.post('/activate', this.controller.activate.bind(this.controller)); //implementa nel chathandler
+        this.app.post('/activate', this.activate.bind(this)); //implementa nel chathandler
+    }
+
+    async register(req, res){
+        const r = await this.controller.register(req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk);
+        res.send(JSON.stringify(r));
+    }
+
+    async login(req, res){
+        const r = await this.controller.login(req.body.userName, req.body.password);
+        console.log("Login ",r)
+        res.send(JSON.stringify(r));
+    }
+
+    async logout(req, res){
+        const r = await this.controller.logout(req.body.id, req.body.token);
+        res.send(JSON.stringify(r));
+    }
+
+    async checkToken(req, res){
+        const r = await this.controller.checkToken(req.body.id, req.body.token);
+        console.log("CheckToken ",req.body.token)
+        res.send(JSON.stringify(r));
+    }
+
+    async activate(req, res){
+        const r = await this.controller.activate(req.body.id);
+        res.send(JSON.stringify(r));
     }
 }
 

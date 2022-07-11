@@ -1,71 +1,60 @@
 import MsgServiceConnection from '../services/msgServiceConnection.js';
 import NotifyServiceConnection from '../services/notifyServiceConnection.js';
+import AuthServiceConnection from '../services/authServiceConnection.js';
 
 export default class MsgHandler {
     constructor(register) {
         this.register = register
         this.msgSerivceConnection = new MsgServiceConnection();
         this.notifyServiceConnection = new NotifyServiceConnection();
+        this.authConn = new AuthServiceConnection();
     }
 
-    async storedMsgRequest(req, res){
-        if(req.body.idDestinatario == null || req.body.token == null){
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else {
-            if(this.register.checkToken(req.body.idDestinatario, req.body.token)){
-                var resp = await this.msgSerivceConnection.storedMsgRequest(req.body.idDestinatario, req.body.token, req.body.timestamp);
-                res.send(JSON.stringify(resp))
-            }
+    async storedMsgRequest(id, token){
+        if(id == null || token == null)
+            return {"ok": false}
+     
+        if(await this.authConn.checkToken(id, token)){
+            var resp = await this.msgSerivceConnection.storedMsgRequest(id, token);
+            return resp;
         }
+        return {"ok": false};
     }
     
-    async msgRequest(req, res) {
-        if(req.body.idMittente == null || req.body.idDestinatario == null || req.body.token == null || req.body.text == null || req.body.timestamp == null){
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else {
-            if(this.register.checkToken(req.body.idMittente, req.body.token)){         
-                if(this.register.getUser(req.body.idDestinatario) != null){ // se l'utente destinatario è connesso
-                    if(true == await this.msgSerivceConnection.checkBlock(req.body.idDestinatario, req.body.idMittente)){
-                        res.send(JSON.stringify({ok:false}));
-                        return;
-                    }
-                    this.register.getUser(req.body.idDestinatario).send(req.body.text, req.body.idMittente, req.body.timestamp, req.body.keyD);
-                } else {
-                    const reqMsg = await this.msgSerivceConnection.storeMsg(req.body.idMittente, req.body.idDestinatario, req.body.text, req.body.keyM, req.body.keyD , req.body.timestamp); 
-                    if(reqMsg.ok == false){
-                        res.send(JSON.stringify({ok:false}));
-                        return;
-                    }  
-                }
-                res.send(JSON.stringify({ok:true}));
-                this.notifyServiceConnection.notify(req.body.idDestinatario);
-            } else {
-                res.send(JSON.stringify({ok:false}));
-            }
+    async msgRequest(idM, idD, token, text, timestamp, keyD) {
+        if(idM == null || idD == null || token == null || text == null || timestamp == null || keyD == null)
+            return {ok: false}
 
+        if(! await this.authConn.checkToken(idM, token)){   
+            return {ok: false};
         }
+
+        if(this.register.getUser(idD) != null){ // se l'utente destinatario è connesso
+            if(true == await this.msgSerivceConnection.checkBlock(idD, idM))
+                return {ok:false};
+            
+            this.register.getUser(idD).send(text, idM, timestamp, keyD);
+        } else {
+            const reqMsg = await this.msgSerivceConnection.storeMsg(idM, idD, text, keyD, timestamp); 
+            if(reqMsg.ok == false)
+                return {ok:false};
+        }
+        this.notifyServiceConnection.notify(idD);
+        return {ok:true};
     }
 
-    async blockUserRequest(req, res){
-        if(req.body.id == null || req.body.token == null || req.body.idBlocked == null){
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else {
-            if(this.register.checkToken(req.body.id, req.body.token)){
-                const reqMsg = await this.msgSerivceConnection.blockUser(req.body.id, req.body.idBlocked);
-                if(reqMsg.ok == false){
-                    res.send(JSON.stringify({ok:false}));
-                } else {
-                     res.send(JSON.stringify({ok:true}));
-                }
-            } else {
-                res.send(JSON.stringify({ok:false}));
-            }
-        }
+    async blockUserRequest(id, idBlocked, token){
+        if(id == null || token == null || idBlocked == null)
+            return {ok: false};
+        
+        if(! await this.authConn.checkToken(id,token))
+            return {ok: false};
+    
+        const reqMsg = await this.msgSerivceConnection.blockUser(id, idBlocked);
+        if(reqMsg.ok == false){
+            return {ok:false};
+        } 
+        
+        return {ok:true};
     }
 }

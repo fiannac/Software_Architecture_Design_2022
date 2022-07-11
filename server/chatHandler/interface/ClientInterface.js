@@ -29,24 +29,91 @@ export default class ClientInterface {
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/register', this.controller.registerRequest.bind(this.controller));
-        this.app.post('/login', this.controller.loginRequest.bind(this.controller));
-        this.app.post('/logout', this.controller.logoutRequest.bind(this.controller));
+        this.app.post('/register', this.register.bind(this));
+        this.app.post('/login', this.login.bind(this));
+        this.app.post('/logout', this.logout.bind(this));
 
-        this.app.post('/userdata', this.controller.userDataRequest.bind(this.controller));
-        this.app.post('/userdataId', this.controller.userDataIdRequest.bind(this.controller));
+        this.app.post('/userdata', this.userData.bind(this));
+        this.app.post('/userdataId', this.userDataId.bind(this));
 
-        this.app.post('/storedmsg', this.controller.storedMsgRequest.bind(this.controller));
-        this.app.post('/msg', this.controller.msgRequest.bind(this.controller));  
-        this.app.post('/blockUser', this.controller.blockUserRequest.bind(this.controller));
+        this.app.post('/storedmsg', this.storedMsg.bind(this));
+        this.app.post('/msg', this.msg.bind(this));  
+        this.app.post('/blockUser', this.blockUser.bind(this));
 
-        this.app.get('/activate/:id', this.controller.activateAccount.bind(this.controller)); 
+        this.app.get('/activate/:id', this.activateAccount.bind(this)); 
         
         this.app.get('/test', (req, res) => {
             res.send('Server is running...');
         })
     }
+
+    async register(req, res){
+        console.log("register ", req.body);
+        const r = await this.controller.registerRequest(req.body.userName, req.body.password, req.body.email, req.body.puk, req.body.prk);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async login(req, res){
+        console.log("login ", req.body);
+        console.log("login");
+        const r = await this.controller.loginRequest(req.body.userName, req.body.password, req.body.notifyToken);
+        console.log(r);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async logout(req, res){
+        console.log("logout ", req.body);
+        const r = await this.controller.logoutRequest(req.body.id, req.body.token);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
     
+    async activateAccount(req, res){
+        console.log("activateAccount ", req.params.id);
+        const r = await this.controller.activateAccount(req.params.id);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async userData(req, res){
+        console.log("userData ", req.body);
+        const r = await this.controller.userDataRequest(req.body.userNameDest, req.body.id, req.body.token);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async userDataId(req, res){
+        console.log("userDataId ", req.body);
+        const r = await this.controller.userDataIdRequest(req.body.idRichiesto, req.body.id, req.body.token);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async storedMsg(req, res){
+        console.log("storedMsg ", req.body);
+        const r = await this.controller.storedMsgRequest(req.body.idDestinatario, req.body.token);
+        res.setHeader('Content-Type', 'application/json');
+        console.log(r)
+        res.send(JSON.stringify(r));
+    }
+    
+    async msg(req, res){
+        console.log("msg ", req.body);
+        const r = await this.controller.msgRequest(req.body.idMittente, req.body.idDestinatario, req.body.token, req.body.text, req.body.timestamp, req.body.keyD);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+    async blockUser(req, res){
+        console.log("blockUser ", req.body);
+        const r = await this.controller.blockUserRequest(req.body.id, req.body.idBlocked, req.body.token);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+    }
+
+
     initWSS(){
         let controller = this.controller;
         this.wss.on('connection', function(ws) {

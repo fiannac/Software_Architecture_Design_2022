@@ -56,7 +56,7 @@ export default class AuthServiceConnection{
         response = await response.json()
         return response;
     }
-    async checkToken(token, id){
+    async checkToken(id, token){
         var response = await fetch(`http://${authServerIp}:${authServerPort}/checkToken`, 
             {
             method: 'POST',
@@ -70,7 +70,7 @@ export default class AuthServiceConnection{
             })
         })
         response = await response.json()
-        return response;
+        return response.ok;
     }
 
     async activateAccount(id){

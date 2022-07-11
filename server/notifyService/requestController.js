@@ -6,19 +6,16 @@ export default class RequestController{
         this.dao = new DAO();
     }
 
-    async deleteRequest(req, res){
-        console.log("delete notifytoken request")
-        this.dao.deleteToken(req.body.id);
+    async deleteRequest(id){
+        await this.dao.deleteToken(id);
     }
 
-    async insertRequest(req, res){
-        console.log("insert notifytoken request")
-        this.dao.storeToken(req.body.id, req.body.notifyToken);
+    async insertRequest(id, notifyToken){
+        await this.dao.storeToken(id, notifyToken);
     }
 
-    async notifyRequest(req, res){
-        console.log("notify request")
-        const token = await this.dao.fetchToken(req.body.id)
+    async notifyRequest(id){
+        const token = await this.dao.fetchToken(id)
         if(token){
             this.sendPushNotification(token);
         }

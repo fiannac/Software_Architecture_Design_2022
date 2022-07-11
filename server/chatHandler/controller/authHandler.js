@@ -9,66 +9,54 @@ export default class AuthHandler {
         this.notifyServiceConnection = new NotifyServiceConnection();
         this.register = register
     }
-    async registerRequest(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        if(req.body.userName == null || req.body.password == null || req.body.email == null || req.body.puk == null || req.body.prk == null){ 
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else  {
-            const regReq = await this.authServiceConnection.registerRequest(req.body.userName, req.body.password, req.body.email, req.body.puk, req.body.prk);
-            if(regReq.ok == false){
-                res.send(JSON.stringify({ok:false}));
-            } else{
-                const addDataReq = await this.userDataConnection.storeDataRequest(req.body.userName, req.body.puk, regReq.id);
-                res.send(JSON.stringify({ok:true}));
-            }
-        }
+    
+    async registerRequest(userName, password, email, puk, prk) {
+        if(userName == null || password == null || email == null || puk == null || prk == null){ 
+            return {ok:false}
+        }    
+        const regReq = await this.authServiceConnection.registerRequest(userName, password, email, puk, prk);
+        if(regReq.ok == false){
+            return {ok:false};
+        } 
+        const addDataReq = await this.userDataConnection.storeDataRequest(userName, puk, regReq.id);
+        return {ok:true};
     }
-    async loginRequest(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        console.log(req.body.userName, req.body.password)
-        if(req.body.userName == null || req.body.password == null){
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else {
-            const loginReq = await this.authServiceConnection.loginRequest(req.body.userName, req.body.password);
-            console.log(loginReq)
-            if(loginReq.ok == false){
-                res.send(JSON.stringify({ok:false}));
-            } else {
-                this.register.createUser(loginReq.id, loginReq.token);
-                this.notifyServiceConnection.insert(loginReq.id, req.body.notifyToken);
-                res.send(JSON.stringify({ok:true, token: loginReq.token, id: loginReq.id, prk: loginReq.prk, puk: loginReq.puk}));
-            }
-        }
 
+    async loginRequest(userName, password, notifyToken) {
+        if(userName == null || password == null){
+            return {ok:false}
+        } 
+        const loginReq = await this.authServiceConnection.loginRequest(userName, password);
+        if(loginReq.ok == false){
+            return {ok:false};
+        } 
+            
+        this.register.createUser(loginReq.id, loginReq.token);
+        this.notifyServiceConnection.insert(loginReq.id, notifyToken);
+        return {ok:true, token: loginReq.token, id: loginReq.id, prk: loginReq.prk, puk: loginReq.puk};
     }
-    async logoutRequest(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        if(req.body.token == null || req.body.id == null){
-            res.send(JSON.stringify({
-                "ok": false
-            }));
-        } else {
-            const logoutReq = this.authServiceConnection.logoutRequest(req.body.id,req.body.token);
-            if(logoutReq.ok == false){
-                res.send(JSON.stringify({ok:false}));
-            } else {
-                this.register.deleteUser(req.body.id);
-                res.send(JSON.stringify({ok:true}));
-                this.notifyServiceConnection.delete(req.body.id);
-            }
+
+    async logoutRequest(id,token) {
+        if(token == null || id == null){
+            return {"ok": false};
+        } 
+
+        const logoutReq = this.authServiceConnection.logoutRequest(id,token);
+        if(logoutReq.ok == false){
+            return {ok:false};
         }
+                
+        this.register.deleteUser(id);
+        this.notifyServiceConnection.delete(id);
+        return {ok:true};
     }
     
-    async activateAccount(req, res){
-        const ok = await this.authServiceConnection.activateAccount(req.params.id)
+    async activateAccount(id){
+        const ok = await this.authServiceConnection.activateAccount(id)
         if(ok == true){
-            res.send("Account attivato!")
+            return "Account attivato!"
         } else {
-            res.send("Il link di attivazione utilizzato non è valido!")
+            return "Il link di attivazione utilizzato non è valido!"
         }
     }
 
@@ -77,7 +65,7 @@ export default class AuthHandler {
         if(msg.id == null || msg.token == null){
             return
         }
-        if(this.register.checkToken(msg.id, msg.token)){
+        if(await this.authServiceConnection.checkToken(msg.id, msg.token)){
             console.log("User authenticated")
             this.register.authConnection(msg.id,ws);
             ws.send(JSON.stringify({type:'auth',ok:true}))

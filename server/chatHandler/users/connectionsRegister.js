@@ -42,17 +42,6 @@ export default class ConnectionsRegister{
         this.WsToId.set(Ws, id);
     }
 
-    checkToken(id,token){
-        const conn = this.connections.get(id);
-        if(conn == undefined || conn == null){
-            return false;
-        }
-        if(conn.getToken() === token){
-            return true;
-        }
-        return false;
-    }
-
     checkUserOnline(id){
         const conn = this.connections.get(id);
         if(conn != null){

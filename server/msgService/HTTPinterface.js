@@ -25,10 +25,30 @@ class HTTPinterface{
         this.app.use(bodyParser.raw());
         this.app.use(cors({origin: '*'}));
 
-        this.app.post('/storeMsg', this.controller.storeMsg.bind(this.controller));
-        this.app.post('/storedMsgRequest', this.controller.storedMsgRequest.bind(this.controller));
-        this.app.post('/blockUser', this.controller.blockUser.bind(this.controller));
-        this.app.post('/checkBlock', this.controller.checkBlock.bind(this.controller));
+        this.app.post('/storeMsg', this.storeMsg.bind(this));
+        this.app.post('/storedMsgRequest', this.storedMsgRequest.bind(this));
+        this.app.post('/blockUser', this.blockUser.bind(this));
+        this.app.post('/checkBlock', this.checkBlock.bind(this));
+    }
+
+    async storeMsg(req, res){
+        const r = await this.controller.storeMsg(req.body.idMittente, req.body.idDestinatario, req.body.text, req.body.keyD, req.body.timestamp);
+        res.send(JSON.stringify(r));
+    }
+
+    async storedMsgRequest(req, res){
+        const r = await this.controller.storedMsgRequest(req.body.idDestinatario);
+        res.send(JSON.stringify(r));
+    }
+
+    async blockUser(req, res){
+        const r = await this.controller.blockUser(req.body.id, req.body.idBlocked);
+        res.send(JSON.stringify(r));
+    }
+
+    async checkBlock(req, res){
+        const r = await this.controller.checkBlock(req.body.id, req.body.idBlocked);
+        res.send(JSON.stringify(r));
     }
 }
 

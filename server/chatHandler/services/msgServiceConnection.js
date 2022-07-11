@@ -5,7 +5,7 @@ const msgServerIp = 'localhost';
 const msgServerPort = '8890' 
 
 export default class msgSerivceConnection{
-    async storeMsg(idMittente, idDestinatario, text, keyM, keyD, timestamp){
+    async storeMsg(idMittente, idDestinatario, text, keyD, timestamp){
         var resp = await fetch(`http://${msgServerIp}:${msgServerPort}/storeMsg`, 
             {
             method: 'POST',
@@ -17,7 +17,6 @@ export default class msgSerivceConnection{
                 idMittente: idMittente,
                 idDestinatario: idDestinatario,
                 text: text,
-                keyM: keyM,
                 keyD: keyD,
                 timestamp: timestamp
             })
