@@ -25,7 +25,6 @@ export default class App extends React.Component {
       }
     }.bind(this), 1000
     )
-    
   }
 
   connect(){

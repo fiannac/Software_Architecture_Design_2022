@@ -8,9 +8,6 @@ import ControllerFacade from '../controller/controllerFacade.js';
 
 export default class ClientInterface {
     constructor() {
-
-        this.socketToId = new Map();
-
         this.controller = new ControllerFacade();
 
         this.app = express();

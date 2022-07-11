@@ -13,6 +13,7 @@ export default class DAO{
             return connection;
         }catch(err){
             console.log(err);
+            await connection.end();
         }
     }
 
@@ -36,10 +37,12 @@ export default class DAO{
     async storeToken(id, token){
         try{
             var connection = await this.connect();
+            await connection.query("DELETE FROM notifytoken WHERE id = ?", [id]);
             await connection.query("INSERT INTO notifytoken (id, notifytoken) VALUES (?, ?)", [id, token]);
             await connection.end();
         }catch(err){
             console.log(err);
+            await connection.end();
         }
     }
 
@@ -50,6 +53,7 @@ export default class DAO{
             await connection.end();
         }catch(err){
             console.log(err);
+            await connection.end();
         }
     }
 }

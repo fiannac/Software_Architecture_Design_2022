@@ -35,6 +35,12 @@ class RequestController{
         }
         res.send(JSON.stringify({ok:resp}));
     }
+
+    async checkBlock(req, res){
+        console.log("Check block request: "+ JSON.stringify(req.body));
+        const blocked = await this.dao.checkBlockedUser(req.body.id, req.body.idBlocked)
+        res.send(JSON.stringify({ok:blocked}));
+    }
 }
 
 module.exports = RequestController;

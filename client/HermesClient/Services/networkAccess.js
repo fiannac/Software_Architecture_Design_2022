@@ -5,7 +5,6 @@ export default class NetworkAccess {
     constructor(controller, ws = `ws://${serverIp}:${serverPort}/`) {
         this.ws = this.createWS(ws,controller)
         this.controller = controller
-
         this.createWS = this.createWS.bind(this)
     }
     

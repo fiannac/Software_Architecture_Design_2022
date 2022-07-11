@@ -27,7 +27,6 @@ export default class ChatPage extends React.Component {
       this.setState({height : Dimensions.get('window').height})
     }.bind(this))
 
-
     this.listnerBack = BackHandler.addEventListener('hardwareBackPress', function () {
       this.props.handleNavigation()
       return true;
@@ -56,17 +55,13 @@ export default class ChatPage extends React.Component {
       "Impostazioni chat",
       "Seleziona una delle seguenti opzioni",
       [
-
         {
-           text: "Annulla",
-            onPress: () => console.log("OK Pressed") 
-        },
-        {
+           text: "Annulla"
+        },{
           text: "Elimina Chat",
           onPress: () => {this.props.handleNavigation();this.controller.deleteChat(this.id)}, 
           style: 'destructive'
-        },
-        {
+        },{
           text: "Blocca utente",
           onPress: () => this.controller.bloccaUtente(this.id),
           style: "cancel"
@@ -96,9 +91,9 @@ export default class ChatPage extends React.Component {
 
       </View>
       
-      <View style = {{backgroundColor: 'white', height: this.state.height - 105,
+      <View style = {{backgroundColor: 'white', height: this.state.height - 115,
           paddingLeft: 20,
-          paddingRight: 20, paddingBottom: 0}}>
+          paddingRight: 20}}>
           <ScrollView ref={this.ref} onContentSizeChange={(width, height) => this.ref.current.scrollTo({ y: height, animated: false }) }
           showsVerticalScrollIndicator={false}>
             {this.props.chat.map((msg, i) => (

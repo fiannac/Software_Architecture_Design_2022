@@ -14,13 +14,10 @@ export default class RegistrationPage extends React.Component {
     this.controller = props.controller
     this.registratiButton = this.registratiButton.bind(this);
 
-
     this.listnerBack = BackHandler.addEventListener('hardwareBackPress', function () {
       this.props.setRegisterPage(false);
       return true;
-    }.bind(this))
-
-    
+    }.bind(this))    
   }
 
   componentWillUnmount(){
@@ -28,24 +25,19 @@ export default class RegistrationPage extends React.Component {
   }  
 
   async registratiButton(){
-    this.setState({loading: true})
     if(this.psw.length < 8 || !this.psw.match(/[A-Z]/i) || !this.psw.match(/[0-9]/i)){
-      this.setState({errore: true})
       alert('Password non valida')
       return
     }
     if(!this.mail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
-      this.setState({errore: true})
       alert('Mail non valida')
       return
     }
     if(!this.usrname.match(/^[a-zA-Z0-9]+$/)){
-      this.setState({errore: true})
       alert('Username non valido')
       return
     }
     if(this.psw != this.psw2){
-      this.setState({errore: true})
       alert('Password non uguali')
       return
     }

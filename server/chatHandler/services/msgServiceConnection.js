@@ -72,5 +72,27 @@ export default class msgSerivceConnection{
         }
         return resp;
     }
+
+    async checkBlock(id, idBlocked){
+        var resp = await fetch(`http://${msgServerIp}:${msgServerPort}/checkBlock`, 
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                idBlocked: idBlocked
+            })
+        })
+        try{
+            resp = await resp.json()
+            return resp.ok;
+        } catch (e){
+            console.log("Errore: ", e)
+            return null;
+        }
+    }
 }
 

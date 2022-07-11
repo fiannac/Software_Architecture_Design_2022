@@ -8,8 +8,6 @@ const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/
 export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
-        this.date = new Date(this.props.timestamp);
-        console.log(this.date);
     } 
 
     pad(d) {
@@ -53,7 +51,7 @@ export default class Conversation extends React.Component {
                         {this.props.text.length >30 ? this.props.text.slice(0, 30) + '...' : this.props.text.slice(0, 30) }
                     </Text>
                 </View>
-                {(this.props.timestamp != ' ') && <Text style={{ fontWeight: '200' }}>{this.pad(this.date.getHours())}:{this.pad(this.date.getMinutes())}</Text>}
+                {(this.props.timestamp != ' ') && <Text style={{ fontWeight: '200' }}>{this.pad((new Date(this.props.timestamp)).getHours())}:{this.pad((new Date(this.props.timestamp)).getMinutes())}</Text>}
             </View>
 
             </TouchableOpacity>

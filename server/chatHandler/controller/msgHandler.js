@@ -29,6 +29,10 @@ export default class MsgHandler {
         } else {
             if(this.register.checkToken(req.body.idMittente, req.body.token)){         
                 if(this.register.getUser(req.body.idDestinatario) != null){ // se l'utente destinatario è connesso
+                    if(true == await this.msgSerivceConnection.checkBlock(req.body.idDestinatario, req.body.idMittente)){
+                        res.send(JSON.stringify({ok:false}));
+                        return;
+                    }
                     this.register.getUser(req.body.idDestinatario).send(req.body.text, req.body.idMittente, req.body.timestamp, req.body.keyD);
                 } else {
                     const reqMsg = await this.msgSerivceConnection.storeMsg(req.body.idMittente, req.body.idDestinatario, req.body.text, req.body.keyM, req.body.keyD , req.body.timestamp); 

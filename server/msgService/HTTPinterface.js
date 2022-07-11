@@ -28,6 +28,7 @@ class HTTPinterface{
         this.app.post('/storeMsg', this.controller.storeMsg.bind(this.controller));
         this.app.post('/storedMsgRequest', this.controller.storedMsgRequest.bind(this.controller));
         this.app.post('/blockUser', this.controller.blockUser.bind(this.controller));
+        this.app.post('/checkBlock', this.controller.checkBlock.bind(this.controller));
     }
 }
 
