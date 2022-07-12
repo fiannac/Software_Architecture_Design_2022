@@ -100,6 +100,7 @@ export default class LocalStorage {
     }
 
     async storeAuthData(userName, psw){
+        console.log(userName, psw);
         const query = `INSERT INTO authData VALUES('${userName}', '1', '${psw}')`;
         var ok = new Promise((resolve, reject) => {
               this.db.transaction(tx => { tx.executeSql(query)},
@@ -107,6 +108,7 @@ export default class LocalStorage {
                 () => resolve(true))
         });
         ok = await ok
+        console.log("store riuscita ", ok)
         return ok;        
     }
 

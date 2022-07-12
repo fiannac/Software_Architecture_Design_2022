@@ -38,11 +38,9 @@ class DAO{
             if(result.length == 1){
                 return {ok: true, id: result[0].id, puk: result[0].puk};
             }else{
-                await connection.end();
                 return {ok: false, error: "User does not exist"};
             }
         }catch(err){
-            console.log(err);
             return {ok: false, error: "Can't connect to database"};
         }
     }
@@ -59,8 +57,7 @@ class DAO{
                 return {ok: false, error: "User does not exist"};
             }
         }catch(err){
-            await connection.end();
-            console.log(err);
+     
             return {ok: false, error: "Can't connect to database"};
         }
     }

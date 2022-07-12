@@ -100,8 +100,6 @@ export default class MainPage extends React.Component {
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#122643'}}>
           <View style={{paddingVertical: 50, paddingHorizontal: 30,}}>
-            
-              
               {(this.state.searchBar && !this.state.newChat) &&
               <View style={{flexDirection: "row", alignItems: "center"}}>
                 <TouchableOpacity onPress={() => this.setState({searchBar: false, search:''})}>
@@ -165,12 +163,12 @@ export default class MainPage extends React.Component {
             Conversazioni
           </Text>
           </View>
+
           <View style={styles.chatContainer}>
             <ScrollView
               style={{
-              minHeight: Dimensions.get('window').height - 180,
-              marginTop: 5,
-              paddingTop: 5,
+              height: Dimensions.get('window').height - 180,
+             
               }}
               showsVerticalScrollIndicator={false}
             >
@@ -193,7 +191,7 @@ export default class MainPage extends React.Component {
             style={styles.button}
             activeOpacity={0.5}
           >
-            <Icon name="plus" size={24} color="white" />
+            <Icon name="plus" size={27} color="white" />
             </TouchableOpacity>
           </View>}
           
@@ -220,7 +218,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    paddingTop: 5,
     overflow: 'hidden',
     paddingHorizontal: 15,
   },

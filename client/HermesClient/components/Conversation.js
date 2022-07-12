@@ -21,7 +21,8 @@ export default class Conversation extends React.Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: 20,
+            marginTop: 15,
+            marginBottom: 5,
             }}
             onPress={this.props.handleNavigation}
             >

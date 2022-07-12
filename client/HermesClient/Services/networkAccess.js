@@ -1,8 +1,6 @@
-export const serverIp = '109.116.253.181'
-export const serverPort = '8888'
+import { serverIp, serverPort } from "./networkConfig"
 
 export default class NetworkAccess {
-
     constructor(controller, ws = `ws://${serverIp}:${serverPort}/`) {
         this.ws = this.createWS(ws,controller)
         this.controller = controller
@@ -13,56 +11,46 @@ export default class NetworkAccess {
         if(this.ws != null){
             this.ws.close()
         }
-        
-        //creazione nuova web socket con indirizzo passato come parametro
         ws = new WebSocket(wsAddress);
         ws.controller = controller
-
-        //specifica funzioni richiamate alla apertura,chiusura e messaggio sulla socket
         ws.onopen = this.WSopen; 
         ws.onclose = this.WSclose;
         ws.onmessage = this.WSmsg;
         return ws;
     }
 
-    reconnect(){
+    connect(){
         this.ws = this.createWS(`ws://${serverIp}:${serverPort}/`, this.controller)
-        this.controller.rememberMeLogin()
     }
 
     disconnect(){
         this.ws.close();
     }
 
-    //aggiornamenti stato connessione 
-    //(stato connState/loggedState mantenuto dal LoggedUser)
     WSopen(){
         this.controller.updateConnectionState(true)
+        this.controller.resume()
     }
 
     WSclose(){
-        this.controller.updateConnectionState(false)
+        this.controller.updateConnectionState(false);
     }
 
     WSmsg(event){
         const msg = JSON.parse(event.data);
         if(msg?.type == 'auth' && msg?.ok == true){
-            //Messaggio di auth sulla wb per login utente
             this.controller.updateLoggedState(true)
         } else if(msg?.type == 'msg'){
-            //Ricezione dei messaggi sulla webSocket
             this.controller.rcvMsg(msg.text, msg.keyD, msg.idMittente, msg.timestamp)
         }
     }
 
-    //metodo per richiesta di autenticazione della socket
     authWSRequest(id, token){
         const jmsg = JSON.stringify({type: 'authWS', id: id, token: token});
         this.ws.send(jmsg);
         console.log("Richiesta di auth")
     }
 
-    //metodo per richiesta invio messaggio 
     async msgRequest(idMittente, idDestinatario, token, text, keyM, keyD, timestamp){
         var response = await fetch(`http://${serverIp}:${serverPort}/msg`, 
             {
@@ -84,8 +72,7 @@ export default class NetworkAccess {
         return response;
     }
 
-    //metodo per richiesta messaggi ricevuti mentre utente offline
-    async rcvOldMsgReq(idDestinatario, token, timestamp){
+    async rcvOldMsgReq(idDestinatario, token){
         var response = await fetch(`http://${serverIp}:${serverPort}/storedmsg`, 
             {
             method: 'POST',
@@ -95,14 +82,12 @@ export default class NetworkAccess {
             },
             body: JSON.stringify({
                 idDestinatario: idDestinatario,
-                token: token,
-                timestamp: timestamp
+                token: token
             })
         }).then((response) => response.json())
         return response;
     }
 
-    //metodo per richiesta HTTP di registrazione 
     async registerRequest(user, email, psw, puk, prk){
         var response= await fetch(`http://${serverIp}:${serverPort}/register`, 
             {
@@ -123,7 +108,6 @@ export default class NetworkAccess {
         return response.ok
     }   
 
-    //metodo per richiesta HTTP di login 
     async loginRequest(usr, psw, notifyToken){
         var response = await fetch(`http://${serverIp}:${serverPort}/login`, 
             {
@@ -153,8 +137,7 @@ export default class NetworkAccess {
         }
 
     }
- 
-    //metodo per richiesta HTTP di logout 
+
     async logoutRequest(id, token){
         var response = await fetch(`http://${serverIp}:${serverPort}/logout`,
             {
@@ -171,7 +154,6 @@ export default class NetworkAccess {
         return response.ok;
     }
 
-    
     async userDataRequest(destUsr, id, token){
         var response = await fetch(`http://${serverIp}:${serverPort}/userdata`, 
             {
@@ -208,7 +190,6 @@ export default class NetworkAccess {
         return response;
     }
 
-    //richiesta di block di un utente
     async blockUser(id, token, idBlocked){
         var response = await fetch(`http://${serverIp}:${serverPort}/blockUser`, 
             {
