@@ -8,6 +8,7 @@ export default class Chat{
         this.user = user;
     }
 
+    //funzione di add di un nuovo messaggio 
     addMessage(testo, timestamp, type){
         const msg = new messaggio(testo, timestamp, type)
         this.msgs.push(msg)

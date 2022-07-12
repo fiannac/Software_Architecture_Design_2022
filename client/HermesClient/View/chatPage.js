@@ -77,7 +77,6 @@ export default class ChatPage extends React.Component {
   render(){
     
     return (
-      
     <View style={styles.container}>
 
       <View style={[styles.flexify,{height:55 }]}>

@@ -3,13 +3,14 @@ import * as Notifications from 'expo-notifications';
 
 export default class LoginController {
     constructor(network, loggedUser, crypto, createChat, storage) {
-        this.network = network
+        this.network = network 
         this.loggedUser = loggedUser
         this.createChat = createChat
         this.crypto = crypto
         this.storage = storage
     }
 
+    //richiamata a partire dalla loginPress della loginPage
     async login(user, Opsw, rememberMe){
         const psw = await this.crypto.hashPsw(Opsw)
         const notifyToken = await this.registerForPushNotificationsAsync()
@@ -17,16 +18,21 @@ export default class LoginController {
         if(reply.ok == false){
             return false
         }
+
         this.loggedUser.setId(reply.id)
         this.loggedUser.setToken(reply.token)
         this.loggedUser.setPsw(Opsw)
         this.loggedUser.setUser(user)
         this.loggedUser.setPuk(reply.puk)
+
+        //risposta alla richiesta di login restutisce anche chiave privata cryptata con psw utente.
+        //decypting prk con psw utente per memorizzare prk in locale in chiaro. 
         const prk = await this.crypto.decryptPrk(reply.prk, Opsw)
         this.loggedUser.setPrk(prk)
 
-        
         if(this.loggedUser.loggedState != true){
+            //se utente non ha effettuato logout e remember me==true non necessario 
+            //rifare il load dell chat 
             const chats = await this.storage.loadChats(reply.id);
             for(let chat of chats){
                 console.log(chat)
@@ -38,10 +44,13 @@ export default class LoginController {
             }
         }
 
+        //ricezione dei messaggi non consegnati
         const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
+        
         for(let msg of msgs.list){
             const id = reply.id
             if(!this.loggedUser.chats.has(msg.sender)){
+                //non esiste chat con il sender del msg, è creata usando il suo id
                 const res = await this.createChat.createChatFromId(msg.sender)
             } 
             const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
@@ -86,6 +95,7 @@ export default class LoginController {
        
     }
 
+    //funzione che returna token univoco per il dispositivo utilizzato
     async registerForPushNotificationsAsync() {
         let token;
         if (Device.isDevice) {

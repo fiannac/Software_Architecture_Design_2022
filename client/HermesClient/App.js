@@ -59,7 +59,7 @@ export default class App extends React.Component {
     this.controller.unsubscribeStateObserver()
   }
 
-  //Funzione richiamata dal logged-user per settare lo stato
+  //Funzione richiamata dal loggedUser per settare lo stato (app è observer di loggedUser)
   notify(connected, logged){
     const newState = {
       connected: connected,
