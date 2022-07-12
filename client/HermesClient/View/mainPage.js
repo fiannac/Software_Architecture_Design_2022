@@ -14,6 +14,7 @@ const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/
 export default class MainPage extends React.Component {
   constructor(props){
     super(props)
+    //stato della main page
     this.state = {
       chats : [],
       chatOpen : false,
@@ -32,6 +33,7 @@ export default class MainPage extends React.Component {
     this.signOutUser = this.signOutUser.bind(this)
   }
   
+  //alla costruzione del componente, questo è sottoscritto come observer dello stato delle chats del model
   componentDidMount(){
     this.controller.subscribeChatObserver(this.notify.bind(this))
   }
@@ -40,6 +42,7 @@ export default class MainPage extends React.Component {
     this.controller.unsubscribeChatObserver()
   }
   
+  // Funzione richiamata all'aggiornamento delle chat nel model 
   notify(chats){
     var newChats = []
     chats.forEach((chat, id) => {
@@ -61,6 +64,7 @@ export default class MainPage extends React.Component {
     this.setState({chats:newChats})
   }
 
+  //funzione richiamata al tentativo di creazione di una chat  
   async handleCreateChat(){
     if(this.state.newUser != ''){
       const res = await this.controller.createChatFromUsername(this.state.newUser)
@@ -78,6 +82,7 @@ export default class MainPage extends React.Component {
     this.setState({newChat:false, newUser:''})
   }
 
+  //funzione per la navigazione tra le chat
   handleNavigation = () => {
     this.setState({chatOpen:false})
   }
@@ -91,7 +96,7 @@ export default class MainPage extends React.Component {
   }
 
   render(){
-    if(this.state.chatOpen == false){
+    if(this.state.chatOpen == false){ // a chat chiusa returno la main page
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#122643'}}>
           <View style={{paddingVertical: 50, paddingHorizontal: 30,}}>
@@ -194,7 +199,7 @@ export default class MainPage extends React.Component {
           
         </SafeAreaView>
       );
-    } else {
+    } else { //altrimenti renderizzo la chatpage
       return(
         <View>
           <ChatPage controller = {this.controller} chat = {this.state.chats[this.chatOpenNumber].chat.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)})} userName = {this.state.chats[this.chatOpenNumber].user} id = {this.state.chats[this.chatOpenNumber].id} handleNavigation={this.handleNavigation}/>

@@ -10,16 +10,18 @@ import { StyleSheet, Text, View, Button, TextInput, BackHandler, TouchableOpacit
 export default class RegistrationPage extends React.Component {
   constructor(props){
     super(props)
- 
+    //campi per la registrazione
     this.usrname = ''
     this.psw = ''
     this.psw2= ''
     this.mail = ''
+    //controller passato dalla login page come prop
     this.controller = props.controller
     this.registratiButton = this.registratiButton.bind(this);
 
+    //Aggiunta di un listener per consentire il ritorno alla pagina precedente
     this.listnerBack = BackHandler.addEventListener('hardwareBackPress', function () {
-      this.props.setRegisterPage(false);
+      this.props.setRegisterPage(false); // richiama la funzione di set del campo register page dello stato della login page
       return true;
     }.bind(this))    
   }
@@ -28,7 +30,11 @@ export default class RegistrationPage extends React.Component {
     this.listnerBack.remove()
   }  
 
+  // funzione richiamata alla pressione del tasto di registrazione
   async registratiButton(){
+
+    //Controlli di validità dell'input
+
     if(this.psw.length < 8 || !this.psw.match(/[A-Z]/i) || !this.psw.match(/[0-9]/i)){
       alert('Password non valida')
       return
@@ -45,9 +51,11 @@ export default class RegistrationPage extends React.Component {
       alert('Password non uguali')
       return
     }
+    //invio richiesta di registrazione utente tramite il controller
     const res = await this.controller.registerUser(this.usrname, this.mail, this.psw)
     
     if(res == true){
+      //a registrazione avvenuta con successo
       this.props.setRegisterPage(false)
     } else {
       alert('Username o email già utilizzata!')

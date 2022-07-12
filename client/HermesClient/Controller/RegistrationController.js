@@ -5,12 +5,12 @@ export default class RegistrationController {
     }
 
     async registerUser(user, email, psw){  
-        const keys = await this.crypto.generateKeys();
+        const keys = await this.crypto.generateKeys(); // generazione chiave pubblica e privata per RSA
         const prk = keys.prk;
         const puk = keys.puk;
 
-        const Cprk = await this.crypto.encryptPrk(prk, psw)
-        const Hpsw = await this.crypto.hashPsw(psw)
+        const Cprk = await this.crypto.encryptPrk(prk, psw) // privata cifrata con la password in chiaro
+        const Hpsw = await this.crypto.hashPsw(psw) //hashing della password con MD5
         const res = await this.network.registerRequest(user, email, Hpsw, puk, Cprk)
 
         if(res == true){

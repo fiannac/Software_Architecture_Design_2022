@@ -8,7 +8,7 @@ import Message from "../components/Message";
 export default class ChatPage extends React.Component {
   constructor(props){
     super(props)
-    this.state = {
+    this.state = { // stato delle chat
       msg : "",
       height: Dimensions.get('window').height,
     }
@@ -18,6 +18,7 @@ export default class ChatPage extends React.Component {
     this.id = props.id
     this.ref = React.createRef()
 
+    //Aggiunte di un listener per settaggio della dimensione dello screen all'apertura della tastiera
     this.listnerShow = Keyboard.addListener("keyboardDidShow", function(e){
       this.setState({height : Dimensions.get('window').height-e.endCoordinates.height})
       this.ref.current.scrollToEnd()
@@ -27,12 +28,14 @@ export default class ChatPage extends React.Component {
       this.setState({height : Dimensions.get('window').height})
     }.bind(this))
 
+    //Funzione per returnare indietro alla mainpage
     this.listnerBack = BackHandler.addEventListener('hardwareBackPress', function () {
       this.props.handleNavigation()
       return true;
     }.bind(this))
   }
 
+  //Funzione per gestire l'invio di un messaggio
   async handleMsgSend(){
     if(this.state.msg != ''){
       const res = await this.controller.inviaMessaggio(this.id,this.state.msg)
@@ -43,13 +46,14 @@ export default class ChatPage extends React.Component {
       }
     }
   }
-
+  //rimozione listener
   componentWillUnmount(){
     this.listnerShow.remove()
     this.listnerHide.remove()
     this.listnerBack.remove()
   }
 
+  //Funzione richiamata alla pressione del tasto di opzioni all'interno della chat page 
   settingPressed(){
     Alert.alert(
       "Impostazioni chat",
@@ -73,7 +77,6 @@ export default class ChatPage extends React.Component {
   render(){
     
     return (
-      
     <View style={styles.container}>
 
       <View style={[styles.flexify,{height:55 }]}>

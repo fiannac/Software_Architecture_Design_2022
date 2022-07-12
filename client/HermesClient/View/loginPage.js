@@ -18,13 +18,14 @@ let customFonts = {
 export default class LoginPage extends React.Component {
   constructor(props){
     super(props)
+    //stato della login page
     this.state = {
       registerPage: false,
       loading: false,
       rememberMeLogin: true,
       fontsLoaded: false
     }
-
+    //il riferimento al controller viene passato tramite i props
     this.controller = props.controller
     this.usrname = '';
     this.psw = '';
@@ -46,6 +47,7 @@ export default class LoginPage extends React.Component {
     this.setState({registerPage:value})
   }
 
+  //funzione richiamata alla pressione del tasto di login
   async loginPress(){
     this.setState({loading: true})
     if(await this.controller.login(this.usrname, this.psw, this.state.rememberMeLogin) == false){
@@ -58,8 +60,10 @@ export default class LoginPage extends React.Component {
   
 
     if(this.state.registerPage){
+      // renderizza la pagina di registrazione qualora registerPage sia stata posta a true
       return(<RegistrationPage  controller={this.controller} setRegisterPage = {this.setRegisterPage}/>);
     }else{
+      //returniamo la pagina di login
       return (
             <ScrollView contentContainerStyle={styles.container}>
                   <Image
