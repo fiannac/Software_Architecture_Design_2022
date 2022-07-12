@@ -31,8 +31,7 @@ export default class LoginController {
         this.loggedUser.setPrk(prk)
 
         if(this.loggedUser.loggedState != true){
-            //se utente non ha effettuato logout e remember me==true non necessario 
-            //rifare il load dell chat 
+            
             const chats = await this.storage.loadChats(reply.id);
             for(let chat of chats){
                 console.log(chat)
@@ -43,6 +42,7 @@ export default class LoginController {
                 }
             }
         }
+        //se utente non ha effettuato logout e remember me==true
 
         //ricezione dei messaggi non consegnati
         const msgs = await this.network.rcvOldMsgReq(reply.id, reply.token); 
@@ -53,13 +53,17 @@ export default class LoginController {
                 //non esiste chat con il sender del msg, è creata usando il suo id
                 const res = await this.createChat.createChatFromId(msg.sender)
             } 
+
+            // per ciascuno dei messaggi non ancora consegnati ricavo la chiave di cifratura, li aggiungo ai messaggi e li storo
+            // key è cifrata dal mittente con la chiave pubblica del loggedUser 
             const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
             console.log(msg.text)
-            const text = await this.crypto.decryptMsg(msg.text, key);
-            this.loggedUser.createMessage(text, msg.sender, msg.timestamp, 'rcv')
+            const text = await this.crypto.decryptMsg(msg.text, key); //uso key per decifrare i messaggi ricevuti
+            this.loggedUser.createMessage(text, msg.sender, msg.timestamp, 'rcv') 
             this.storage.insertMessage(id,msg.sender, text, msg.timestamp, 'rcv')
         }
-            
+        
+        // richiesta di autenticazione del canale di comunicazione
         this.network.authWSRequest(reply.id, reply.token);
         if(rememberMe == true){
             this.storage.storeAuthData(user, Opsw)
@@ -67,6 +71,7 @@ export default class LoginController {
         return true;
     }
 
+    // funzione per effettuare il logout col reset di tutti gli attributi di loggedUser
     async logout(){
         const res = await this.network.logoutRequest(this.loggedUser.id, this.loggedUser.token);
         this.loggedUser.setId('')
@@ -80,6 +85,7 @@ export default class LoginController {
         return true;
     }
 
+    
     async rememberMeLogin(){
         const DBquery = await this.storage.getAuthData()
         console.log(DBquery)

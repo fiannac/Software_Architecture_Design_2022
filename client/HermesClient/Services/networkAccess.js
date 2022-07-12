@@ -208,6 +208,7 @@ export default class NetworkAccess {
         return response;
     }
 
+    //richiesta di block di un utente
     async blockUser(id, token, idBlocked){
         var response = await fetch(`http://${serverIp}:${serverPort}/blockUser`, 
             {

@@ -6,6 +6,7 @@ export default class Crypto {
         this.rsa = new RSAKey();
     }
 
+    // Funzione per cifrare la prk con la password sfruttando AES
     async encryptPrk(prk, password){ 
         var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(prk), password).toString();
         return ciphertext;
@@ -17,11 +18,13 @@ export default class Crypto {
         return decryptedData;
     }
 
+    //MD5 Hashing
     async hashPsw(psw){
         const hash = CryptoJS.MD5(psw).toString();
         return hash;
     }
 
+    // Generazione chiave pubblica e privata di RSA
     async generateKeys(){
         const bits = 512;
         const exponent = '10001'; 
@@ -31,11 +34,13 @@ export default class Crypto {
         return {puk,prk};
     }
 
+    // generazione di una chiave casuale K 
     generateKey(){
         const key = "pippozzo";//uuid.v4();
         return key;
     }
 
+    // crittaggio e decrittaggio di key con chiavi RSA 
     async encryptKey(key, puk){
         this.rsa.setPublicString(puk);
         return this.rsa.encrypt(key);
@@ -45,6 +50,8 @@ export default class Crypto {
         this.rsa.setPrivateString(prk);
         return this.rsa.decrypt(key);
     }
+
+    //Funzioni di crypt e decrypt con chiave K sfruttando algoritmo a chiave simmetrica (AES) 
 
     async encryptMsg(msg, key){
         const ciphertext = await CryptoJS.AES.encrypt(msg, key).toString();;

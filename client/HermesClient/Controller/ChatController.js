@@ -63,6 +63,7 @@ export default class CreateChatController {
         return true
     }
 
+    
     async bloccaUtente(id, token, idDaBloccare){ 
         const res = await this.network.blockUser(id, token, idDaBloccare)
         if(res.ok == false){
