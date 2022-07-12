@@ -23,7 +23,6 @@ export default class MainPage extends React.Component {
       newChat: false,
       newUser: ''
     }
-
     this.chatOpenNumber = -1
     this.controller = props.controller
 
@@ -99,20 +98,21 @@ export default class MainPage extends React.Component {
     if(this.state.chatOpen == false){ // a chat chiusa returno la main page
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#122643'}}>
-          <View style={{paddingVertical: 50, paddingHorizontal: 30,}}>
-              {(this.state.searchBar && !this.state.newChat) &&
+          <View style={{paddingVertical: 50, paddingHorizontal: 30}}>
+              {(this.state.searchBar && this.state.newChat) &&
               <View style={{flexDirection: "row", alignItems: "center"}}>
-                <TouchableOpacity onPress={() => this.setState({searchBar: false, search:''})}>
+                <TouchableOpacity onPress={() => this.setState({searchBar: false, search:'', newChat: false})}>
                   <Icon2 name="arrow-left" size={22} color="white" />   
                 </TouchableOpacity>
                 <View style={{flex: 1, paddingLeft: 15}}>
                   <SearchBar
                     inputStyle={{backgroundColor: 'white', borderColor: '#122643'}}
-                    containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643'}}
-                    inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                    containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643', height: 60}}
+                    inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643', height: 45}}
                     placeholder="Cerca conversazione..."
                     onChangeText={this.updateSearch}
                     value={this.state.search}
+                    searchIcon={{size: 22}}
                   />
                 </View>
               </View>
@@ -134,13 +134,13 @@ export default class MainPage extends React.Component {
                     alignItems: 'center',
                   }}
                 >
-                <TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5} onPress={()=>this.setState({searchBar:true, search: ''})}>
-                <Icon name="search" size={18} color="white" />
+                <TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5} onPress={()=>this.setState({searchBar:true, search: '', newChat: true})}>
+                <Icon name="search" size={22} color="white" />
                 </TouchableOpacity>
                 </View>
             </View>}
 
-            {this.state.newChat &&
+            {(this.state.newChat && !this.state.searchBar) &&
             <View style={{flexDirection: "row", alignItems: "center"}}>
             <TouchableOpacity onPress={() => this.setState({newChat: false})}>
               <Icon2 name="arrow-left" size={22} color="white" />   
@@ -148,8 +148,8 @@ export default class MainPage extends React.Component {
             <View style={{flex: 1, paddingLeft: 15}}>
               <SearchBar
                 inputStyle={{backgroundColor: 'white', borderColor: '#122643'}}
-                containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643'}}
-                inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643', height: 60}}
+                inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643', height: 45}}
                 placeholder="Crea nuova conversazione..."
                 onChangeText={(text) => this.setState({newUser: text})}
                 value={this.state.newUser}
@@ -172,7 +172,7 @@ export default class MainPage extends React.Component {
               }}
               showsVerticalScrollIndicator={false}
             >
-
+            
             {this.state.chats.filter((chat)=>chat.user.startsWith(this.state.search)).map((id,i) => (
               <Conversation
                 key={i}
@@ -184,7 +184,7 @@ export default class MainPage extends React.Component {
             ))}
             </ScrollView>
           </View>
-
+                
           {!this.state.newChat && <View style={styles.buttonContainer}>
             <TouchableOpacity
             onPress={()=>this.setState({newChat: true})}
@@ -207,9 +207,11 @@ export default class MainPage extends React.Component {
   }
 }
 
+//sort((a,b) => {return b.chat[b.chat.length-1].timestamp - a.chat[a.chat.length-1].timestamp})
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
+    height: 60,
     alignItems: 'center',
     flexDirection: 'row',
   },
