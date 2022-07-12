@@ -23,8 +23,8 @@ export default class ConnectionsRegister{
         }
     }
 
-    createUser(id, token, ws = null){
-        const conn = new connectedUser(id, token, ws);
+    createConnection(id, ws){
+        const conn = new connectedUser(id, ws);
         this.connections.set(id, conn);
 
         if(ws != null){

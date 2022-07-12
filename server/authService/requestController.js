@@ -24,7 +24,6 @@ class RequestController{
     }
 
     async register(username, password, email, prk, puk){
-        console.log("Register request: "+ JSON.stringify(req.body));
         let id = uuid.v4();
         const ok = await this.dao.register(id, username, password, email, prk, puk, true );
         if(ok == true){

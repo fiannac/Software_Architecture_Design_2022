@@ -31,7 +31,6 @@ export default class AuthHandler {
             return {ok:false};
         } 
             
-        this.register.createUser(loginReq.id, loginReq.token);
         this.notifyServiceConnection.insert(loginReq.id, notifyToken);
         return {ok:true, token: loginReq.token, id: loginReq.id, prk: loginReq.prk, puk: loginReq.puk};
     }
@@ -67,7 +66,7 @@ export default class AuthHandler {
         }
         if(await this.authServiceConnection.checkToken(msg.id, msg.token)){
             console.log("User authenticated")
-            this.register.authConnection(msg.id,ws);
+            this.register.createConnection(msg.id,ws);
             ws.send(JSON.stringify({type:'auth',ok:true}))
         }
     }

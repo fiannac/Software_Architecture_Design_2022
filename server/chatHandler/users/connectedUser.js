@@ -1,7 +1,6 @@
 export default class connectedUser{
-    constructor(id, token, ws = null){
+    constructor(id, ws){
         this.id = id;
-        this.token = token;
         this.ws = ws
     }
 
@@ -17,13 +16,5 @@ export default class connectedUser{
             "keyD": keyD,
             "type": "msg"
         }));
-    }
-
-    getToken(){
-        return this.token;
-    }
-
-    setWs(ws){
-        this.ws = ws
     }
 }
