@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, TextInput, StyleSheet, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useFonts } from 'expo-font';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -8,6 +9,9 @@ const windowHeight = Dimensions.get('window').height;
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const FormInput = ({isPsw, placeholderText, iconType, ...rest}) => {
+    let [fontsLoaded] = useFonts({
+        'Lato-Regular': require('../assets/fonts/Lato-Regular.ttf'),
+      })
     const [hidePsw, setHidePsw] = useState(isPsw);
     return (
       <View style={styles.inputContainer}>
@@ -62,19 +66,9 @@ const FormInput = ({isPsw, placeholderText, iconType, ...rest}) => {
       padding: 10,
       flex: 1,
       fontSize: 16,
-      //fontFamily: 'Lato-Regular',
+      fontFamily: 'Lato-Regular',
       color: '#333',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    inputField: {
-      padding: 10,
-      marginTop: 5,
-      marginBottom: 10,
-      width: windowWidth / 1.5,
-      height: windowHeight / 15,
-      fontSize: 16,
-      borderRadius: 8,
-      borderWidth: 1,
     },
   });

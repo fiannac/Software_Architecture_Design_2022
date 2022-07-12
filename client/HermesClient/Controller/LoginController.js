@@ -29,7 +29,6 @@ export default class LoginController {
         if(this.loggedUser.loggedState != true){
             const chats = await this.storage.loadChats(reply.id);
             for(let chat of chats){
-                console.log(chat)
                 this.loggedUser.createChat(chat.idDestinatario, chat.userName, chat.puk)
                 const msg = await this.storage.getMessagesByChat(reply.id, chat.idDestinatario)
                 for(let m of msg){
@@ -45,7 +44,6 @@ export default class LoginController {
                 const res = await this.createChat.createChatFromId(msg.sender)
             } 
             const key = await this.crypto.decryptKey(msg.keyD, this.loggedUser.prk)
-            console.log(msg.text)
             const text = await this.crypto.decryptMsg(msg.text, key);
             this.loggedUser.createMessage(text, msg.sender, msg.timestamp, 'rcv')
             this.storage.insertMessage(id,msg.sender, text, msg.timestamp, 'rcv')
@@ -73,7 +71,6 @@ export default class LoginController {
 
     async rememberMeLogin(){
         const DBquery = await this.storage.getAuthData()
-        console.log(DBquery)
         if(DBquery.length == 0){
             return false
         }
@@ -100,7 +97,6 @@ export default class LoginController {
             return;
           }
           token = (await Notifications.getExpoPushTokenAsync()).data;
-          console.log(token);
         } else {
           alert('Must use physical device for Push Notifications');
         }

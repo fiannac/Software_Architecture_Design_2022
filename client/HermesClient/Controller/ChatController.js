@@ -12,6 +12,7 @@ export default class CreateChatController {
         const id = this.loggedUser.id;
         const token = this.loggedUser.token;
         const data = await this.network.userDataRequest(username, id, token);
+        console.log(data)
         if(data.ok == false){
             return -2;
         }

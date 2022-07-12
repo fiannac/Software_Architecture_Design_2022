@@ -4,19 +4,25 @@ import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator, Touchable
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import * as Font from 'expo-font';
+
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import RegistrationPage from './registrationPage.js'
 
-
+let customFonts = {
+  'Kufam-SemiBoldItalic': require('../assets/fonts/Kufam-SemiBoldItalic.ttf'),
+  'JosefinSans-Regular': require('../assets/fonts/JosefinSans-Regular.ttf')
+};
 export default class LoginPage extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       registerPage: false,
       loading: false,
-      rememberMeLogin: true
+      rememberMeLogin: true,
+      fontsLoaded: false
     }
 
     this.controller = props.controller
@@ -25,6 +31,15 @@ export default class LoginPage extends React.Component {
 
     this.setRegisterPage = this.setRegisterPage.bind(this)
     this.loginPress = this.loginPress.bind(this)
+  }
+
+  async _loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    this.setState({ fontsLoaded: true });
+  }
+
+  componentDidMount() {
+    this._loadFontsAsync();
   }
 
   setRegisterPage(value){
@@ -70,21 +85,30 @@ export default class LoginPage extends React.Component {
               isPsw={true}
             />
 
-            <View style = {{flexDirection: "row",justifyContent: "space-between", alignContent:"center"}}>
-            <Icon2
-              name={this.state.rememberMeLogin ? 'checkbox-intermediate' : 'checkbox-blank-outline'}
-              size={15}
-              style={{marginLeft: 5}}
-              color="black"
-              onPress={() => this.setState({rememberMeLogin: !this.state.rememberMeLogin})}
-            />
-            <Text style={{paddingHorizontal:10}}>Remember me?</Text>
-            </View>
+            <View style = {{flexDirection: "row",justifyContent: "space-between", alignContent:"center", position: 'relative', left: -109}}>
 
-            <FormButton
-              buttonTitle="Login"
-              handleLogin={this.loginPress}
+            <BouncyCheckbox
+            size={15}
+            style={{marginLeft: 5}}
+            fillColor="#122643"
+            unfillColor="#FFFFFF"
+            text="Remember me"
+            isChecked={this.state.rememberMeLogin}
+            textStyle={{
+              textDecorationLine: "none",
+              paddingHorizontal: 5,
+              fontFamily: "JosefinSans-Regular",
+            }}
+            iconStyle={{ borderColor: "#122643", borderRadius: 0, }}
+            onPress={() => this.setState({rememberMeLogin: !this.state.rememberMeLogin})}
             />
+            </View>
+            
+
+              <FormButton
+                buttonTitle="Login"
+                handleLogin={this.loginPress}
+              />
 
             <TouchableOpacity
                     style={styles.forgotButton}
@@ -113,7 +137,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   text: {
-    //fontFamily: 'Cochin',
+    fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
@@ -128,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#2e64e5',
-    //fontFamily: 'Cochin',
+    fontFamily: 'Lato-Regular',
   },
   checkbox: {
     alignSelf: "center",

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { Avatar, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon2 from 'react-native-vector-icons/FontAwesome'
 import Conversation from "../components/Conversation";
 import { SearchBar } from "@rneui/themed";
 
@@ -17,10 +18,12 @@ export default class MainPage extends React.Component {
       chats : [],
       chatOpen : false,
       search: '',
+      searchBar: false,
+      newChat: false,
+      newUser: ''
     }
 
     this.chatOpenNumber = -1
-    this.newUser = ''
     this.controller = props.controller
 
     this.handleCreateChat = this.handleCreateChat.bind(this)
@@ -59,8 +62,8 @@ export default class MainPage extends React.Component {
   }
 
   async handleCreateChat(){
-    if(this.newUser != ''){
-      const res = await this.controller.createChatFromUsername(this.newUser)
+    if(this.state.newUser != ''){
+      const res = await this.controller.createChatFromUsername(this.state.newUser)
       if(res == true){
         this.chatOpenNumber = this.state.chats.length-1;
         this.setState({chatOpen:true})
@@ -72,6 +75,7 @@ export default class MainPage extends React.Component {
         alert('Hai già una chat con questo utente!')
       }
     }
+    this.setState({newChat:false, newUser:''})
   }
 
   handleNavigation = () => {
@@ -91,30 +95,66 @@ export default class MainPage extends React.Component {
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#122643'}}>
           <View style={{paddingVertical: 50, paddingHorizontal: 30,}}>
-            <View style={styles.container}>
-              <TouchableOpacity activeOpacity={0.5} onPress={this.signOutUser}>
-                <Avatar
-                  rounded
-                  source={{
-                    uri: PLACEHOLDER_AVATAR,
-                  }}
-                />
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-
-              <SearchBar
-                    placeholder="Type Here..."
+            
+              
+              {(this.state.searchBar && !this.state.newChat) &&
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => this.setState({searchBar: false, search:''})}>
+                  <Icon2 name="arrow-left" size={22} color="white" />   
+                </TouchableOpacity>
+                <View style={{flex: 1, paddingLeft: 15}}>
+                  <SearchBar
+                    inputStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                    containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643'}}
+                    inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                    placeholder="Cerca conversazione..."
                     onChangeText={this.updateSearch}
                     value={this.state.search}
                   />
+                </View>
               </View>
+                  }
+              {(!this.state.searchBar && !this.state.newChat) && 
+              <View style={styles.container}>
+                <TouchableOpacity activeOpacity={0.5} onPress={this.signOutUser}>
+                  <Avatar
+                    rounded
+                    source={{
+                      uri: PLACEHOLDER_AVATAR,
+                    }}
+                  />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                <TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5} onPress={()=>this.setState({searchBar:true, search: ''})}>
+                <Icon name="search" size={18} color="white" />
+                </TouchableOpacity>
+                </View>
+            </View>}
+
+            {this.state.newChat &&
+            <View style={{flexDirection: "row", alignItems: "center"}}>
+            <TouchableOpacity onPress={() => this.setState({newChat: false})}>
+              <Icon2 name="arrow-left" size={22} color="white" />   
+            </TouchableOpacity>
+            <View style={{flex: 1, paddingLeft: 15}}>
+              <SearchBar
+                inputStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 20, borderColor: '#122643'}}
+                inputContainerStyle={{backgroundColor: 'white', borderColor: '#122643'}}
+                placeholder="Crea nuova conversazione..."
+                onChangeText={(text) => this.setState({newUser: text})}
+                value={this.state.newUser}
+                onSubmitEditing={this.handleCreateChat}
+              />
+            </View>
           </View>
+            }
 
           <Text h4 style={{ color: 'white', marginTop: 15 }}>
             Conversazioni
@@ -130,7 +170,7 @@ export default class MainPage extends React.Component {
               showsVerticalScrollIndicator={false}
             >
 
-            {this.state.chats.map((id,i) => (
+            {this.state.chats.filter((chat)=>chat.user.startsWith(this.state.search)).map((id,i) => (
               <Conversation
                 key={i}
                 id={id.user}
@@ -142,18 +182,16 @@ export default class MainPage extends React.Component {
             </ScrollView>
           </View>
 
-          <View style={styles.buttonContainer}>
+          {!this.state.newChat && <View style={styles.buttonContainer}>
             <TouchableOpacity
-            onPress={this.handleCreateChat}
+            onPress={()=>this.setState({newChat: true})}
             style={styles.button}
             activeOpacity={0.5}
           >
             <Icon name="plus" size={24} color="white" />
             </TouchableOpacity>
-          </View>
-          <TextInput style = {{position: 'absolute',
-            bottom: 100,
-            right: 30,}} placeholder="Inserisci username contatto" onChangeText = {(value) => {this.newUser = value}} ref={input => { this.textInput = input }}/>
+          </View>}
+          
         </SafeAreaView>
       );
     } else {
