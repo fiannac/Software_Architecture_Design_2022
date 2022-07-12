@@ -3,6 +3,8 @@ import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dime
 import { Avatar, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Conversation from "../components/Conversation";
+import { SearchBar } from "@rneui/themed";
+
 
 import ChatPage from './chatPage.js'
 
@@ -14,6 +16,7 @@ export default class MainPage extends React.Component {
     this.state = {
       chats : [],
       chatOpen : false,
+      search: '',
     }
 
     this.chatOpenNumber = -1
@@ -22,6 +25,7 @@ export default class MainPage extends React.Component {
 
     this.handleCreateChat = this.handleCreateChat.bind(this)
     this.handleNavigation = this.handleNavigation.bind(this)
+    this.updateSearch = this.updateSearch.bind(this)
     this.signOutUser = this.signOutUser.bind(this)
   }
   
@@ -74,6 +78,10 @@ export default class MainPage extends React.Component {
     this.setState({chatOpen:false})
   }
 
+  updateSearch  = (search) => {
+    this.setState({search:search})
+  }
+
   signOutUser = () => {
     this.controller.logout()
   }
@@ -99,9 +107,12 @@ export default class MainPage extends React.Component {
                   alignItems: 'center',
                 }}
               >
-              <TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5}>
-              <Icon name="search" size={18} color="white" />
-              </TouchableOpacity>
+
+              <SearchBar
+                    placeholder="Type Here..."
+                    onChangeText={this.updateSearch}
+                    value={this.state.search}
+                  />
               </View>
           </View>
 
@@ -187,3 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#122643',
   },
 })
+
+//<TouchableOpacity style={{ marginRight: 15 }} activeOpacity={0.5} onPress={}>
+//<Icon name="search" size={18} color="white" />
+//</TouchableOpacity>

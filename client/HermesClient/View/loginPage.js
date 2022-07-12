@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator, TouchableOpacity, Image, ScrollView } from 'react-native';
+
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +14,6 @@ export default class LoginPage extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      hidePass: true,
       registerPage: false,
       loading: false,
       rememberMeLogin: true
@@ -44,20 +46,30 @@ export default class LoginPage extends React.Component {
       return(<RegistrationPage  controller={this.controller} setRegisterPage = {this.setRegisterPage}/>);
     }else{
       return (
-        <View style = {{flex: 1,justifyContent: "center",paddingHorizontal: 10}}>
-          <View style = {{alignItems: "center",padding: 10}}>
-            <Text>Effettua il login o registrati!</Text>
-            <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder="Inserisci nome utente"/>
-            <View style={styles.stilePassword}>
-              <TextInput onChangeText = {(value) => {this.psw = value}} style={styles.inserimentoTestoPsw} placeholder="Inserisci password" autoCompleteType="password" secureTextEntry={this.state.hidePass ? true : false}/>
-            </View>
-            <Icon
-                name={this.state.hidePass ? 'eye-slash' : 'eye'}
-                size={15}
-                style={{marginLeft: 5}}
-                color="grey"
-                onPress={() => this.setState({hidePass: !this.state.hidePass})}
-              />
+            <ScrollView contentContainerStyle={styles.container}>
+                  <Image
+                    source={require('../assets/MicrosoftTeams-image.png')}
+                    style={styles.logo}
+                  />
+            <Text style={styles.text}>Hermes Messenger</Text>
+
+            <FormInput
+              onChangeText={(value) => {this.usrname = value}}
+              placeholderText="Nome utente"
+              iconType="user"
+              autoCapitalize="none"
+              autoComplete="username"
+              autoCorrect={false}
+              isPsw={false}
+            />
+            <FormInput
+              onChangeText={(value) => {this.psw = value}}
+              placeholderText="Password"
+              iconType="lock"
+              autoComplete="password" 
+              isPsw={true}
+            />
+
             <View style = {{flexDirection: "row",justifyContent: "space-between", alignContent:"center"}}>
             <Icon2
               name={this.state.rememberMeLogin ? 'checkbox-intermediate' : 'checkbox-blank-outline'}
@@ -68,46 +80,55 @@ export default class LoginPage extends React.Component {
             />
             <Text style={{paddingHorizontal:10}}>Remember me?</Text>
             </View>
-            <View style={styles.bottone}>
-              <View style={styles.bottoneLogin}>
-                <Button title="Log in" onPress = {this.loginPress}  />
-              </View>
-              <Button title="Crea Nuovo account" onPress={()=>this.setRegisterPage(true)} />
-            </View>
-          </View>
-          {<ActivityIndicator size="large" /> && this.state.loading}
-        </View>
+
+            <FormButton
+              buttonTitle="Login"
+              handleLogin={this.loginPress}
+            />
+
+            <TouchableOpacity
+                    style={styles.forgotButton}
+                    onPress={()=>this.setRegisterPage(true)}>
+                    <Text style={styles.navButtonText}>
+                      Don't have an account? Create here
+                    </Text>
+                  </TouchableOpacity>
+                  {<ActivityIndicator size="large" /> && this.state.loading}
+                </ScrollView>
       );
     }
   }
 }
 
 const styles = StyleSheet.create({
-  stilePassword: {
-    flexDirection: 'row',
-    alignItems: 'center', 
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    paddingTop: 50
   },
-  inserimentoTestoUser: {
-    borderWidth: 1,
-    backgroundColor: 'white',
-    marginVertical: 5,
-    marginLeft: 5,
-    width: 200
+  logo: {
+    height: 150,
+    width: 150,
+    resizeMode: 'cover',
   },
-  inserimentoTestoPsw: {
-    borderWidth: 1,
-    backgroundColor: 'white',
-    marginVertical: 5,
-    marginLeft: 5,
-    width: 200
+  text: {
+    //fontFamily: 'Cochin',
+    fontSize: 28,
+    marginBottom: 10,
+    color: '#051d5f',
   },
-  bottoneLogin: {
-    marginRight: 5,
-    marginLeft: 5,
+  navButton: {
+    marginTop: 15,
   },
-  bottone: {
-    flexDirection: "row",
-    marginVertical: 5,
+  forgotButton: {
+    marginVertical: 35,
+  },
+  navButtonText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#2e64e5',
+    //fontFamily: 'Cochin',
   },
   checkbox: {
     alignSelf: "center",

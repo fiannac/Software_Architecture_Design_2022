@@ -1,6 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput, BackHandler } from 'react-native';
+
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
+
+import { StyleSheet, Text, View, Button, TextInput, BackHandler, TouchableOpacity, ScrollView } from 'react-native';
 
 
 export default class RegistrationPage extends React.Component {
@@ -52,41 +56,110 @@ export default class RegistrationPage extends React.Component {
 
   render(){
     return (
-      <View style = {{flex: 1,justifyContent: "center",paddingHorizontal: 10}}>
-        <View style = {{alignItems: "center",padding: 10}}>
-          <Text>Registrati con username e password</Text>
-          <TextInput onChangeText = {(value) => {this.mail = value}} style={styles.inserimentoTestoMail} placeholder="Inserisci mail"/>
-          <TextInput onChangeText = {(value) => {this.usrname = value}} style={styles.inserimentoTestoUser} placeholder='Inserisci nome utente'/>
-          <TextInput onChangeText = {(value) => {this.psw = value}} secureTextEntry = {true} style={styles.inserimentoTestoPsw} placeholder='Inserisci password'/>
-          <TextInput onChangeText = {(value) => {this.psw2 = value}} secureTextEntry = {true} style={styles.inserimentoTestoPsw} placeholder='Conferma password'/>
-          <Button title="Registrati!" style = {styles.inserimentoTestoPsw} onPress={this.registratiButton}/>
-        </View>
+      <ScrollView style={styles.container}>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.text}>Create an account</Text>
+        <FormInput
+        isPsw={false}
+        onChangeText={(value) => {this.mail = value}}
+        placeholderText="Email"
+        iconType="mail"
+        keyboardType="email-address"
+        autoComplete="email"
+        autoCapitalize="none"
+        autoCorrect={false}
+        />
+
+        <FormInput
+        isPsw={false}
+        onChangeText={(value) => {this.usrname = value}}
+        placeholderText="Nome utente"
+        iconType="user"
+        autoComplete="username"
+        autoCapitalize="none"
+        autoCorrect={false}
+        />
+
+        <FormInput
+        onChangeText={(value) => {this.psw = value}}
+        placeholderText="Password"
+        iconType="lock"
+        isPsw={true}
+        autoComplete="password-new" 
+        />
+
+        <FormInput
+        onChangeText={(value) => {this.psw2 = value}}
+        placeholderText="Conferma Password"
+        iconType="lock"
+        isPsw={true}
+        autoComplete="off"
+        />
+
+        <FormButton
+        buttonTitle="Sign Up"
+        handleLogin={this.registratiButton}
+      />
+
+      <View style={styles.textPrivate}>
+        <Text style={styles.color_textPrivate}>
+          By registering, you confirm that you accept our{' '}
+        </Text>
+        <TouchableOpacity onPress={() => alert('Terms Clicked!')}>
+          <Text style={[styles.color_textPrivate, {color: '#122643'}]}>
+            Terms of service
+          </Text>
+        </TouchableOpacity>
+        <Text style={styles.color_textPrivate}> and </Text>
+        <TouchableOpacity onPress={() => alert('Privacy Clicked!')}>
+          <Text style={[styles.color_textPrivate, {color: '#122643'}]}>
+            Privacy Policy
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={()=>this.props.setRegisterPage(false)}>
+        <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+      </TouchableOpacity>
+      </View>
+    </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  inserimentoTestoUser: {
-    borderWidth: 1,
-    marginVertical: 5,
-    width: 200,
-    marginLeft: 5,
+  container: {
+    backgroundColor: '#f9fafd',
+    flex: 1,
+    padding: 20,
   },
-  inserimentoTestoPsw: {
-    borderWidth: 1,
-    marginVertical: 5,
-    width: 200, 
-    marginLeft: 5,
+  text: {
+    //fontFamily: 'Kufam-SemiBoldItalic',
+    fontSize: 28,
+    marginBottom: 10,
+    color: '#051d5f',
   },
-  inserimentoTestoMail: {
-    borderWidth: 1,
-    marginVertical: 5,
-    width: 200,
-    marginLeft: 5,
+  navButton: {
+    marginTop: 15,
   },
-  bottone: {
-    flexDirection: "row",
-    marginVertical: 5,
-  }
+  navButtonText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#2e64e5',
+    //fontFamily: 'Lato-Regular',
+  },
+  textPrivate: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginVertical: 35,
+    justifyContent: 'center',
+  },
+  color_textPrivate: {
+    fontSize: 13,
+    fontWeight: '400',
+    //fontFamily: 'Lato-Regular',
+    color: 'grey',
+  },
 });
