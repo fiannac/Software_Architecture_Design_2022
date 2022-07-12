@@ -13,6 +13,7 @@ export default class loggedUser{
     setConnState(state){
         this.connState = state
         if(this.observerState != null){
+            // Richiama la funzione notify dell'app
             this.observerState(this.connState, this.loggedState)
         }
     }
@@ -20,6 +21,7 @@ export default class loggedUser{
     setLoggedState(state){
         this.loggedState = state
         if(this.observerState != null){
+            // Richiama la funzione notify dell'app
             this.observerState(this.connState, this.loggedState)
         }
     }
@@ -83,10 +85,13 @@ export default class loggedUser{
         this.observerChat = null
     }
 
+    //"observer" passato come parametro è la funzione di notify dell'app
     subscribeStateObserver(observer){
         this.observerState = observer
         this.observerState(this.loggedState)
     }  
+
+    
     unsubscribeStateObserver(){
         this.observerState = null
     }
