@@ -6,27 +6,12 @@ import * as Font from 'expo-font';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
- 
-//let customFonts = {
-    //'Lato-Regular': require('../assets/fonts/Lato-Regular.ttf'),
-  //};
+
 export default class FormButton extends React.Component {
     constructor(props) {
         super(props);
     } 
-/*
-    state = {
-        fontsLoaded: false,
-    };
-    async _loadFontsAsync() {
-        await Font.loadAsync(customFonts);
-        this.setState({ fontsLoaded: true });
-      }
     
-      componentDidMount() {
-        this._loadFontsAsync();
-      }
-  */  
     render() { 
             return(
                 <TouchableOpacity style={styles.buttonContainer} onPress={this.props.handleLogin}>

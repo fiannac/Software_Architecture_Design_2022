@@ -9,11 +9,6 @@ const windowHeight = Dimensions.get('window').height;
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const FormInput = ({isPsw, placeholderText, iconType, ...rest}) => {
-    //let [fontsLoaded] = useFonts({
-        //'Lato-Regular': require('../assets/fonts/Lato-Regular.ttf'),
-      //})
-
-
     const [hidePsw, setHidePsw] = useState(isPsw);
     return (
       <View style={styles.inputContainer}>

@@ -38,8 +38,9 @@ export default class Conversation extends React.Component {
                 <Avatar
                   rounded
                   source={{
-                    uri: 'http://109.116.253.181:8888/avatar/' + this.props.id +'/'+ new Date()
+                    uri: 'http://109.116.253.181:8888/avatar/' + this.props.id +'/'+ (new Date()).getMinutes()
                   }}
+                    size= {45}
                 />
                 <View style={{flexDirection: 'column', paddingLeft:15, width:'75%'}}>
                     

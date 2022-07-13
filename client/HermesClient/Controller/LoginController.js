@@ -14,7 +14,6 @@ export default class LoginController {
         const psw = await this.crypto.hashPsw(Opsw)
         const notifyToken = await this.registerForPushNotificationsAsync()
         const reply = await this.network.loginRequest(user,psw,notifyToken);
-        console.log(reply)
         if(reply.ok == false){
             return false
         }
@@ -50,7 +49,6 @@ export default class LoginController {
             this.storage.insertMessage(id,msg.sender, text, msg.timestamp, 'rcv')
         }
         
-        console.log("Autentico socket...")
         this.network.authWSRequest(reply.id, reply.token);
         if(rememberMe == true){
             this.storage.storeAuthData(user, Opsw)
@@ -73,7 +71,6 @@ export default class LoginController {
 
     async rememberMeLogin(){
         const DBquery = await this.storage.getAuthData()
-        console.log(DBquery)
         if(DBquery.length == 0){
             return false
         }
@@ -100,7 +97,6 @@ export default class LoginController {
             return;
           }
           token = (await Notifications.getExpoPushTokenAsync()).data;
-          console.log(token);
         } else {
           alert('Must use physical device for Push Notifications');
         }

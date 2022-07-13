@@ -12,7 +12,6 @@ import ChatPage from './chatPage.js'
 export default class MainPage extends React.Component {
   constructor(props){
     super(props)
-    //stato della main page
     this.state = {
       chats : new Map(),
       chatOpen : false,
@@ -30,8 +29,7 @@ export default class MainPage extends React.Component {
     this.userPressed = this.userPressed.bind(this)
     this.picker = this.picker.bind(this)
   }
-  
-  //alla costruzione del componente, questo è sottoscritto come observer dello stato delle chats del model
+    
   componentDidMount(){
     this.controller.subscribeChatObserver(this.notify.bind(this))
     this.id = this.controller.getId()
@@ -90,7 +88,6 @@ export default class MainPage extends React.Component {
   sortChats = (a, b) => {
     if(b.timestampLastMsg==null) return -1
     if(a.timestampLastMsg==null) return 1
-    console.log(a.timestampLastMsg, b.timestampLastMsg)
     return b.timestampLastMsg.getTime() - a.timestampLastMsg.getTime()
   }
   updateSearch  = (search) => {
@@ -106,11 +103,8 @@ export default class MainPage extends React.Component {
       quality: 1,
     })
     if (!result.cancelled) {
-      console.log("immagine caricata!", result.uri);
       this.controller.setAvatar(result.uri)
-    } else {
-      console.log("immagine non caricata!");
-    }
+    } 
   }
 
   userPressed = async () => {
@@ -163,8 +157,9 @@ export default class MainPage extends React.Component {
                   <Avatar
                     rounded
                     source={{
-                      uri: 'http://109.116.253.181:8888/avatar/' + this.id +'/'+ new Date()
+                      uri: 'http://109.116.253.181:8888/avatar/' + this.id +'/'+ (new Date()).getMinutes()
                     }}
+                    size= {60}
                   />
                 </TouchableOpacity>
                 <View
@@ -207,7 +202,7 @@ export default class MainPage extends React.Component {
           <View style={styles.chatContainer}>
             <ScrollView
               style={{
-              height: Dimensions.get('window').height - 180,
+              height: Dimensions.get('window').height - 205,
              
               }}
               showsVerticalScrollIndicator={false}

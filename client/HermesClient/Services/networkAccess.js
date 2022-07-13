@@ -48,7 +48,6 @@ export default class NetworkAccess {
     authWSRequest(id, token){
         const jmsg = JSON.stringify({type: 'authWS', id: id, token: token});
         this.ws.send(jmsg);
-        console.log("Richiesta di auth")
     }
 
     async msgRequest(idMittente, idDestinatario, token, text, keyM, keyD, timestamp){
@@ -213,7 +212,6 @@ export default class NetworkAccess {
         data.append('id', id);
         data.append('token', token);
 
-        console.log("richiesrta di avatar")
         var response = await fetch(`http://${serverIp}:${serverPort}/setAvatar`, 
             {
             method: 'POST',

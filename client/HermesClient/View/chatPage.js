@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native-elements'
+import { Text, Avatar } from 'react-native-elements'
 import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Keyboard , BackHandler, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/Entypo'
@@ -79,14 +79,28 @@ export default class ChatPage extends React.Component {
     return (
     <View style={styles.container}>
 
-      <View style={[styles.flexify,{height:55 }]}>
-        <TouchableOpacity onPress={() => {this.props.handleNavigation(); } } activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
+      <View style={[styles.flexify,{height:60}]}>
+      
+      <View style={[styles.flexify]}>
+        <TouchableOpacity onPress={() => {this.props.handleNavigation(); } } activeOpacity={0.5} style={{paddingLeft:20,paddingRight:10}}>
           <Icon name="arrow-left" size={20} color='white'/>
         </TouchableOpacity>
 
-        <Text style={{color: 'white',fontWeight: "600"}}>
+        <Avatar rounded
+            source={{
+            uri: 'http://109.116.253.181:8888/avatar/' + this.id +'/'+ (new Date()).getMinutes()
+           }}
+            size = {30}
+          />
+
+        <Text style={{color: 'white',fontWeight: "700", paddingHorizontal:10}}>
           {this.userName}
         </Text>
+      </View>
+
+        
+        
+        
 
         <TouchableOpacity onPress={()=>{this.settingPressed()}} activeOpacity={0.5} style={{paddingHorizontal:'5%'}}>
           <Icon2 name="dots-three-vertical" size={20} color='white' />
@@ -147,12 +161,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  msgBg: {
-    flex: 1,
-    backgroundColor: '#efefef',
-    borderRadius: 20,
-    padding: 10,
   },
   spaceMsg: {
     alignItems: 'flex-end',
