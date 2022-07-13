@@ -12,6 +12,7 @@
   "dependencies": {
     "form-data": "^4.0.0",
     "FormData": "^0.10.1",
+    "formdata-node": "^4.3.3",
     "jest": "^28.1.2",
     "node-fetch": "^3.2.6",
     "request": "^2.88.2",

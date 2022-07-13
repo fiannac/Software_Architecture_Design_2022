@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-
+import FormData from 'form-data';
 const userServerIp = 'localhost';
 const userServerPort = '8891' 
 
@@ -51,5 +51,16 @@ export default class UserDataConnection {
         response = await response.json()
         return response;
     }
-}
 
+    async setAvatar(id, img){
+        let form = new FormData();
+        console.log("IMG:",img)
+        form.append('file', img.buffer, img.originalname);
+        try{
+        let res = await fetch(`http://${userServerIp}:${userServerPort}/upload/` + id, {mode: 'cors',method: "POST", body: form});
+        }catch(e){
+            return {ok:false}
+        }
+        return {ok:true}
+    }
+}

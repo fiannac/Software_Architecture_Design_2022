@@ -47,4 +47,7 @@ export default class ControllerFacade {
     async deleteWs(msg, ws){
         return this.authHandler.deleteWs(msg, ws);
     }
+    async setAvatarRequest(id, token, image){
+        return this.infoHandler.setAvatar(id, token, image);
+    }
 }

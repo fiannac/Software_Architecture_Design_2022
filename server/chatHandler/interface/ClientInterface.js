@@ -7,7 +7,6 @@ import fetch from 'node-fetch';
 import bodyParser from 'body-parser';
 import request from 'request';
 import ControllerFacade from '../controller/controllerFacade.js';
-import formData from 'form-data';
 
 
 export default class ClientInterface {
@@ -46,12 +45,10 @@ export default class ClientInterface {
         this.app.post('/msg', this.msg.bind(this));  
         this.app.post('/blockUser', this.blockUser.bind(this));
 
-        this.app.get('/activate/:id', this.activateAccount.bind(this)); 
-        
-        this.app.get('/avatar/:id/:date', this.image.bind(this));
         this.app.post('/setAvatar',  this.multer.single('image'), this.setAvatar.bind(this));
 
-
+        this.app.get('/activate/:id', this.activateAccount.bind(this)); 
+        this.app.get('/avatar/:id/:date', this.image.bind(this));
         this.app.get('/test', (req, res) => {
             res.send('Server is running...');
         })
@@ -125,20 +122,15 @@ export default class ClientInterface {
 
     async image(req, res){
         const id = req.params.id;
-        request("http://localhost:3000/avatar/"+ id).pipe(res);
+        request("http://localhost:8891/avatar/"+ id).pipe(res);
     }
 
     async setAvatar(req, res){
         const img = req.file;
         const id = req.body.id;
         const token = req.body.token;
-        let form = new formData();
-        form.append('file', img.buffer, img.originalname);
-        console.log("setAvatar ", req.body);
-        await fetch('http://localhost:3000/upload/' + id, {mode: 'cors',method: "POST", body: form});
-        console.log("setAvatar done");
-        res.send();
-       // const r = await this.controller.setAvatarRequest(req.body.id, req.body.token, req.body.image);
+        let r = this.controller.setAvatarRequest(id, token, img);
+        res.send(JSON.stringify(r));
     }
     initWSS(){
         let controller = this.controller;

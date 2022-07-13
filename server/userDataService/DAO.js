@@ -1,4 +1,6 @@
 var mysql = require('mysql2/promise');
+const path = require('path');
+const fs = require('fs');
 
 class DAO{
     
@@ -61,6 +63,20 @@ class DAO{
             return {ok: false, error: "Can't connect to database"};
         }
     }
-}
 
+    async setAvatar(id, file){
+        const tempPath = file.path;
+        const targetPath = path.join(__dirname, "./uploads/" + id + ".jpg");
+        if (path.extname(file.originalname).toLowerCase() === ".jpg") {
+        fs.rename(tempPath, targetPath, err => {
+            if (err) return handleError(err, res);
+            return {ok:true};
+        });
+        } else {
+            fs.unlink(tempPath, err => {
+                return {ok:true};
+            });
+        }
+    }
+}
 module.exports = DAO

@@ -36,4 +36,15 @@ export default class InfoHandler {
            
         return {ok:true, id: userDataReq.id, userName: userDataReq.userName, puk: userDataReq.puk};
     }
+
+    async setAvatar(id, token, image){
+        if(id == null || token == null || image == null)
+            return {ok: false}
+        
+        if(await this.authConn.checkToken(id, token) == false)
+            return {ok:false};
+        
+        const r = await this.userDataConnection.setAvatar(id, image);
+        return r;
+    }
 }
