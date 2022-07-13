@@ -67,4 +67,14 @@ export default class CreateChatController {
         this.loggedUser.deleteChat(idDaEliminare)
         return true;
     }
+
+    async setAvatar(uri){
+        const id = this.loggedUser.id;
+        const token = this.loggedUser.token;
+        const res = await this.network.setAvatar(id, token, uri)
+        if(res.ok == false){
+            return false;
+        }
+        return true;
+    }
 }

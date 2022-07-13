@@ -38,13 +38,13 @@ export default class Conversation extends React.Component {
                 <Avatar
                   rounded
                   source={{
-                    uri: PLACEHOLDER_AVATAR,
+                    uri: 'http://109.116.253.181:8888/avatar/' + this.props.id +'/'+ new Date()
                   }}
                 />
                 <View style={{flexDirection: 'column', paddingLeft:15, width:'75%'}}>
                     
                     <Text h5 style={{ fontWeight: '700' }}>
-                        {this.props.id}
+                        {this.props.username}
                     </Text>
                  
 

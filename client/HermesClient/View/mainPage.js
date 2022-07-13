@@ -1,15 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Button, TextInput, TouchableOpacity, ScrollView, Dimensions, SafeAreaView, Alert } from 'react-native';
 import { Avatar, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Icon2 from 'react-native-vector-icons/FontAwesome'
 import Conversation from "../components/Conversation";
 import { SearchBar } from "@rneui/themed";
-
+import * as ImagePicker from 'expo-image-picker';
 
 import ChatPage from './chatPage.js'
-
-const PLACEHOLDER_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
 
 export default class MainPage extends React.Component {
   constructor(props){
@@ -29,12 +27,14 @@ export default class MainPage extends React.Component {
     this.handleCreateChat = this.handleCreateChat.bind(this)
     this.handleNavigation = this.handleNavigation.bind(this)
     this.updateSearch = this.updateSearch.bind(this)
-    this.signOutUser = this.signOutUser.bind(this)
+    this.userPressed = this.userPressed.bind(this)
+    this.picker = this.picker.bind(this)
   }
   
   //alla costruzione del componente, questo è sottoscritto come observer dello stato delle chats del model
   componentDidMount(){
     this.controller.subscribeChatObserver(this.notify.bind(this))
+    this.id = this.controller.getId()
   }
 
   componentWillUnmount(){
@@ -97,9 +97,42 @@ export default class MainPage extends React.Component {
     this.setState({search:search})
   }
 
-  signOutUser = () => {
-    this.controller.logout()
+  picker = async () => { 
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+      quality: 1,
+    })
+    if (!result.cancelled) {
+      console.log("immagine caricata!", result.uri);
+      this.controller.setAvatar(result.uri)
+    } else {
+      console.log("immagine non caricata!");
+    }
   }
+
+  userPressed = async () => {
+    //allert with tree choices, one for logout, one for upload image, one to close the allert
+    Alert.alert(
+      "Impostazioni profilo",
+      "Seleziona una delle seguenti opzioni",
+      [
+        {
+           text: "Annulla"
+        },{
+          text: "Logout",
+          onPress: () => {this.controller.logout()}, 
+          style: 'destructive'
+        },{
+          text: "Carica foto profilo",
+          onPress: () => {this.picker()},
+          style: "cancel"
+        }
+      ]
+    );
+  }  
 
   render(){
     if(this.state.chatOpen == false){ // a chat chiusa returno la main page
@@ -126,11 +159,11 @@ export default class MainPage extends React.Component {
                   }
               {(!this.state.searchBar && !this.state.newChat) && 
               <View style={styles.container}>
-                <TouchableOpacity activeOpacity={0.5} onPress={this.signOutUser}>
+                <TouchableOpacity activeOpacity={0.5} onPress={this.userPressed}>
                   <Avatar
                     rounded
                     source={{
-                      uri: PLACEHOLDER_AVATAR,
+                      uri: 'http://109.116.253.181:8888/avatar/' + this.id +'/'+ new Date()
                     }}
                   />
                 </TouchableOpacity>
@@ -183,7 +216,8 @@ export default class MainPage extends React.Component {
             {Array.from(this.state.chats.values()).filter((chat)=>chat.user.startsWith(this.state.search)).sort(this.sortChats).map((chat,i) => (
               <Conversation
                 key={i}
-                id={chat.user}
+                username={chat.user}
+                id = {chat.id}
                 handleNavigation={()=>{this.chatOpenNumber = chat.id; this.setState({chatOpen:true})}}
                 text={this.state.chats.get(chat.id).chat.length == 0 ? ' ' : this.state.chats.get(chat.id).chat[this.state.chats.get(chat.id).chat.length-1].text}
                 timestamp={this.state.chats.get(chat.id).chat.length == 0 ? ' ' : this.state.chats.get(chat.id).chat[this.state.chats.get(chat.id).chat.length-1].timestamp}

@@ -206,4 +206,23 @@ export default class NetworkAccess {
         }).then((res) => res.json())
         return response.ok;
     }
+
+    async setAvatar(id, token, avatar){
+        var data = new FormData()
+        data.append('image', {uri: avatar, name: 'image.jpg', type: 'image/jpeg'})
+        data.append('id', id);
+        data.append('token', token);
+
+        console.log("richiesrta di avatar")
+        var response = await fetch(`http://${serverIp}:${serverPort}/setAvatar`, 
+            {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data'
+            },
+            body: data
+        })
+        return response;
+    }
 }

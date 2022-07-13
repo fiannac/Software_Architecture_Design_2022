@@ -96,4 +96,12 @@ export default class Controller{
         this.NetworkAccess.disconnect()
         this.loggedUser.setConnState(false)
     }
+
+    getId(){
+        return this.loggedUser.id
+    }
+
+    async setAvatar(uri){
+        return await this.ChatController.setAvatar(uri)
+    }
 }
