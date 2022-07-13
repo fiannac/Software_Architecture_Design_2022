@@ -62,25 +62,6 @@ export default class MainPage extends React.Component {
     this.setState({chats:newChats})
   }
 
-  //funzione richiamata al tentativo di creazione di una chat  
-  async handleCreateChat(){
-    if(this.state.newUser != ''){
-      const res = await this.controller.createChatFromUsername(this.state.newUser)
-      if(res == true){
-        this.chatOpenNumber = this.state.chats.length-1;
-        this.setState({chatOpen:true})
-      } else if(res == -1) {
-        alert('Non puoi creare una chat con te stesso!')
-      } else if(res == -2){
-        alert('Non esiste un utente con questo username!')
-      } else if(res == -3){
-        alert('Hai già una chat con questo utente!')
-      }
-    }
-    this.setState({newChat:false, newUser:''})
-  }
-
-  //funzione per la navigazione tra le chat
   handleNavigation = () => {
     this.setState({chatOpen:false})
   }
@@ -95,7 +76,6 @@ export default class MainPage extends React.Component {
   }
 
   picker = async () => { 
-      // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
@@ -127,6 +107,23 @@ export default class MainPage extends React.Component {
       ]
     );
   }  
+
+  async handleCreateChat(){
+    if(this.state.newUser != ''){
+      const res = await this.controller.createChatFromUsername(this.state.newUser)
+      if(res.ok == true){
+        this.chatOpenNumber = res.id;
+        this.setState({chatOpen:true})
+      } else if(res == -1) {
+        alert('Non puoi creare una chat con te stesso!')
+      } else if(res == -2){
+        alert('Non esiste un utente con questo username!')
+      } else if(res == -3){
+        alert('Hai già una chat con questo utente!')
+      }
+    }
+    this.setState({newChat:false, newUser:''})
+  }
 
   render(){
     if(this.state.chatOpen == false){ // a chat chiusa returno la main page

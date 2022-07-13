@@ -24,7 +24,7 @@ export default class CreateChatController {
         var res = await this.storage.insertUser(idDest, username, puk);
         var res = await this.storage.insertChat(id, idDest, 0);
 
-        return true;
+        return {ok:true, id:idDest};
         
     }
 
