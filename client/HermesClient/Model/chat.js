@@ -1,11 +1,25 @@
 import messaggio from './messaggio.js'
 
 export default class Chat{
-    constructor(id, timestamp, user){
+    constructor(id, user){
         this.id = id;
-        this.time = timestamp;
         this.msgs = new Array();
         this.user = user;
+    }
+
+    setTimestamp(timestamp){
+        let time = new Date(timestamp);
+        if(this.time==null || this.time==undefined){
+            this.time = time;
+        }else{
+            if(time.getTime()>this.time.getTime()){
+                this.time = time;
+            }
+        }
+    }
+
+    getTimestamp(){
+        return this.time;
     }
 
     addMessage(testo, timestamp, type){

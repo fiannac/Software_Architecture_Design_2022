@@ -45,7 +45,7 @@ export default class loggedUser{
 
     createChat(id, username, puk){
         const user = new User(id, username, puk)
-        const chat = new Chat('0', '0', user)
+        const chat = new Chat('0', user)
         this.chats.set(id,chat)
         if(this.observerChat != null){
             this.observerChat(this.chats)
@@ -55,7 +55,7 @@ export default class loggedUser{
     createMessage(text, id, timestamp, type){
         const chat = this.chats.get(id);
         chat.addMessage(text,timestamp, type);
-
+        chat.setTimestamp(timestamp);
         if(this.observerChat != null){
             this.observerChat(this.chats)
         }

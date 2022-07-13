@@ -84,7 +84,7 @@ export default class ChatPage extends React.Component {
           <Icon name="arrow-left" size={20} color='white'/>
         </TouchableOpacity>
 
-        <Text style={{color: 'white',fontWeight: "600",textTransform: 'capitalize',}}>
+        <Text style={{color: 'white',fontWeight: "600"}}>
           {this.userName}
         </Text>
 

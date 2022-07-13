@@ -16,7 +16,7 @@ export default class MainPage extends React.Component {
     super(props)
     //stato della main page
     this.state = {
-      chats : [],
+      chats : new Map(),
       chatOpen : false,
       search: '',
       searchBar: false,
@@ -43,12 +43,13 @@ export default class MainPage extends React.Component {
   
   // Funzione richiamata all'aggiornamento delle chat nel model 
   notify(chats){
-    var newChats = []
+    var newChats = new Map()
     chats.forEach((chat, id) => {
       var toAdd = {
         user:chat.getUserName(),
         id:id,
-        chat:[]
+        chat:[],
+        timestampLastMsg:chat.getTimestamp()
       }
       
       chat.getMessages().forEach((msg) => {
@@ -58,7 +59,7 @@ export default class MainPage extends React.Component {
           sender:msg.getSender()
         })
       })
-      newChats = newChats.concat(toAdd)
+      newChats.set(id, toAdd)
     });
     this.setState({chats:newChats})
   }
@@ -86,6 +87,12 @@ export default class MainPage extends React.Component {
     this.setState({chatOpen:false})
   }
 
+  sortChats = (a, b) => {
+    if(b.timestampLastMsg==null) return -1
+    if(a.timestampLastMsg==null) return 1
+    console.log(a.timestampLastMsg, b.timestampLastMsg)
+    return b.timestampLastMsg.getTime() - a.timestampLastMsg.getTime()
+  }
   updateSearch  = (search) => {
     this.setState({search:search})
   }
@@ -173,13 +180,13 @@ export default class MainPage extends React.Component {
               showsVerticalScrollIndicator={false}
             >
             
-            {this.state.chats.filter((chat)=>chat.user.startsWith(this.state.search)).map((id,i) => (
+            {Array.from(this.state.chats.values()).filter((chat)=>chat.user.startsWith(this.state.search)).sort(this.sortChats).map((chat,i) => (
               <Conversation
                 key={i}
-                id={id.user}
-                handleNavigation={()=>{this.chatOpenNumber = i; this.setState({chatOpen:true})}}
-                text={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1].text}
-                timestamp={this.state.chats[i].chat.length == 0 ? ' ' : this.state.chats[i].chat[this.state.chats[i].chat.length-1].timestamp}
+                id={chat.user}
+                handleNavigation={()=>{this.chatOpenNumber = chat.id; this.setState({chatOpen:true})}}
+                text={this.state.chats.get(chat.id).chat.length == 0 ? ' ' : this.state.chats.get(chat.id).chat[this.state.chats.get(chat.id).chat.length-1].text}
+                timestamp={this.state.chats.get(chat.id).chat.length == 0 ? ' ' : this.state.chats.get(chat.id).chat[this.state.chats.get(chat.id).chat.length-1].timestamp}
               />
             ))}
             </ScrollView>
@@ -200,14 +207,14 @@ export default class MainPage extends React.Component {
     } else { //altrimenti renderizzo la chatpage
       return(
         <View>
-          <ChatPage controller = {this.controller} chat = {this.state.chats[this.chatOpenNumber].chat.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)})} userName = {this.state.chats[this.chatOpenNumber].user} id = {this.state.chats[this.chatOpenNumber].id} handleNavigation={this.handleNavigation}/>
+          <ChatPage controller = {this.controller} chat = {this.state.chats.get(this.chatOpenNumber).chat.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)})} userName = {this.state.chats.get(this.chatOpenNumber).user} id = {this.state.chats.get(this.chatOpenNumber).id} handleNavigation={this.handleNavigation}/>
         </View>
       )      
     }
   }
 }
 
-//sort((a,b) => {return b.chat[b.chat.length-1].timestamp - a.chat[a.chat.length-1].timestamp})
+//
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
