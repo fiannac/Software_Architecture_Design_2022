@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator, TouchableOpacity, Image, ScrollView } from 'react-native';
 
 import FormInput from '../components/FormInput';
@@ -64,8 +64,18 @@ export default class LoginPage extends React.Component {
     }else{
       //returniamo la pagina di login
       return (
-            <ScrollView contentContainerStyle={styles.container}>
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <>
+
+        {this.state.loading ?
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
+         <ActivityIndicator size = 'large'/>
+        </View> 
+        :
+        <ScrollView contentContainerStyle={styles.container}>
+
+            
+
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image
                     source={require('../assets/MicrosoftTeams-image.png')}
                     style={styles.logo}
@@ -121,9 +131,9 @@ export default class LoginPage extends React.Component {
                       Don't have an account? Create here
                     </Text>
                   </TouchableOpacity>
-                  {<ActivityIndicator size="large" /> && this.state.loading}
-                </ScrollView>
-      );
+        </ScrollView>
+        }</>
+    );
     }
 }
 }

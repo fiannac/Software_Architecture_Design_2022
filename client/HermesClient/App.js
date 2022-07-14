@@ -11,7 +11,8 @@ export default class App extends React.Component {
     super()
     this.state = {
       connected: false,
-      logged: false
+      logged: false,
+      rememberMe: true
     }
     setConnState = this.setConnState
     setLoggedState = this.setLoggedState
@@ -20,12 +21,10 @@ export default class App extends React.Component {
     const app = this
   }
   
-  componentDidMount(){
+  async componentDidMount(){
     this.controller.subscribeStateObserver(this.notify.bind(this))
-    this.controller.rememberMeLogin()
-    
-
-
+    await this.controller.rememberMeLogin()
+    this.setState({rememberMe : false})
     const subscription = AppState.addEventListener("change", nextAppState => {
       if(nextAppState == "background"){
         this.controller.disconnect()
@@ -49,7 +48,7 @@ export default class App extends React.Component {
   }
 
   render(){
-    if(!this.state.connected){
+    if(!this.state.connected || this.state.rememberMe){
       return(
         
         <View style = {{flex: 1,justifyContent: "center", paddingHorizontal:10}}>

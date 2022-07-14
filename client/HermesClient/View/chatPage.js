@@ -38,9 +38,9 @@ export default class ChatPage extends React.Component {
   //Funzione per gestire l'invio di un messaggio
   async handleMsgSend(){
     if(this.state.msg != ''){
-      const res = await this.controller.inviaMessaggio(this.id,this.state.msg)
       this.setState({msg:''})
       this.textInput.clear()
+      const res = await this.controller.inviaMessaggio(this.id,this.state.msg)
       if(res == false){
         alert("Il messaggio non è stato consegnato, potresti essere stato bloccato!")
       }
